@@ -4,6 +4,9 @@ export default {
     orders: 'Orders',
     profile: 'Profile',
   },
+  mainScreen: {
+    headerText: 'Delivery to',
+  },
 
   common: {
     welcome: 'Welcome!',

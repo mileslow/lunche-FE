@@ -13,7 +13,7 @@ const TmpNestedScreen: FC<TmpNestedScreenProps> = ({ navigation, route }) => {
       <Text>{route.params?.payload}</Text>
 
       <Button
-        title="Go back"
+        title='Go back'
         onPress={(): void => {
           navigation.goBack()
         }}

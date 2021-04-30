@@ -18,7 +18,7 @@ const TmpIndexScreen: FC<TmpIndexScreenProps> = ({ navigation, route }) => {
 
       <Text>Example Index Screen</Text>
       <Button
-        title="Show nested screen"
+        title='Show nested screen'
         onPress={(): void => {
           navigation.push(Routes.ExampleStackChild, {
             payload: `Opened from ${route.name as string}`,

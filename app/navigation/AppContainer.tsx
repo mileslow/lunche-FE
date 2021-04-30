@@ -4,18 +4,18 @@ import { StatusBar } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 // navigators
-import HomeNavigator from 'navigation/navigators/HomeTabs'
+import MainTabsNavigator from 'navigation/navigators/MainTabs'
 
 const RootStack = createStackNavigator()
 
 const AppNavigationContainer: FC = () => {
   return (
     <>
-      <StatusBar backgroundColor="transparent" networkActivityIndicatorVisible translucent />
+      <StatusBar backgroundColor='transparent' networkActivityIndicatorVisible translucent />
 
       <NavigationContainer>
         <RootStack.Navigator screenOptions={{ headerShown: false }}>
-          <RootStack.Screen name="HomeNavigator" component={HomeNavigator} />
+          <RootStack.Screen name='RootNavigator' component={MainTabsNavigator} />
         </RootStack.Navigator>
       </NavigationContainer>
     </>
