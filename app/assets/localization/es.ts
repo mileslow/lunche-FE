@@ -10,13 +10,11 @@ export default {
     logout: 'Cerrar sesión',
     firstName: 'Nombre de pila',
     lastName: 'Apellido',
-    authAgreements:
-      'Estoy de acuerdo con los <0>Términos de Condiciones</0> y <1>Política de Privacidad</1>',
+    authAgreements: 'Estoy de acuerdo con los <0>Términos de Condiciones</0> y <1>Política de Privacidad</1>',
     forgotPassword: 'Se te olvidó tu contraseña',
     submit: 'Enviar',
     forgotPasswordSuccessTitle: 'Éxito',
-    forgotPasswordSuccessMessage:
-      'Revise su correo electrónico para restablecer la contraseña',
+    forgotPasswordSuccessMessage: 'Revise su correo electrónico para restablecer la contraseña',
     cancel: 'Cancelar',
   },
   errors: {
@@ -38,4 +36,4 @@ export default {
     chooseFromLibrary: 'Elige de la biblioteca',
     takePhoto: 'Tomar foto',
   },
-} as const;
+} as const
