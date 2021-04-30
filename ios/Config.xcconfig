@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  lunche
+//
+//  Created by Yevhen Cheshchevyi on 30.04.2021.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include? "tmp.xcconfig"
