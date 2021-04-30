@@ -6,10 +6,10 @@ enum Routes {
   SignUp = 'SignUp',
   ForgotPassword = 'ForgotPassword',
 
-  // tmp example
-  Tab1 = 'Tab1',
-  Tab2 = 'Tab2',
-  Tab3 = 'Tab3',
+  // tabs
+  HomeTab = 'HomeTab',
+  OrdersTab = 'OrdersTab',
+  ProfileTab = 'ProfileTab',
 
   ExampleStack = 'ExampleStack',
   ExampleStackIndex = 'ExampleStackIndex',

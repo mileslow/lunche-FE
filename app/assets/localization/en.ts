@@ -1,4 +1,10 @@
 export default {
+  tabs: {
+    home: 'Home',
+    orders: 'Orders',
+    profile: 'Profile',
+  },
+
   common: {
     welcome: 'Welcome!',
     home: 'Home',
