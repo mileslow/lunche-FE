@@ -74,4 +74,7 @@ export default StyleSheet.create({
     fontFamily: Fonts.regular,
     fontSize: FontSize.base,
   },
+  content: {
+    padding: Spacing.double,
+  },
 })

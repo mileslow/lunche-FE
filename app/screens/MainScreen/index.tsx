@@ -14,6 +14,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gesture-handler'
 // components
+import TruckCard from 'screens/MainScreen/components/TruckCard'
 // assets
 import PersonIcon from 'assets/svg/person.svg'
 import SearchIcon from 'assets/svg/search.svg'
@@ -92,6 +93,11 @@ const MainScreen = () => {
     opacity: y.value > 0 ? 1 : 0,
   }))
 
+  const titleSwipeStyle = useAnimatedStyle(() => ({
+    opacity: y.value > 0 ? 1 : 0,
+    transform: [{ scale: y.value > 0 ? 1 : 0 }],
+  }))
+
   const runAnimation = () => {
     y.value = withTiming(windowHeight / 2, { duration: 300 })
   }
@@ -148,14 +154,23 @@ const MainScreen = () => {
       <PanGestureHandler ref={mainDrawer} simultaneousHandlers={scrollView} onGestureEvent={gestureHandler}>
         <Animated.View style={[styles.box, animatedStyle]}>
           <Animated.View style={[styles.swipeBar, swipeBarStyle]} />
+          <Animated.Text style={[styles.listTitle, titleSwipeStyle]}>Top Pick Restaurants</Animated.Text>
           <NativeViewGestureHandler ref={scrollView} simultaneousHandlers={mainDrawer}>
             <Animated.ScrollView
               animatedProps={animatedProps}
               bounces={false}
               scrollEventThrottle={16}
               onScroll={onRegisterScroll}
+              contentContainerStyle={styles.content}
+              showsVerticalScrollIndicator={false}
             >
-              <Text style={styles.listTitle}>Top Pick Restaurants</Text>
+              <TruckCard />
+              <TruckCard />
+              <TruckCard />
+              <TruckCard />
+              <TruckCard />
+              <TruckCard />
+              <TruckCard />
             </Animated.ScrollView>
           </NativeViewGestureHandler>
         </Animated.View>
