@@ -6,6 +6,7 @@ export default {
   },
   mainScreen: {
     headerText: 'Delivery to',
+    onlyDelivery: 'Only Delivery',
   },
 
   common: {

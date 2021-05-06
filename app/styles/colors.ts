@@ -7,6 +7,7 @@ enum Colors {
   greyNurse = '#E7E7E7',
   midNightMoss = '#010F07',
   gunsmoke = '#868686',
+  cadmiumOrange = '#EF8829',
 }
 
 export default Colors

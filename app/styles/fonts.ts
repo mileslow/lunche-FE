@@ -6,6 +6,7 @@ export enum Fonts {
 
 export enum FontSize {
   base = 14,
+  regular = 16,
   subhead = 20,
   h3 = 24,
 }
