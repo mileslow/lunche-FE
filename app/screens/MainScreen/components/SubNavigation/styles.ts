@@ -6,6 +6,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: Spacing.double,
     paddingHorizontal: Spacing.base,
   },
   subNavigationBlock: {

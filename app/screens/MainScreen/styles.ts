@@ -6,9 +6,9 @@ export default StyleSheet.create({
     color: Colors.midNightMoss,
     fontFamily: Fonts.bold,
     fontSize: FontSize.h3,
+    marginBottom: Spacing.double,
     marginTop: 20,
     paddingHorizontal: Spacing.double,
-    paddingTop: Spacing.medium,
     position: 'absolute',
   },
   swipeBar: {
@@ -16,8 +16,8 @@ export default StyleSheet.create({
     backgroundColor: Colors.greyNurse,
     borderRadius: 2,
     height: 4,
-    marginBottom: Spacing.base,
     marginTop: Spacing.medium,
+    position: 'absolute',
     width: 34,
   },
   box: {
@@ -25,6 +25,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: Spacing.double,
+    paddingHorizontal: Spacing.double,
+    paddingTop: Spacing.base,
   },
 })

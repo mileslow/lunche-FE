@@ -1,16 +1,18 @@
 import React, { memo, FC } from 'react'
 // libs
 import { Text, View } from 'react-native'
-import Animated, { useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated'
+import { useTranslation } from 'react-i18next'
 // components
 import Checkbox from 'components/Checkbox'
 import Button, { ButtonTypes } from 'components/Button'
 // assets
 import LocationIcon from 'assets/svg/location.svg'
 import SearchIcon from 'assets/svg/search.svg'
+// constants
+import { END_POSITION } from 'screens/MainScreen/constants'
 // styles
 import styles from './styles'
-import { useTranslation } from 'react-i18next'
 
 interface IProps {
   onLocationPress: () => void
@@ -23,7 +25,7 @@ const SubNavigation: FC<IProps> = ({ onLocationPress, isOnlyDelivery, onOnlyDeli
   const { t } = useTranslation()
 
   const subNavigationStyle = useAnimatedStyle(() => ({
-    opacity: swipePositionY.value <= 0 ? 1 : 0,
+    opacity: interpolate(swipePositionY.value, [0, END_POSITION], [1, 0]),
   }))
 
   return (
@@ -37,7 +39,7 @@ const SubNavigation: FC<IProps> = ({ onLocationPress, isOnlyDelivery, onOnlyDeli
         </Button>
       </View>
       <View style={styles.subNavigationBlock}>
-        <Checkbox checked={isOnlyDelivery} onPress={onOnlyDeliveryPress} />
+        <Checkbox checked={isOnlyDelivery} onPress={onOnlyDeliveryPress} type='radio' />
         <Text style={styles.onlyLabel}>{t('mainScreen:onlyDelivery')}</Text>
       </View>
     </Animated.View>

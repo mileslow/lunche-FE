@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   useAnimatedScrollHandler,
   useAnimatedProps,
+  interpolate,
 } from 'react-native-reanimated'
 import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gesture-handler'
 // components
@@ -14,6 +15,7 @@ import TruckCard from 'screens/MainScreen/components/TruckCard'
 import SubNavigation from 'screens/MainScreen/components/SubNavigation'
 import HeaderWithLocation from 'screens/MainScreen/components/HeaderWithLocation'
 import HeaderTransparent from 'screens/MainScreen/components/HeaderTransparent'
+import Categories from 'screens/MainScreen/components/Categories'
 // constants
 import { END_POSITION } from './constants'
 // styles
@@ -78,7 +80,7 @@ const MainScreen = () => {
   }))
 
   const titleSwipeStyle = useAnimatedStyle(() => ({
-    opacity: swipePositionY.value > 0 ? 1 : 0,
+    opacity: interpolate(swipePositionY.value, [0, END_POSITION], [0, 1]),
   }))
 
   const onRegisterScroll = useAnimatedScrollHandler({
@@ -99,6 +101,8 @@ const MainScreen = () => {
         <Animated.View style={[styles.box, animatedStyle]}>
           <Animated.View style={[styles.swipeBar, swipeBarStyle]} />
           <Animated.Text style={[styles.listTitle, titleSwipeStyle]}>Top Pick Restaurants</Animated.Text>
+
+          <Categories swipePositionY={swipePositionY} />
 
           <SubNavigation
             swipePositionY={swipePositionY}
