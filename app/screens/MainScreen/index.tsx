@@ -16,6 +16,8 @@ import SubNavigation from 'screens/MainScreen/components/SubNavigation'
 import HeaderWithLocation from 'screens/MainScreen/components/HeaderWithLocation'
 import HeaderTransparent from 'screens/MainScreen/components/HeaderTransparent'
 import Categories from 'screens/MainScreen/components/Categories'
+// services
+import { useGetCurrentPosition } from 'services/geoLocation'
 // constants
 import { END_POSITION } from './constants'
 // styles
@@ -31,6 +33,8 @@ const MainScreen = () => {
   const swipePositionY = useSharedValue(0)
 
   const scrollY = useSharedValue(0)
+
+  useGetCurrentPosition()
 
   const animateTo = useCallback(
     (position: number) => () => {

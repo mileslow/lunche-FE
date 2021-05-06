@@ -33,6 +33,7 @@
 		00E356EE1AD99517003FC87E /* luncheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = luncheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* luncheTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = luncheTests.m; sourceTree = "<group>"; };
+		035B23EA26443E7A00F252A9 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		03BF5BCD263BEA7A00BF3840 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* lunche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lunche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lunche/AppDelegate.h; sourceTree = "<group>"; };
@@ -41,14 +42,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = lunche/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lunche/main.m; sourceTree = "<group>"; };
 		44702EA17139ED161FE571E5 /* Pods-lunche-luncheTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lunche-luncheTests.debug.xcconfig"; path = "Target Support Files/Pods-lunche-luncheTests/Pods-lunche-luncheTests.debug.xcconfig"; sourceTree = "<group>"; };
-		48F12BBEDF3247BDBFB4FDFC /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../app/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
+		48F12BBEDF3247BDBFB4FDFC /* Lato-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Regular.ttf"; path = "../app/assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		5410C95EC89713C872F24183 /* Pods-lunche-luncheTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lunche-luncheTests.release.xcconfig"; path = "Target Support Files/Pods-lunche-luncheTests/Pods-lunche-luncheTests.release.xcconfig"; sourceTree = "<group>"; };
 		6E8B2D1A37D2F10A86BAEC9E /* Pods-lunche.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lunche.debug.xcconfig"; path = "Target Support Files/Pods-lunche/Pods-lunche.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lunche/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		93D9E5BA14E04F688FEF20F2 /* Lato-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Black.ttf"; path = "../app/assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
+		93D9E5BA14E04F688FEF20F2 /* Lato-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Black.ttf"; path = "../app/assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; };
 		97A8224BB25409FF58FFB6C4 /* libPods-lunche-luncheTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lunche-luncheTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9D07DF2E86A36A0C21B5F97 /* Pods-lunche.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lunche.release.xcconfig"; path = "Target Support Files/Pods-lunche/Pods-lunche.release.xcconfig"; sourceTree = "<group>"; };
-		CA132DBEB4EF40DEA206DE2A /* Lato-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Bold.ttf"; path = "../app/assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
+		CA132DBEB4EF40DEA206DE2A /* Lato-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Bold.ttf"; path = "../app/assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FFD74CC818FC47894A81E889 /* libPods-lunche.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lunche.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -121,7 +122,6 @@
 				CA132DBEB4EF40DEA206DE2A /* Lato-Bold.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -134,6 +134,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				035B23EA26443E7A00F252A9 /* File.swift */,
 				03BF5BCD263BEA7A00BF3840 /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* lunche */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
