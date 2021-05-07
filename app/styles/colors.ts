@@ -1,6 +1,13 @@
 enum Colors {
+  transparent = 'transparent',
+  shadowColor = 'rgba(0, 0, 0, 0.15)',
   primary = '#22A45D',
-  text = '#868686',
+  basic = '#FFFFFF',
+  concrete = '#F1F1F1',
+  greyNurse = '#E7E7E7',
+  midNightMoss = '#010F07',
+  gunsmoke = '#868686',
+  cadmiumOrange = '#EF8829',
 }
 
 export default Colors

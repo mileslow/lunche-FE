@@ -6,6 +6,7 @@ import { SvgProps } from 'react-native-svg'
 // navigation
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import ExmapleStackNavigator from 'navigation/navigators/ExampleStack'
+import MainStackNavigator from 'navigation/navigators/MainStack'
 // localization
 import { useTranslation } from 'react-i18next'
 // assets
@@ -22,17 +23,17 @@ const tabBarIconRender = ({ focused }: { focused: boolean }, Icon: FC<SvgProps>)
 )
 
 const tabBarLabelRender = ({ focused }: { focused: boolean }, label: string): ReactNode => (
-  <Text style={[styles.labelStyles, { color: focused ? Colors.primary : Colors.text }]}>{label}</Text>
+  <Text style={[styles.labelStyles, { color: focused ? Colors.primary : Colors.gunsmoke }]}>{label}</Text>
 )
 
-const HomeTabsNavigator: FC = () => {
+const MainTabsNavigator: FC = () => {
   const { t } = useTranslation()
 
   return (
     <Tab.Navigator>
       <Tab.Screen
         name={Routes.HomeTab}
-        component={ExmapleStackNavigator}
+        component={MainStackNavigator}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, HomeIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:home')),
@@ -65,4 +66,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default HomeTabsNavigator
+export default MainTabsNavigator
