@@ -8,6 +8,10 @@ export default {
     headerText: 'Delivery to',
     onlyDelivery: 'Only Delivery',
   },
+  truckScreen: {
+    menuTitle: 'Menu',
+    aboutUs: 'About us',
+  },
 
   common: {
     welcome: 'Welcome!',

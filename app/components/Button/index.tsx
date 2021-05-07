@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   icon: {
-    borderRadius: 34 / 2,
-    height: 34,
-    width: 34,
+    borderRadius: 24 / 2,
+    height: 24,
+    width: 24,
   },
   link: {},
 })

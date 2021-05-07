@@ -32,39 +32,9 @@ export default StyleSheet.create({
     paddingHorizontal: Spacing.base,
   },
   categories: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: 10,
-    paddingHorizontal: Spacing.base,
-  },
-  category: {
-    color: Colors.gunsmoke,
-    fontFamily: Fonts.regular,
-    fontSize: FontSize.base,
-    marginHorizontal: Spacing.tiny,
-  },
-  point: {
-    backgroundColor: Colors.gunsmoke,
-    borderRadius: 2,
-    height: 4,
-    marginHorizontal: Spacing.tiny,
-    width: 4,
+    marginBottom: Spacing.small,
   },
   info: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: 10,
-    paddingHorizontal: Spacing.base,
-  },
-  infoItem: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginHorizontal: Spacing.base,
-  },
-  infoText: {
-    color: Colors.midNightMoss,
-    fontFamily: Fonts.regular,
-    fontSize: FontSize.base,
-    marginLeft: Spacing.tiny,
+    marginBottom: Spacing.small,
   },
 })

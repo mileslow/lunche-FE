@@ -16,6 +16,7 @@ enum Routes {
   ExampleStackChild = 'ExampleStackChild',
 
   MainScreen = 'MainScreen',
+  TruckScreen = 'TruckScreen',
 }
 
 export default Routes
