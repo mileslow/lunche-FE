@@ -7,7 +7,7 @@ const TruckGradient = () => (
     <Defs>
       <LinearGradient id='grad' x1='0' y1='0' x2='0' y2='1'>
         <Stop offset='0' stopColor='#000' stopOpacity='0' />
-        <Stop offset='0.53' stopColor='#000' stopOpacity='0.43' />
+        <Stop offset='0.43' stopColor='#000' stopOpacity='0.43' />
         <Stop offset='1' stopColor='#000' stopOpacity='1' />
       </LinearGradient>
     </Defs>

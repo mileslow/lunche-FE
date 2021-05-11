@@ -17,6 +17,7 @@ enum Routes {
 
   MainScreen = 'MainScreen',
   TruckScreen = 'TruckScreen',
+  AboutTruckScreen = 'AboutTruckScreen',
 }
 
 export default Routes

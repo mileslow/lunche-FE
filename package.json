@@ -36,6 +36,7 @@
     "react-native-reanimated": "^2.1.0",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.1.1",
+    "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^12.1.1",
     "react-redux": "^7.2.4"
   },
@@ -48,6 +49,7 @@
     "@types/lodash.map": "^4.6.13",
     "@types/lodash.some": "^4.6.6",
     "@types/react-native": "^0.64.0",
+    "@types/react-native-snap-carousel": "^3.8.3",
     "@types/react-test-renderer": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
