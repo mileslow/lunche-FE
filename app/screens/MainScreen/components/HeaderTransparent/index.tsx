@@ -6,12 +6,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 // components
 import Button, { ButtonTypes } from 'components/Button'
 // constants
-import { END_POSITION, HEADER_HEIGHT } from 'screens/MainScreen/constants'
+import { END_POSITION } from 'screens/MainScreen/constants'
 // assets
 import BackIcon from 'assets/svg/back.svg'
 import ListIcon from 'assets/svg/list.svg'
 import SearchIcon from 'assets/svg/search.svg'
 // styles
+import { Spacing } from 'styles'
 import styles from './styles'
 
 interface IProps {
@@ -32,7 +33,7 @@ const HeaderTransparent: FC<IProps> = ({ swipePositionY, animateTo }) => {
       style={[
         styles.headerActions,
         transparentHeader,
-        { paddingTop: insets.top, minHeight: HEADER_HEIGHT + insets.top },
+        { paddingTop: insets.top, minHeight: Spacing.header + insets.top },
       ]}
     >
       <Button style={[styles.headerIcon, styles.backButton]} onPress={animateTo(0)}>

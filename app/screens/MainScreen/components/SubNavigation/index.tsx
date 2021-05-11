@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next'
 // components
 import Checkbox from 'components/Checkbox'
 import Button, { ButtonTypes } from 'components/Button'
+import SearchButton from 'components/Button/SearchButton'
 // assets
 import LocationIcon from 'assets/svg/location.svg'
-import SearchIcon from 'assets/svg/search.svg'
 // constants
 import { END_POSITION } from 'screens/MainScreen/constants'
 // styles
@@ -34,9 +34,7 @@ const SubNavigation: FC<IProps> = ({ onLocationPress, isOnlyDelivery, onOnlyDeli
         <Button type={ButtonTypes.icon} style={styles.subNavigationAction} onPress={onLocationPress}>
           <LocationIcon />
         </Button>
-        <Button type={ButtonTypes.icon} style={styles.subNavigationAction} onPress={() => null}>
-          <SearchIcon />
-        </Button>
+        <SearchButton onPress={() => null} />
       </View>
       <View style={styles.subNavigationBlock}>
         <Checkbox checked={isOnlyDelivery} onPress={onOnlyDeliveryPress} type='radio' />

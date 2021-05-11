@@ -1,10 +1,14 @@
 import { StyleSheet } from 'react-native'
-import { Colors } from 'styles'
+import { Colors, Spacing } from 'styles'
 
+const ROUND_ICON_SIZE = 34
 export default StyleSheet.create({
   headerIcon: {
     backgroundColor: Colors.basic,
-    marginHorizontal: 8,
+    borderRadius: ROUND_ICON_SIZE / 2,
+    height: ROUND_ICON_SIZE,
+    marginHorizontal: Spacing.base,
+    width: ROUND_ICON_SIZE,
   },
   backButton: {
     alignItems: 'center',
@@ -12,7 +16,7 @@ export default StyleSheet.create({
     borderRadius: 24 / 2,
     height: 24,
     justifyContent: 'center',
-    marginHorizontal: 8,
+    marginHorizontal: Spacing.base,
     width: 24,
   },
   headerActions: {

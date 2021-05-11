@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState, useCallback } from 'react'
+import React, { memo, useRef, useState, useCallback, FC } from 'react'
 // libs
 import Animated, {
   useSharedValue,
@@ -22,8 +22,10 @@ import { useGetCurrentPosition } from 'services/geoLocation'
 import { END_POSITION } from './constants'
 // styles
 import styles from './styles'
+import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { StackScreenProps } from '@react-navigation/stack'
 
-const MainScreen = () => {
+const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.MainScreen>> = ({ navigation }) => {
   const scrollView = useRef(null)
 
   const mainDrawer = useRef(null)
@@ -42,6 +44,10 @@ const MainScreen = () => {
     },
     [swipePositionY],
   )
+
+  const navigateToTruck = useCallback(() => {
+    navigation.navigate(Routes.TruckScreen)
+  }, [navigation])
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (event, ctx: { startY: number }) => {
@@ -124,13 +130,13 @@ const MainScreen = () => {
               contentContainerStyle={styles.content}
               showsVerticalScrollIndicator={false}
             >
-              <TruckCard />
-              <TruckCard />
-              <TruckCard />
-              <TruckCard />
-              <TruckCard />
-              <TruckCard />
-              <TruckCard />
+              <TruckCard onPress={navigateToTruck} />
+              <TruckCard onPress={navigateToTruck} />
+              <TruckCard onPress={navigateToTruck} />
+              <TruckCard onPress={navigateToTruck} />
+              <TruckCard onPress={navigateToTruck} />
+              <TruckCard onPress={navigateToTruck} />
+              <TruckCard onPress={navigateToTruck} />
             </Animated.ScrollView>
           </NativeViewGestureHandler>
         </Animated.View>
