@@ -8,8 +8,8 @@ export default StyleSheet.create({
     backgroundColor: Colors.basic,
     borderRadius: 12,
     elevation: 4,
-    height: WINDOW_HEIGHT / 3.3,
     marginBottom: Spacing.double,
+    minHeight: WINDOW_HEIGHT / 3.3,
     shadowColor: Colors.shadowColor,
     shadowOffset: {
       width: 0,
@@ -21,6 +21,7 @@ export default StyleSheet.create({
   mainImage: {
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
+    height: 144,
     marginBottom: Spacing.base,
     width: '100%',
   },
@@ -29,10 +30,11 @@ export default StyleSheet.create({
     fontFamily: Fonts.regular,
     fontSize: FontSize.subhead,
     marginBottom: Spacing.base,
-    paddingHorizontal: Spacing.base,
+    paddingHorizontal: Spacing.double,
   },
   categories: {
     marginBottom: Spacing.small,
+    paddingHorizontal: Spacing.double,
   },
   info: {
     marginBottom: Spacing.small,

@@ -25,6 +25,7 @@ export default StyleSheet.create({
     width: 8,
   },
   subTitleWrap: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
     marginBottom: Spacing.tiny,
     marginTop: Spacing.base,
@@ -43,5 +44,8 @@ export default StyleSheet.create({
   },
   foodItem: {
     paddingHorizontal: Spacing.base,
+  },
+  content: {
+    paddingBottom: Spacing.large,
   },
 })

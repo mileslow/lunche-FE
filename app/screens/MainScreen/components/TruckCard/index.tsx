@@ -1,37 +1,31 @@
 import React, { FC, useMemo } from 'react'
 import { Pressable, Image, Text } from 'react-native'
+import map from 'lodash.map'
 // components
 import StringList from 'components/StringList'
-// assets
-import ClockIcon from 'assets/svg/clock.svg'
-import DistanceIcon from 'assets/svg/distance.svg'
-import RatingsIcon from 'assets/svg/ratings.svg'
-import truckImage from './BG.png'
+import InfoWithIconList from 'components/InfoWithIconList'
+// store
+import { Truck } from 'store/trucks/types'
+// hooks
+import useTruckInfo from 'hooks/useTruckInfo'
 // styles
 import styles from './styles'
-import InfoWithIconList from 'components/InfoWithIconList'
-
-const CATEGORIES = ['Chinese', 'American', 'Deshi food']
 
 interface IProps {
+  item: Truck
   onPress: () => void
 }
 
-const TrackCard: FC<IProps> = ({ onPress }) => {
-  const info = useMemo(
-    () => [
-      { icon: <RatingsIcon />, text: '4.3 (200+ ratings)' },
-      { icon: <ClockIcon />, text: '25 min' },
-      { icon: <DistanceIcon />, text: '2 km' },
-    ],
-    [],
-  )
+const TrackCard: FC<IProps> = ({ onPress, item }) => {
+  const info = useTruckInfo(item)
+
+  const categories = useMemo(() => map(item.foodCategories, (i) => i.name), [item.foodCategories])
 
   return (
     <Pressable style={styles.card} onPress={onPress}>
-      <Image style={styles.mainImage} source={truckImage} />
-      <Text style={styles.subhead}>Treat Day Truck</Text>
-      <StringList data={CATEGORIES} style={styles.categories} />
+      <Image style={styles.mainImage} source={{ uri: item.mainPhoto }} />
+      <Text style={styles.subhead}>{item.name}</Text>
+      <StringList data={categories} style={styles.categories} />
       <InfoWithIconList data={info} style={styles.info} />
     </Pressable>
   )

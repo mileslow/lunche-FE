@@ -4,7 +4,9 @@ import { View, Image, ScrollView, useWindowDimensions } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import map from 'lodash.map'
+import dayjs from 'dayjs'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
 import StringList from 'components/StringList'
@@ -13,10 +15,13 @@ import TrackGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
 import FoodItem from 'screens/AboutTruckScreen/components/FoodItem'
 import ContactItem from 'screens/AboutTruckScreen/components/ContactItem'
+// selectors
+import { truckSelector, truckCategoriesSelector } from 'store/trucks/selectors'
 // assets
 import RatingsIcon from 'assets/svg/ratings.svg'
 import AddressIcon from 'assets/svg/address.svg'
 import PhoneIcon from 'assets/svg/phone.svg'
+import TimeIcon from 'assets/svg/time.svg'
 // styles
 import { TRUCK_IMAGE_HEIGHT } from 'screens/TruckScreen/styles'
 import { Spacing } from 'styles'
@@ -37,6 +42,10 @@ const AboutTruckScreen = () => {
 
   const WINDOW_WIDTH = useWindowDimensions().width
 
+  const currentTruck = useSelector(truckSelector)
+
+  const truckCategories = useSelector(truckCategoriesSelector)
+
   const [activeSlide, setActiveSlide] = useState(0)
 
   const translationY = useSharedValue(0)
@@ -46,9 +55,9 @@ const AboutTruckScreen = () => {
   })
 
   const renderItem = useCallback(
-    () => (
+    ({ item }) => (
       <View>
-        <Image style={{ width: WINDOW_WIDTH, height: TRUCK_IMAGE_HEIGHT }} source={require('./Header-image.jpeg')} />
+        <Image style={{ width: WINDOW_WIDTH, height: TRUCK_IMAGE_HEIGHT }} source={{ uri: item }} />
         <TrackGradient />
       </View>
     ),
@@ -66,8 +75,18 @@ const AboutTruckScreen = () => {
     () =>
       map(
         [
-          { title: t('aboutTrackScreen:address'), item: { icon: AddressIcon, text: '3517 W. Gray St. Utica' } },
-          { title: t('aboutTrackScreen:contacts'), item: { icon: PhoneIcon, text: '(907) 555-0101' } },
+          { title: t('aboutTrackScreen:address'), item: { icon: AddressIcon, texts: [currentTruck.address] } },
+          { title: t('aboutTrackScreen:contacts'), item: { icon: PhoneIcon, texts: [currentTruck.phone] } },
+          {
+            title: t('aboutTrackScreen:schedule'),
+            item: {
+              icon: TimeIcon,
+              texts: map(
+                currentTruck.scheduleItems,
+                (item) => `${item.from} to ${item.to} ${dayjs().day(item.dayOfWeek).format('ddd')}`,
+              ),
+            },
+          },
         ],
         (contact, index) => (
           <Fragment key={index}>
@@ -78,17 +97,23 @@ const AboutTruckScreen = () => {
           </Fragment>
         ),
       ),
-    [t],
+    [t, currentTruck],
   )
+
+  const photos = useMemo(() => [currentTruck.mainPhoto, ...currentTruck.photos], [currentTruck])
 
   return (
     <View style={styles.screen}>
       <Header translationY={translationY} />
-
-      <Animated.ScrollView style={styles.screen} onScroll={scrollHandler} scrollEventThrottle={16}>
+      <Animated.ScrollView
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+      >
         <View style={styles.truckImage}>
           <Carousel
-            data={[1, 2, 3, 4]}
+            data={photos}
             inactiveSlideScale={1}
             renderItem={renderItem}
             sliderWidth={WINDOW_WIDTH}
@@ -96,7 +121,7 @@ const AboutTruckScreen = () => {
             onSnapToItem={handleSnapToItem}
           />
           <Pagination
-            dotsLength={[1, 2, 3, 4].length}
+            dotsLength={photos.length}
             activeDotIndex={activeSlide}
             containerStyle={styles.carouselPagination}
             dotStyle={styles.carouselDot}
@@ -107,11 +132,11 @@ const AboutTruckScreen = () => {
 
         <View style={styles.subTitleWrap}>
           <Typography variant={TypographyVariants.h3} style={styles.subTitle}>
-            Dined
+            {currentTruck.name}
           </Typography>
-          <InfoWithIconList data={[{ icon: <RatingsIcon />, text: '4.3 (200+ ratings)' }]} />
+          <InfoWithIconList data={[{ icon: <RatingsIcon />, text: `${currentTruck.rating}` }]} />
         </View>
-        <StringList data={['Chinese', 'American', 'Deshi food']} style={{ paddingHorizontal: Spacing.double }} />
+        <StringList data={truckCategories} style={{ paddingHorizontal: Spacing.double }} />
         <Typography style={styles.subhead} variant={TypographyVariants.subhead}>
           {t('aboutTrackScreen:subhead')}
         </Typography>

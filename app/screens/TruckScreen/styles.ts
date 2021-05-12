@@ -14,10 +14,11 @@ export default StyleSheet.create({
     width: '100%',
   },
   truckTitle: {
-    alignItems: 'flex-end',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginBottom: Spacing.base,
+  },
+  titleWrap: {
+    flex: 1,
   },
   header: {
     alignItems: 'center',
