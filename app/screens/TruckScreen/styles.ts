@@ -51,10 +51,11 @@ export default StyleSheet.create({
     zIndex: 1,
   },
   subhead: {
-    paddingHorizontal: Spacing.base,
+    paddingHorizontal: Spacing.double,
   },
   categories: {
     marginBottom: Spacing.small,
+    paddingHorizontal: Spacing.double,
   },
   info: {
     marginBottom: 18,

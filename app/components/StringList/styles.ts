@@ -5,11 +5,11 @@ export default StyleSheet.create({
   list: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: Spacing.base,
   },
   item: {
     color: Colors.gunsmoke,
-    marginHorizontal: Spacing.tiny,
+    marginLeft: Spacing.tiny,
+    marginRight: Spacing.tiny,
   },
   firstItem: {
     marginLeft: 0,

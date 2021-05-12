@@ -10,6 +10,8 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated'
 import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gesture-handler'
+import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { StackScreenProps } from '@react-navigation/stack'
 // components
 import TruckCard from 'screens/MainScreen/components/TruckCard'
 import SubNavigation from 'screens/MainScreen/components/SubNavigation'
@@ -22,8 +24,6 @@ import { useGetCurrentPosition } from 'services/geoLocation'
 import { END_POSITION } from './constants'
 // styles
 import styles from './styles'
-import { RootNavigationStackParamsList, Routes } from 'navigation'
-import { StackScreenProps } from '@react-navigation/stack'
 
 const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.MainScreen>> = ({ navigation }) => {
   const scrollView = useRef(null)

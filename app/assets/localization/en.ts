@@ -12,6 +12,11 @@ export default {
     menuTitle: 'Menu',
     aboutUs: 'About us',
   },
+  aboutTrackScreen: {
+    subhead: 'What to eat here',
+    address: 'Where we are',
+    contacts: 'Contacts',
+  },
 
   common: {
     welcome: 'Welcome!',
