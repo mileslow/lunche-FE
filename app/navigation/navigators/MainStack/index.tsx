@@ -11,7 +11,7 @@ const Stack = createStackNavigator<RootNavigationStackParamsList>()
 
 const MainStackNavigator: FC = () => {
   return (
-    <Stack.Navigator headerMode='none' initialRouteName={Routes.AboutTruckScreen}>
+    <Stack.Navigator headerMode='none'>
       <Stack.Screen name={Routes.MainScreen} component={MainScreen} />
       <Stack.Screen name={Routes.TruckScreen} component={TruckScreen} />
       <Stack.Screen name={Routes.AboutTruckScreen} component={AboutTruckScreen} />

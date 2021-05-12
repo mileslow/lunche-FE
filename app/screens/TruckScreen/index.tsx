@@ -26,13 +26,13 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { StackScreenProps } from '@react-navigation/stack'
 
 const DATA = [
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
 ]
 
 const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.AboutTruckScreen>> = ({ navigation }) => {

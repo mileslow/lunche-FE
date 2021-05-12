@@ -1,4 +1,3 @@
-// services
 import axios from 'services/api/axios'
 
 export default {

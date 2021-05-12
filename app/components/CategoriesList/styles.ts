@@ -19,4 +19,8 @@ export default StyleSheet.create({
     fontFamily: Fonts.regular,
     fontSize: FontSize.regular,
   },
+  icon: {
+    height: 24,
+    width: 24,
+  },
 })

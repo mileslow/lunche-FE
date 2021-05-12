@@ -3,26 +3,16 @@ import React, { memo, FC } from 'react'
 import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated'
 // components
 import CategoriesList from 'components/CategoriesList'
-// assets
-import ChickenIcon from 'assets/svg/chicken.svg'
 // constants
 import { END_POSITION } from 'screens/MainScreen/constants'
-
-const DATA = [
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, label: 'Chicken' },
-]
+import { FoodCategory } from 'store/foodCategories/types'
 
 interface IProps {
   swipePositionY: Animated.SharedValue<number>
+  data: FoodCategory[]
 }
 
-const Categories: FC<IProps> = ({ swipePositionY }) => {
+const Categories: FC<IProps> = ({ swipePositionY, data }) => {
   const categoriesAnimStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: interpolate(swipePositionY.value, [0, END_POSITION], [0, 48]) }],
     zIndex: 1,
@@ -30,7 +20,7 @@ const Categories: FC<IProps> = ({ swipePositionY }) => {
 
   return (
     <Animated.View style={categoriesAnimStyle}>
-      <CategoriesList data={DATA} />
+      <CategoriesList data={data} />
     </Animated.View>
   )
 }
