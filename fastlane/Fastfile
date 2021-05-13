@@ -1,0 +1,82 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  lane :bump_version_code do
+    path = '../android/app/build.gradle'
+    re = /versionCode\s+(\d+)/
+
+    s = File.read(path)
+    versionCode = s[re, 1].to_i
+    s[re, 1] = (versionCode + 1).to_s
+
+    f = File.new(path, 'w')
+    f.write(s)
+    f.close
+  end
+
+  lane :beta do
+    ensure_git_status_clean
+
+    # Bump version code for uploading
+    bump_version_code
+
+    key_alias = prompt(text: "Alias: ", secure_text: false)
+    store_password = prompt(text: "Signing Store Password: ", secure_text: true)
+    key_password = prompt(text: "Key Password: ", secure_text: true)
+    releaseFilePath = File.join(Dir.pwd, "..", "android/app/lunche.keystore")
+    gradle(task: 'clean', project_dir: './android')
+    gradle(
+      task: 'bundle',
+      project_dir: './android',
+      build_type: 'Release',
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => releaseFilePath,
+        "android.injected.signing.store.password" => store_password,
+        "android.injected.signing.key.alias" => key_alias,
+        "android.injected.signing.key.password" => key_password,
+      }
+    )
+    supply(track: 'internal')
+
+    git_commit(message: "Bump Version")
+    push_to_git_remote
+  end
+end
+
+platform :ios do
+  desc "Push a new dev build to TestFlight"
+  lane :dev do |options|
+    ensure_git_status_clean
+
+    increment_build_number(xcodeproj: "./ios/lunche.xcodeproj", build_number: options[:build_number])
+
+    if options[:version]
+      set_info_plist_value(path: "./ios/Info.plist", key: "CFBundleShortVersionString", value: options[:version])
+    end
+
+    sync_code_signing(type: "appstore", readonly: true)
+
+    build_app(workspace: "./ios/lunche.xcworkspace", scheme: "lunche")
+
+    upload_to_testflight(skip_submission: true)
+
+    git_commit(path: "./ios/Info.plist", message: "Bump Version")
+    push_to_git_remote
+  end
+end
