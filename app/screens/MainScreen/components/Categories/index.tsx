@@ -10,9 +10,10 @@ import { FoodCategory } from 'store/foodCategories/types'
 interface IProps {
   swipePositionY: Animated.SharedValue<number>
   data: FoodCategory[]
+  onPress: (id: number) => void
 }
 
-const Categories: FC<IProps> = ({ swipePositionY, data }) => {
+const Categories: FC<IProps> = ({ swipePositionY, data, onPress }) => {
   const categoriesAnimStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: interpolate(swipePositionY.value, [0, END_POSITION], [0, 48]) }],
     zIndex: 1,
@@ -20,7 +21,7 @@ const Categories: FC<IProps> = ({ swipePositionY, data }) => {
 
   return (
     <Animated.View style={categoriesAnimStyle}>
-      <CategoriesList data={data} />
+      <CategoriesList data={data} onPress={onPress} />
     </Animated.View>
   )
 }

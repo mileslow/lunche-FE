@@ -32,13 +32,13 @@ import styles, { TRUCK_IMAGE_HEIGHT } from './styles'
 import { Colors, Spacing } from 'styles'
 
 const DATA = [
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 0 },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 1 },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 2 },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 3 },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 4 },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 5 },
+  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken', id: 6 },
 ]
 
 const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.TruckScreen>> = ({
@@ -66,7 +66,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
       setLoading(false)
     }
     fetchData()
-  }, [])
+  }, [dispatch, setLoading, route.params.id])
 
   const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - Spacing.header - insets.top, [insets])
 

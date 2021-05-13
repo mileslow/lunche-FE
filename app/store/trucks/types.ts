@@ -33,3 +33,5 @@ export type Truck = {
     from: string
   }>
 }
+
+export type GetTrucksParams = { supportDelivery?: boolean; foodCategoryIds?: number[] } | undefined

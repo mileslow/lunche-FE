@@ -137,6 +137,22 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [trucks, navigateToTruck],
   )
 
+  const onOnlyDeliveryPress = useCallback(async () => {
+    setOnlyDelivery(!isOnlyDelivery)
+    setLoading(true)
+    await dispatch(getTrucks({ supportDelivery: !isOnlyDelivery }))
+    setLoading(false)
+  }, [setOnlyDelivery, setLoading, dispatch, isOnlyDelivery])
+
+  const handleCategoryPress = useCallback(
+    async (categoryId) => {
+      setLoading(true)
+      await dispatch(getTrucks({ foodCategoryIds: [categoryId] }))
+      setLoading(false)
+    },
+    [setLoading, dispatch],
+  )
+
   return (
     <>
       <HeaderWithLocation swipePositionY={swipePositionY} />
@@ -148,13 +164,13 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
           <Animated.View style={[styles.swipeBar, swipeBarStyle]} />
           <Animated.Text style={[styles.listTitle, titleSwipeStyle]}>Top Pick Restaurants</Animated.Text>
 
-          <Categories swipePositionY={swipePositionY} data={foodCategories} />
+          <Categories swipePositionY={swipePositionY} data={foodCategories} onPress={handleCategoryPress} />
 
           <SubNavigation
             swipePositionY={swipePositionY}
             isOnlyDelivery={isOnlyDelivery}
             onLocationPress={animateTo(END_POSITION)}
-            onOnlyDeliveryPress={() => setOnlyDelivery(!isOnlyDelivery)}
+            onOnlyDeliveryPress={onOnlyDeliveryPress}
           />
 
           <NativeViewGestureHandler ref={scrollView} simultaneousHandlers={mainDrawer}>
