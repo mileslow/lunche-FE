@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Truck, TrucksSliceState } from 'store/trucks/types'
-import { getTrucks, getTruck } from 'store/trucks/thunks'
+import { getTrucks, getTruck, getTruckMenuItems } from 'store/trucks/thunks'
 
 const initialState: TrucksSliceState = {
   resources: [],
@@ -11,6 +11,7 @@ const initialState: TrucksSliceState = {
     page: 1,
     pageCount: 1,
   },
+  menuItems: [],
 }
 
 // slice
@@ -31,6 +32,9 @@ const foodCategoriesSlice = createSlice({
       })
       .addCase(getTruck.fulfilled, (state, { payload }) => {
         state.resource = payload
+      })
+      .addCase(getTruckMenuItems.fulfilled, (state, { payload }) => {
+        state.menuItems = payload
       })
   },
 })

@@ -14,11 +14,14 @@ interface ICategory {
 
 interface IProps {
   data: ICategory[]
-  onPress?: (id: number) => void
+  onPress: (id: number) => void
 }
 
 const Category = ({ item, onPress }: { item: ICategory; onPress?: (id: number) => void }) => (
-  <Pressable style={styles.item} onPress={() => onPress && onPress(item.id)}>
+  <Pressable
+    style={({ pressed }) => [styles.item, { opacity: pressed ? 0.6 : 1 }]}
+    onPress={() => onPress && onPress(item.id)}
+  >
     <View style={styles.icon}>
       {typeof item.icon === 'string' ? <SvgFromUri width={24} height={24} uri={item.icon} /> : item.icon}
     </View>

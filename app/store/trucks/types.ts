@@ -1,8 +1,11 @@
 import { Meta } from 'services/api/types'
+import { FoodType } from 'store/foodTypes/types'
+
 export type TrucksSliceState = {
   resources: Truck[]
   resource: Truck
   meta: Meta
+  menuItems: MenuItem[]
 }
 
 export type Truck = {
@@ -34,4 +37,17 @@ export type Truck = {
   }>
 }
 
+export type MenuItem = {
+  id: number
+  name: string
+  photo: string
+  description: string
+  price: number
+  createdAt: string
+  updatedAt: string
+  foodTypes: FoodType[]
+}
+
 export type GetTrucksParams = { supportDelivery?: boolean; foodCategoryIds?: number[] } | undefined
+
+export type GetTruckMenuItemsParams = { id: number; params?: { foodTypeIds?: number[] } }

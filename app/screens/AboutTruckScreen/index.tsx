@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useMemo, useState, memo } from 'react'
 // libs
 import { View, Image, ScrollView, useWindowDimensions } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
@@ -16,7 +16,7 @@ import Header from 'screens/TruckScreen/components/Header'
 import FoodItem from 'screens/AboutTruckScreen/components/FoodItem'
 import ContactItem from 'screens/AboutTruckScreen/components/ContactItem'
 // selectors
-import { truckSelector, truckCategoriesSelector } from 'store/trucks/selectors'
+import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
 // assets
 import RatingsIcon from 'assets/svg/ratings.svg'
 import AddressIcon from 'assets/svg/address.svg'
@@ -26,16 +26,6 @@ import TimeIcon from 'assets/svg/time.svg'
 import { TRUCK_IMAGE_HEIGHT } from 'screens/TruckScreen/styles'
 import { Spacing } from 'styles'
 import styles from './styles'
-
-const FOODS = [
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-  { title: 'Cookie Sandwich', categories: ['Lunch', 'Chinese'], image: require('../TruckScreen/food.png') },
-]
 
 const AboutTruckScreen = () => {
   const { t } = useTranslation()
@@ -47,6 +37,8 @@ const AboutTruckScreen = () => {
   const truckCategories = useSelector(truckCategoriesSelector)
 
   const [activeSlide, setActiveSlide] = useState(0)
+
+  const menuItems = useSelector(menuItemsSelector)
 
   const translationY = useSharedValue(0)
 
@@ -67,8 +59,14 @@ const AboutTruckScreen = () => {
   const handleSnapToItem = useCallback((index: number) => setActiveSlide(index), [])
 
   const foods = useMemo(
-    () => map(FOODS, (item, index) => <FoodItem key={index} item={item} style={styles.foodItem} />),
-    [],
+    () => (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.foodList}>
+        {map(menuItems, (item, index) => (
+          <FoodItem key={index} item={item} style={styles.foodItem} />
+        ))}
+      </ScrollView>
+    ),
+    [menuItems],
   )
 
   const contacts = useMemo(
@@ -100,8 +98,6 @@ const AboutTruckScreen = () => {
     [t, currentTruck],
   )
 
-  const photos = useMemo(() => [currentTruck.mainPhoto, ...currentTruck.photos], [currentTruck])
-
   return (
     <View style={styles.screen}>
       <Header translationY={translationY} />
@@ -113,7 +109,7 @@ const AboutTruckScreen = () => {
       >
         <View style={styles.truckImage}>
           <Carousel
-            data={photos}
+            data={currentTruck.photos}
             inactiveSlideScale={1}
             renderItem={renderItem}
             sliderWidth={WINDOW_WIDTH}
@@ -121,7 +117,7 @@ const AboutTruckScreen = () => {
             onSnapToItem={handleSnapToItem}
           />
           <Pagination
-            dotsLength={photos.length}
+            dotsLength={currentTruck.photos.length}
             activeDotIndex={activeSlide}
             containerStyle={styles.carouselPagination}
             dotStyle={styles.carouselDot}
@@ -141,13 +137,12 @@ const AboutTruckScreen = () => {
           {t('aboutTrackScreen:subhead')}
         </Typography>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.foodList}>
-          {foods}
-        </ScrollView>
+        {foods}
+
         {contacts}
       </Animated.ScrollView>
     </View>
   )
 }
 
-export default AboutTruckScreen
+export default memo(AboutTruckScreen)

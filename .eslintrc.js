@@ -118,7 +118,12 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
     // react native
-    'react-native/no-raw-text': 1,
+    'react-native/no-raw-text': [
+      1,
+      {
+        "skip": ["Typography", "Animated.Text"]
+      }
+    ],
     'react-native/no-unused-styles': 2,
     'react-native/split-platform-components': 2,
     'react-native/no-inline-styles': 2,
