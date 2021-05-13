@@ -1,9 +1,14 @@
-import React, { useMemo, useCallback, FC } from 'react'
+import React, { useMemo, useCallback, FC, useEffect, useState, Fragment } from 'react'
 // libs
 import { ImageBackground, View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
+import { StackScreenProps } from '@react-navigation/stack'
+import map from 'lodash.map'
+import filter from 'lodash.filter'
+import find from 'lodash.find'
 // components
 import CategoriesList from 'components/CategoriesList'
 import Divider from 'components/Divider'
@@ -14,48 +19,82 @@ import Typography, { TypographyVariants } from 'components/Typography'
 import MealItem from 'screens/TruckScreen/components/MealItem'
 import TruckGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
-// assets
-import ChickenIcon from 'assets/svg/chicken.svg'
-import RatingsIcon from 'assets/svg/ratings.svg'
-import ClockIcon from 'assets/svg/clock.svg'
-import DistanceIcon from 'assets/svg/distance.svg'
+import Spinner from 'components/Spinner'
+// store
+import { AppDispatch } from 'store'
+import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
+import { getTruck, getTruckMenuItems } from 'store/trucks/thunks'
+// types
+import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { MenuItem } from 'store/trucks/types'
+// hooks
+import useTruckInfo from 'hooks/useTruckInfo'
 // styles
 import styles, { TRUCK_IMAGE_HEIGHT } from './styles'
 import { Colors, Spacing } from 'styles'
-import { RootNavigationStackParamsList, Routes } from 'navigation'
-import { StackScreenProps } from '@react-navigation/stack'
+import allSettled from 'promise.allsettled'
+import { getFoodTypes } from 'store/foodTypes/thunks'
+import { foodTypesSelector } from 'store/foodTypes/selectors'
 
-const DATA = [
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-  { icon: <ChickenIcon width={24} height={24} />, name: 'Chicken' },
-]
-
-const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.AboutTruckScreen>> = ({ navigation }) => {
+const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.TruckScreen>> = ({
+  navigation,
+  route,
+}) => {
   const { t } = useTranslation()
+
+  const dispatch = useDispatch<AppDispatch>()
 
   const insets = useSafeAreaInsets()
 
+  const [isLoading, setLoading] = useState<boolean>(false)
+
+  const [filteredItems, setFilteredItems] = useState<MenuItem[]>([])
+
+  const currentTruck = useSelector(truckSelector)
+
+  const truckCategories = useSelector(truckCategoriesSelector)
+
+  const foodTypes = useSelector(foodTypesSelector)
+
+  const menuItems = useSelector(menuItemsSelector)
+
   const translationY = useSharedValue(0)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      await allSettled([
+        dispatch(getTruck(route.params.id)),
+        dispatch(getFoodTypes()),
+        dispatch(getTruckMenuItems({ id: route.params.id })),
+      ])
+      setLoading(false)
+    }
+    fetchData()
+  }, [dispatch, setLoading, route.params.id])
 
   const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - Spacing.header - insets.top, [insets])
 
-  const info = useMemo(
-    () => [
-      { icon: <RatingsIcon />, text: '4.3 (200+ ratings)' },
-      { icon: <ClockIcon />, text: '25 min' },
-      { icon: <DistanceIcon />, text: '2 km' },
-    ],
-    [],
-  )
+  const info = useTruckInfo(currentTruck)
 
   const redirectToAbout = useCallback(() => {
     navigation.navigate(Routes.AboutTruckScreen)
   }, [navigation])
+
+  const handlePressFoodType = useCallback(
+    (id) => setFilteredItems(filter(menuItems, (item) => !!find(item.foodTypes, { id }))),
+    [menuItems, setFilteredItems],
+  )
+
+  const renderMenuItems = useMemo(() => {
+    const menu = filteredItems.length ? filteredItems : menuItems
+    return map(menu, (item) => (
+      <Fragment key={item.id}>
+        <Divider />
+        <MealItem item={item} />
+      </Fragment>
+    ))
+  }, [filteredItems, menuItems])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y
@@ -71,12 +110,19 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Abo
 
       <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16}>
         <View style={styles.truckInfo}>
-          <ImageBackground style={styles.truckImage} source={require('./Header-image.png')} />
+          <ImageBackground style={styles.truckImage} source={{ uri: currentTruck.mainPhoto }} />
           <TruckGradient />
           <View style={styles.truckTitle}>
-            <Typography variant={TypographyVariants.subhead} color={Colors.basic} style={styles.subhead}>
-              Dined
-            </Typography>
+            <View style={styles.titleWrap}>
+              <Typography
+                variant={TypographyVariants.subhead}
+                color={Colors.basic}
+                style={styles.subhead}
+                numberOfLines={2}
+              >
+                {currentTruck.name}
+              </Typography>
+            </View>
             <Typography
               variant={TypographyVariants.smallBody}
               color={Colors.basic}
@@ -86,7 +132,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Abo
               {t('truckScreen:aboutUs')}
             </Typography>
           </View>
-          <StringList data={['Chinese', 'American', 'Deshi food']} color={Colors.basic} style={styles.categories} />
+          <StringList data={truckCategories} color={Colors.basic} style={styles.categories} />
           <InfoWithIconList data={info} color={Colors.basic} style={styles.info} />
         </View>
 
@@ -95,22 +141,12 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Abo
             <Typography variant={TypographyVariants.h3}>{t('truckScreen:menuTitle')}</Typography>
             <SearchButton onPress={() => null} />
           </View>
-          <View>
-            <CategoriesList data={DATA} />
-          </View>
+          <CategoriesList data={foodTypes} onPress={handlePressFoodType} />
         </Animated.View>
 
-        <Divider />
-        <MealItem />
-        <Divider />
-        <MealItem withDiscount />
-        <Divider />
-        <MealItem />
-        <Divider />
-        <MealItem />
-        <Divider />
-        <MealItem withDiscount />
+        {renderMenuItems}
       </Animated.ScrollView>
+      {isLoading && <Spinner />}
     </View>
   )
 }

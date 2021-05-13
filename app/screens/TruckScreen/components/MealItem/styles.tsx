@@ -7,7 +7,10 @@ export default StyleSheet.create({
     padding: Spacing.base,
   },
   mealImg: {
+    borderRadius: 8,
+    height: 112,
     margin: Spacing.base,
+    width: 112,
   },
   mealInfo: {
     flex: 1,

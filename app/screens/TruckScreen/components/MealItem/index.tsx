@@ -9,28 +9,34 @@ import styles from './styles'
 
 interface IProps {
   withDiscount?: boolean
+  item: {
+    name: string
+    photo: string
+    description: string
+    price: number
+  }
 }
 
-const MealItem: FC<IProps> = ({ withDiscount }) => (
+const MealItem: FC<IProps> = ({ withDiscount, item }) => (
   <View style={styles.meal}>
-    <Image style={styles.mealImg} source={require('../../food.png')} />
+    <Image style={styles.mealImg} source={{ uri: item.photo }} />
     <View style={styles.mealInfo}>
       <View>
         <Typography style={styles.mealName} variant={TypographyVariants.body}>
-          {'Combo Burger'}
+          {item.name}
         </Typography>
         <Typography variant={TypographyVariants.smallBody} color={Colors.gunsmoke}>
-          {'Shortbread, chocolate turtle cookies, and red velvet.'}
+          {item.description}
         </Typography>
         {withDiscount && <DiscountIcon style={styles.discountIcon} />}
       </View>
       <View style={styles.priceInfo}>
         <Typography style={withDiscount && styles.throughPrice} variant={TypographyVariants.smallBody}>
-          $7.4
+          {item.price} $
         </Typography>
         {withDiscount && (
           <Typography style={styles.discountPrice} variant={TypographyVariants.smallBody}>
-            $4.4
+            {item.price} $
           </Typography>
         )}
       </View>

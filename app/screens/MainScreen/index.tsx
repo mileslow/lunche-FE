@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState, useCallback, FC, useEffect } from 'react'
+import React, { memo, useRef, useState, useCallback, FC, useEffect, useMemo } from 'react'
 // libs
 import Animated, {
   useSharedValue,
@@ -13,6 +13,8 @@ import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gestur
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useDispatch, useSelector } from 'react-redux'
+import allSettled from 'promise.allsettled'
+import map from 'lodash.map'
 // components
 import Spinner from 'components/Spinner'
 import TruckCard from 'screens/MainScreen/components/TruckCard'
@@ -20,9 +22,12 @@ import SubNavigation from 'screens/MainScreen/components/SubNavigation'
 import HeaderWithLocation from 'screens/MainScreen/components/HeaderWithLocation'
 import HeaderTransparent from 'screens/MainScreen/components/HeaderTransparent'
 import Categories from 'screens/MainScreen/components/Categories'
-// store
+// thunks
 import { getFoodCategories } from 'store/foodCategories/thunks'
+import { getTrucks } from 'store/trucks/thunks'
+// selectors
 import { foodCategoriesSelector } from 'store/foodCategories/selectors'
+import { trucksSelector } from 'store/trucks/selectors'
 import { AppDispatch } from 'store'
 // services
 import { useGetCurrentPosition } from 'services/geoLocation'
@@ -48,12 +53,14 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const foodCategories = useSelector(foodCategoriesSelector)
 
+  const trucks = useSelector(trucksSelector)
+
   useGetCurrentPosition()
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      await dispatch(getFoodCategories())
+      await allSettled([dispatch(getFoodCategories()), dispatch(getTrucks())])
       setLoading(false)
     }
     fetchData()
@@ -66,9 +73,12 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [swipePositionY],
   )
 
-  const navigateToTruck = useCallback(() => {
-    navigation.navigate(Routes.TruckScreen)
-  }, [navigation])
+  const navigateToTruck = useCallback(
+    (id) => {
+      navigation.navigate(Routes.TruckScreen, { id })
+    },
+    [navigation],
+  )
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (event, ctx: { startY: number }) => {
@@ -122,6 +132,27 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const animatedProps = useAnimatedProps(() => ({ scrollEnabled: swipePositionY.value < END_POSITION }))
 
+  const renderTrucks = useMemo(
+    () => map(trucks, (truck) => <TruckCard key={truck.id} onPress={() => navigateToTruck(truck.id)} item={truck} />),
+    [trucks, navigateToTruck],
+  )
+
+  const onOnlyDeliveryPress = useCallback(async () => {
+    setOnlyDelivery(!isOnlyDelivery)
+    setLoading(true)
+    await dispatch(getTrucks({ supportDelivery: !isOnlyDelivery }))
+    setLoading(false)
+  }, [setOnlyDelivery, setLoading, dispatch, isOnlyDelivery])
+
+  const handleCategoryPress = useCallback(
+    async (categoryId) => {
+      setLoading(true)
+      await dispatch(getTrucks({ foodCategoryIds: [categoryId] }))
+      setLoading(false)
+    },
+    [setLoading, dispatch],
+  )
+
   return (
     <>
       <HeaderWithLocation swipePositionY={swipePositionY} />
@@ -133,13 +164,13 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
           <Animated.View style={[styles.swipeBar, swipeBarStyle]} />
           <Animated.Text style={[styles.listTitle, titleSwipeStyle]}>Top Pick Restaurants</Animated.Text>
 
-          <Categories swipePositionY={swipePositionY} data={foodCategories} />
+          <Categories swipePositionY={swipePositionY} data={foodCategories} onPress={handleCategoryPress} />
 
           <SubNavigation
             swipePositionY={swipePositionY}
             isOnlyDelivery={isOnlyDelivery}
             onLocationPress={animateTo(END_POSITION)}
-            onOnlyDeliveryPress={() => setOnlyDelivery(!isOnlyDelivery)}
+            onOnlyDeliveryPress={onOnlyDeliveryPress}
           />
 
           <NativeViewGestureHandler ref={scrollView} simultaneousHandlers={mainDrawer}>
@@ -151,13 +182,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
               contentContainerStyle={styles.content}
               showsVerticalScrollIndicator={false}
             >
-              <TruckCard onPress={navigateToTruck} />
-              <TruckCard onPress={navigateToTruck} />
-              <TruckCard onPress={navigateToTruck} />
-              <TruckCard onPress={navigateToTruck} />
-              <TruckCard onPress={navigateToTruck} />
-              <TruckCard onPress={navigateToTruck} />
-              <TruckCard onPress={navigateToTruck} />
+              {renderTrucks}
             </Animated.ScrollView>
           </NativeViewGestureHandler>
         </Animated.View>

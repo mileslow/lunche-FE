@@ -16,6 +16,7 @@ export default {
     subhead: 'What to eat here',
     address: 'Where we are',
     contacts: 'Contacts',
+    schedule: 'Schedule',
   },
 
   common: {
