@@ -28,4 +28,7 @@ export default StyleSheet.create({
     paddingHorizontal: Spacing.double,
     paddingTop: Spacing.base,
   },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
 })

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
-import Geolocation, { GeoError, GeoPosition } from 'react-native-geolocation-service'
+import Geolocation, { GeoPosition } from 'react-native-geolocation-service'
 import { PERMISSIONS, RESULTS, requestMultiple } from 'react-native-permissions'
 import some from 'lodash.some'
+import api from 'services/api'
 
 const hasLocationPermission: () => Promise<boolean> = async () => {
   const permissions = Platform.select({
@@ -15,32 +16,38 @@ const hasLocationPermission: () => Promise<boolean> = async () => {
   return some(permissions, (key) => statuses[key] === RESULTS.GRANTED)
 }
 
-export const getCurrentLocation: () => Promise<GeoPosition | null> = async () => {
+export const getCurrentLocation: () => Promise<GeoPosition> = async () => {
   const isGranted = await hasLocationPermission()
-  if (isGranted) {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    if (isGranted) {
       Geolocation.getCurrentPosition(resolve, reject, {
-        enableHighAccuracy: true,
+        enableHighAccuracy: false,
         timeout: 15000,
         maximumAge: 10000,
       })
-    })
-  }
-  return null
+    } else {
+      reject('Permission to the location was denied')
+    }
+  })
 }
 
-export const useGetCurrentPosition = () => {
-  const [currentPosition, setCurrentPosition] = useState<null | GeoPosition | { error: GeoError }>(null)
+type CurrentLocation = { lng: number; lat: number; address?: string }
+export const useGetCurrentPosition = (withAddress = false) => {
+  const [currentPosition, setCurrentPosition] = useState<CurrentLocation>()
 
   useEffect(() => {
-    getCurrentLocation()
-      .then((position: GeoPosition | null) => {
-        setCurrentPosition(position)
-      })
-      .catch((error: GeoError) => {
-        setCurrentPosition({ error })
-      })
-  }, [])
+    getCurrentLocation().then(async (position) => {
+      let location: CurrentLocation = { lng: position.coords.longitude, lat: position.coords.latitude }
+      if (withAddress) {
+        const result = await api.geocode({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        })
+        location = { ...location, address: result.data?.features[0]?.text }
+      }
+      setCurrentPosition(location)
+    })
+  }, [withAddress])
 
   return currentPosition
 }
