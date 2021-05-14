@@ -1,4 +1,4 @@
-import React, { memo, FC, ReactElement } from 'react'
+import React, { memo, ReactElement, forwardRef, ForwardedRef } from 'react'
 // libs
 import { ScrollView, Pressable, Text, View } from 'react-native'
 import { SvgFromUri } from 'react-native-svg'
@@ -29,9 +29,10 @@ const Category = ({ item, onPress }: { item: ICategory; onPress?: (id: number) =
   </Pressable>
 )
 
-const Categories: FC<IProps> = ({ data, onPress }) => {
+const Categories = forwardRef(({ data, onPress }: IProps, ref: ForwardedRef<ScrollView>) => {
   return (
     <ScrollView
+      ref={ref}
       horizontal
       showsHorizontalScrollIndicator={false}
       style={styles.scroll}
@@ -42,6 +43,6 @@ const Categories: FC<IProps> = ({ data, onPress }) => {
       ))}
     </ScrollView>
   )
-}
+})
 
 export default memo(Categories)

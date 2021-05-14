@@ -41,6 +41,8 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const scrollView = useRef(null)
 
+  const horizontalScrollView = useRef(null)
+
   const mainDrawer = useRef(null)
 
   const [isOnlyDelivery, setOnlyDelivery] = useState<boolean>(false)
@@ -159,12 +161,18 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
       <HeaderTransparent swipePositionY={swipePositionY} animateTo={animateTo} />
 
-      <PanGestureHandler ref={mainDrawer} simultaneousHandlers={scrollView} onGestureEvent={gestureHandler}>
+      <PanGestureHandler
+        ref={mainDrawer}
+        simultaneousHandlers={[scrollView, horizontalScrollView]}
+        onGestureEvent={gestureHandler}
+      >
         <Animated.View style={[styles.box, animatedStyle]}>
           <Animated.View style={[styles.swipeBar, swipeBarStyle]} />
           <Animated.Text style={[styles.listTitle, titleSwipeStyle]}>Top Pick Restaurants</Animated.Text>
 
-          <Categories swipePositionY={swipePositionY} data={foodCategories} onPress={handleCategoryPress} />
+          <NativeViewGestureHandler ref={horizontalScrollView} simultaneousHandlers={mainDrawer}>
+            <Categories swipePositionY={swipePositionY} data={foodCategories} onPress={handleCategoryPress} />
+          </NativeViewGestureHandler>
 
           <SubNavigation
             swipePositionY={swipePositionY}

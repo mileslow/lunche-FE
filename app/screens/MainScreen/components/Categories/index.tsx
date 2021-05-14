@@ -1,4 +1,4 @@
-import React, { memo, FC } from 'react'
+import React, { memo, FC, forwardRef, ForwardedRef } from 'react'
 // libs
 import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated'
 // components
@@ -6,6 +6,7 @@ import CategoriesList from 'components/CategoriesList'
 // constants
 import { END_POSITION } from 'screens/MainScreen/constants'
 import { FoodCategory } from 'store/foodCategories/types'
+import { ScrollView } from 'react-native'
 
 interface IProps {
   swipePositionY: Animated.SharedValue<number>
@@ -13,7 +14,7 @@ interface IProps {
   onPress: (id: number) => void
 }
 
-const Categories: FC<IProps> = ({ swipePositionY, data, onPress }) => {
+const Categories: FC<IProps> = forwardRef(({ swipePositionY, data, onPress }, ref: ForwardedRef<ScrollView>) => {
   const categoriesAnimStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: interpolate(swipePositionY.value, [0, END_POSITION], [0, 48]) }],
     zIndex: 1,
@@ -21,9 +22,9 @@ const Categories: FC<IProps> = ({ swipePositionY, data, onPress }) => {
 
   return (
     <Animated.View style={categoriesAnimStyle}>
-      <CategoriesList data={data} onPress={onPress} />
+      <CategoriesList ref={ref} data={data} onPress={onPress} />
     </Animated.View>
   )
-}
+})
 
 export default memo(Categories)

@@ -31,7 +31,11 @@ const MealItem: FC<IProps> = ({ withDiscount, item }) => (
         {withDiscount && <DiscountIcon style={styles.discountIcon} />}
       </View>
       <View style={styles.priceInfo}>
-        <Typography style={withDiscount && styles.throughPrice} variant={TypographyVariants.smallBody}>
+        <Typography
+          color={Colors.midNightMoss}
+          style={withDiscount && styles.throughPrice}
+          variant={TypographyVariants.smallBody}
+        >
           {item.price} $
         </Typography>
         {withDiscount && (

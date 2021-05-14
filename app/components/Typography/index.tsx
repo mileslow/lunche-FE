@@ -42,7 +42,10 @@ const Typography: FC<PropsWithChildren<TypographyProps>> = ({ weight, variant, c
   const currentVariant = useMemo(() => (variant ? styles[variant] : styles.body), [variant])
 
   return (
-    <Text {...props} style={[currentVariant, !!weight && { fontWeight: TypographyWeights[weight] }, { color }, style]}>
+    <Text
+      {...props}
+      style={[currentVariant, !!weight && { fontWeight: TypographyWeights[weight] }, !!color && { color }, style]}
+    >
       {children}
     </Text>
   )
