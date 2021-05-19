@@ -7,7 +7,6 @@ enum Spacing {
   regular = 14,
   double = 16,
   large = 24,
-  header = 56,
 }
 
 export default Spacing

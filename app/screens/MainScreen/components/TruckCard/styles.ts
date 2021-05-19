@@ -1,7 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native'
-import { Colors, Fonts, FontSize, Spacing } from 'styles'
-
-const WINDOW_HEIGHT = Dimensions.get('window').height
+import { StyleSheet } from 'react-native'
+import { Colors, Fonts, FontSize, Spacing, Metrics } from 'styles'
 
 export default StyleSheet.create({
   card: {
@@ -9,7 +7,7 @@ export default StyleSheet.create({
     borderRadius: 12,
     elevation: 4,
     marginBottom: Spacing.double,
-    minHeight: WINDOW_HEIGHT / 3.3,
+    minHeight: Metrics.windowHeight / 3.3,
     shadowColor: Colors.shadowColor,
     shadowOffset: {
       width: 0,
@@ -21,7 +19,7 @@ export default StyleSheet.create({
   mainImage: {
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    height: 144,
+    height: Metrics.truckListImgHeight,
     marginBottom: Spacing.base,
     width: '100%',
   },

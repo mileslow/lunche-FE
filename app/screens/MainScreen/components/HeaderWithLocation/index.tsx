@@ -9,7 +9,7 @@ import { END_POSITION } from 'screens/MainScreen/constants'
 // assets
 import PersonIcon from 'assets/svg/person.svg'
 // styles
-import { Spacing } from 'styles'
+import { Metrics } from 'styles'
 import styles from './styles'
 
 interface IProps {
@@ -29,7 +29,7 @@ const HeaderWithLocation: FC<IProps> = ({ swipePositionY }) => {
 
   return (
     <Animated.View
-      style={[styles.header, headerWithLocation, { paddingTop: insets.top, minHeight: Spacing.header + insets.top }]}
+      style={[styles.header, headerWithLocation, { paddingTop: insets.top, minHeight: Metrics.header + insets.top }]}
     >
       <Text style={styles.headerText}>{t('mainScreen:headerText')}</Text>
       <View style={styles.currentLocationWrap}>

@@ -3,8 +3,10 @@ import { Image, View } from 'react-native'
 import Typography, { TypographyVariants } from 'components/Typography'
 // assets
 import DiscountIcon from 'assets/svg/discount.svg'
+// utils
+import { getImageBySize } from 'services/utils'
 // styles
-import { Colors } from 'styles'
+import { Colors, Metrics } from 'styles'
 import styles from './styles'
 
 interface IProps {
@@ -19,7 +21,10 @@ interface IProps {
 
 const MealItem: FC<IProps> = ({ withDiscount, item }) => (
   <View style={styles.meal}>
-    <Image style={styles.mealImg} source={{ uri: item.photo }} />
+    <Image
+      style={styles.mealImg}
+      source={{ uri: getImageBySize(item.photo, Metrics.menuItemSize, Metrics.menuItemSize) }}
+    />
     <View style={styles.mealInfo}>
       <View>
         <Typography style={styles.mealName} variant={TypographyVariants.body}>

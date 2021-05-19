@@ -4,7 +4,9 @@ import { getTrucks, getTruck, getTruckMenuItems } from 'store/trucks/thunks'
 
 const initialState: TrucksSliceState = {
   resources: [],
-  resource: {} as Truck,
+  resource: {
+    mainPhoto: '',
+  } as Truck,
   meta: {
     total: 0,
     count: 0,
