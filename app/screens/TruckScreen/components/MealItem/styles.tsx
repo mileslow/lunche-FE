@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { Colors, Spacing } from 'styles'
+import { Colors, Spacing, Metrics } from 'styles'
 
 export default StyleSheet.create({
   meal: {
@@ -8,9 +8,9 @@ export default StyleSheet.create({
   },
   mealImg: {
     borderRadius: 8,
-    height: 112,
+    height: Metrics.menuItemSize,
     margin: Spacing.base,
-    width: 112,
+    width: Metrics.menuItemSize,
   },
   mealInfo: {
     flex: 1,

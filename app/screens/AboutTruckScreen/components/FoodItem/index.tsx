@@ -5,8 +5,10 @@ import map from 'lodash.map'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
 import StringList from 'components/StringList'
+// services
+import { getImageBySize } from 'services/utils'
 // styles
-import { Spacing } from 'styles'
+import { Spacing, Metrics } from 'styles'
 
 interface IProps {
   style: ViewStyle
@@ -15,7 +17,10 @@ interface IProps {
 
 const FoodItem: FC<IProps> = ({ style, item }) => (
   <View style={style}>
-    <Image style={styles.foodImage} source={{ uri: item.photo }} />
+    <Image
+      style={styles.foodImage}
+      source={{ uri: getImageBySize(item.photo, Metrics.foodItemSize, Metrics.foodItemSize) }}
+    />
     <Typography variant={TypographyVariants.body} style={styles.title}>
       {item.name}
     </Typography>
@@ -26,9 +31,9 @@ const FoodItem: FC<IProps> = ({ style, item }) => (
 const styles = StyleSheet.create({
   foodImage: {
     borderRadius: 8,
-    height: 140,
+    height: Metrics.foodItemSize,
     marginBottom: Spacing.base,
-    width: 140,
+    width: Metrics.foodItemSize,
   },
   title: {
     marginBottom: Spacing.tiny,

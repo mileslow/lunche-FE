@@ -1,6 +1,6 @@
 import React, { FC, useMemo, memo } from 'react'
 import styles, { TRUCK_IMAGE_HEIGHT } from 'screens/TruckScreen/styles'
-import { Colors, Spacing } from 'styles'
+import { Colors, Spacing, Metrics } from 'styles'
 import BackButton from 'components/Button/BackButton'
 import { StatusBar, StatusBarStyle, View } from 'react-native'
 import Button, { ButtonTypes } from 'components/Button'
@@ -27,9 +27,9 @@ const Header: FC<IProps> = ({ translationY }) => {
 
   const statusBarStyle = useStatusBarStyle('light-content')
 
-  const HEADER_HEIGHT = useMemo(() => Spacing.header + insets.top, [insets])
+  const HEADER_HEIGHT = useMemo(() => Metrics.header + insets.top, [insets])
 
-  const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - HEADER_HEIGHT, [insets, HEADER_HEIGHT])
+  const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - HEADER_HEIGHT, [HEADER_HEIGHT])
 
   useDerivedValue(() => {
     if (statusBarStyle.value !== 'dark-content' && translationY.value >= END_ANIM_POSITION) {

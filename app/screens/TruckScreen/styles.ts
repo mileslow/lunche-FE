@@ -1,7 +1,8 @@
-import { Dimensions, StyleSheet } from 'react-native'
-import { Colors, Spacing } from 'styles'
+import { StyleSheet } from 'react-native'
+import round from 'lodash.round'
+import { Colors, Spacing, Metrics } from 'styles'
 
-export const TRUCK_IMAGE_HEIGHT = Dimensions.get('window').height / 3
+export const TRUCK_IMAGE_HEIGHT = round(Metrics.windowHeight / 3)
 
 export default StyleSheet.create({
   screen: {

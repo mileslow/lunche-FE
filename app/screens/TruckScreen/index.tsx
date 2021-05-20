@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
+import allSettled from 'promise.allsettled'
 import map from 'lodash.map'
 import filter from 'lodash.filter'
 import find from 'lodash.find'
@@ -24,17 +25,18 @@ import Spinner from 'components/Spinner'
 import { AppDispatch } from 'store'
 import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
 import { getTruck, getTruckMenuItems } from 'store/trucks/thunks'
+import { getFoodTypes } from 'store/foodTypes/thunks'
+import { foodTypesSelector } from 'store/foodTypes/selectors'
 // types
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { MenuItem } from 'store/trucks/types'
 // hooks
 import useTruckInfo from 'hooks/useTruckInfo'
+// utils
+import { getImageBySize } from 'services/utils'
 // styles
 import styles, { TRUCK_IMAGE_HEIGHT } from './styles'
-import { Colors, Spacing } from 'styles'
-import allSettled from 'promise.allsettled'
-import { getFoodTypes } from 'store/foodTypes/thunks'
-import { foodTypesSelector } from 'store/foodTypes/selectors'
+import { Colors, Metrics } from 'styles'
 
 const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.TruckScreen>> = ({
   navigation,
@@ -73,7 +75,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     fetchData()
   }, [dispatch, setLoading, route.params.id])
 
-  const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - Spacing.header - insets.top, [insets])
+  const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - Metrics.header - insets.top, [insets])
 
   const info = useTruckInfo(currentTruck)
 
@@ -110,7 +112,14 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
 
       <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16}>
         <View style={styles.truckInfo}>
-          <ImageBackground style={styles.truckImage} source={{ uri: currentTruck.mainPhoto }} />
+          {currentTruck.mainPhoto ? (
+            <ImageBackground
+              style={styles.truckImage}
+              source={{
+                uri: getImageBySize(currentTruck.mainPhoto, Metrics.truckImgWidth, Metrics.truckImgHeight),
+              }}
+            />
+          ) : null}
           <TruckGradient />
           <View style={styles.truckTitle}>
             <View style={styles.titleWrap}>

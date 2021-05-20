@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useMemo, useState, memo } from 'react'
 // libs
-import { View, Image, ScrollView, useWindowDimensions } from 'react-native'
+import { View, Image, ScrollView } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { useTranslation } from 'react-i18next'
@@ -22,15 +22,15 @@ import RatingsIcon from 'assets/svg/ratings.svg'
 import AddressIcon from 'assets/svg/address.svg'
 import PhoneIcon from 'assets/svg/phone.svg'
 import TimeIcon from 'assets/svg/time.svg'
+// utils
+import { getImageBySize } from 'services/utils'
 // styles
 import { TRUCK_IMAGE_HEIGHT } from 'screens/TruckScreen/styles'
-import { Spacing } from 'styles'
+import { Metrics, Spacing } from 'styles'
 import styles from './styles'
 
 const AboutTruckScreen = () => {
   const { t } = useTranslation()
-
-  const WINDOW_WIDTH = useWindowDimensions().width
 
   const currentTruck = useSelector(truckSelector)
 
@@ -49,11 +49,14 @@ const AboutTruckScreen = () => {
   const renderItem = useCallback(
     ({ item }) => (
       <View>
-        <Image style={{ width: WINDOW_WIDTH, height: TRUCK_IMAGE_HEIGHT }} source={{ uri: item }} />
+        <Image
+          style={{ width: Metrics.windowWidth, height: TRUCK_IMAGE_HEIGHT }}
+          source={{ uri: getImageBySize(item, Metrics.truckImgWidth, Metrics.truckImgHeight) }}
+        />
         <TrackGradient />
       </View>
     ),
-    [WINDOW_WIDTH],
+    [],
   )
 
   const handleSnapToItem = useCallback((index: number) => setActiveSlide(index), [])
@@ -112,8 +115,8 @@ const AboutTruckScreen = () => {
             data={currentTruck.photos}
             inactiveSlideScale={1}
             renderItem={renderItem}
-            sliderWidth={WINDOW_WIDTH}
-            itemWidth={WINDOW_WIDTH}
+            sliderWidth={Metrics.windowWidth}
+            itemWidth={Metrics.windowWidth}
             onSnapToItem={handleSnapToItem}
           />
           <Pagination
