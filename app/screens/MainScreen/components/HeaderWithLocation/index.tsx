@@ -14,9 +14,10 @@ import styles from './styles'
 
 interface IProps {
   swipePositionY: Animated.SharedValue<number>
+  address?: string
 }
 
-const HeaderWithLocation: FC<IProps> = ({ swipePositionY }) => {
+const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address }) => {
   const insets = useSafeAreaInsets()
 
   const { t } = useTranslation()
@@ -33,7 +34,7 @@ const HeaderWithLocation: FC<IProps> = ({ swipePositionY }) => {
     >
       <Text style={styles.headerText}>{t('mainScreen:headerText')}</Text>
       <View style={styles.currentLocationWrap}>
-        <Text style={styles.currentLocation}>Los Angeles</Text>
+        <Text style={styles.currentLocation}>{address || 'Los Angeles'}</Text>
         <PersonIcon />
       </View>
     </Animated.View>

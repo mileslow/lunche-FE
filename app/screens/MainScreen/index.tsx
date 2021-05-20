@@ -17,6 +17,7 @@ import allSettled from 'promise.allsettled'
 import map from 'lodash.map'
 // components
 import Spinner from 'components/Spinner'
+import Map from 'components/Map'
 import TruckCard from 'screens/MainScreen/components/TruckCard'
 import SubNavigation from 'screens/MainScreen/components/SubNavigation'
 import HeaderWithLocation from 'screens/MainScreen/components/HeaderWithLocation'
@@ -57,7 +58,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const trucks = useSelector(trucksSelector)
 
-  useGetCurrentPosition()
+  const currentLocation = useGetCurrentPosition(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,7 +158,9 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   return (
     <>
-      <HeaderWithLocation swipePositionY={swipePositionY} />
+      <Map style={styles.map} zoomLevel={14} location={currentLocation} />
+
+      <HeaderWithLocation swipePositionY={swipePositionY} address={currentLocation?.address} />
 
       <HeaderTransparent swipePositionY={swipePositionY} animateTo={animateTo} />
 
