@@ -32,6 +32,7 @@ export default StyleSheet.create({
     paddingHorizontal: Spacing.base,
   },
   subTitle: {
+    flex: 1,
     marginLeft: Spacing.base,
   },
   subhead: {

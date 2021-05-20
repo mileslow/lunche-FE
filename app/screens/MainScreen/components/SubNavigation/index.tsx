@@ -1,6 +1,6 @@
 import React, { memo, FC } from 'react'
 // libs
-import { Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated'
 import { useTranslation } from 'react-i18next'
 // components
@@ -36,10 +36,10 @@ const SubNavigation: FC<IProps> = ({ onLocationPress, isOnlyDelivery, onOnlyDeli
         </Button>
         <SearchButton onPress={() => null} />
       </View>
-      <View style={styles.subNavigationBlock}>
-        <Checkbox checked={isOnlyDelivery} onPress={onOnlyDeliveryPress} type='radio' />
+      <Pressable style={styles.subNavigationBlock} onPress={onOnlyDeliveryPress} pointerEvents='box-only'>
+        <Checkbox checked={isOnlyDelivery} type='radio' />
         <Text style={styles.onlyLabel}>{t('mainScreen:onlyDelivery')}</Text>
-      </View>
+      </Pressable>
     </Animated.View>
   )
 }

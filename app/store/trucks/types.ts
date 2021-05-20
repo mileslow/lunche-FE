@@ -6,6 +6,7 @@ export type TrucksSliceState = {
   resource: Truck
   meta: Meta
   menuItems: MenuItem[]
+  filters: TrucksFilters
 }
 
 export type Truck = {
@@ -48,6 +49,8 @@ export type MenuItem = {
   foodTypes: FoodType[]
 }
 
-export type GetTrucksParams = { supportDelivery?: boolean; foodCategoryIds?: number[] } | undefined
+export type TrucksFilters = { supportDelivery?: boolean; foodCategoryIds?: number[] }
+
+export type GetTrucksParams = TrucksFilters | undefined
 
 export type GetTruckMenuItemsParams = { id: number; params?: { foodTypeIds?: number[] } }

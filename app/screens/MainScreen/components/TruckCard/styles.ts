@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { Colors, Fonts, FontSize, Spacing, Metrics } from 'styles'
 
 export default StyleSheet.create({
@@ -8,7 +8,7 @@ export default StyleSheet.create({
     elevation: 4,
     marginBottom: Spacing.double,
     minHeight: Metrics.windowHeight / 3.3,
-    shadowColor: Colors.shadowColor,
+    shadowColor: Platform.select({ ios: Colors.shadowColor, android: undefined }),
     shadowOffset: {
       width: 0,
       height: 2,

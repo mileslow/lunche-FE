@@ -1,9 +1,12 @@
 import React, { memo, ReactElement, forwardRef, ForwardedRef } from 'react'
 // libs
-import { ScrollView, Pressable, Text, View } from 'react-native'
+import { ScrollView, Pressable, View } from 'react-native'
 import { SvgFromUri } from 'react-native-svg'
 import map from 'lodash.map'
+// components
+import Typography, { TypographyVariants } from 'components/Typography'
 // styles
+import { Colors } from 'styles'
 import styles from './styles'
 
 interface ICategory {
@@ -14,10 +17,17 @@ interface ICategory {
 
 interface IProps {
   data: ICategory[]
+  active?: number[]
   onPress: (id: number) => void
 }
 
-const Category = ({ item, onPress }: { item: ICategory; onPress?: (id: number) => void }) => (
+interface ICategoryProps {
+  item: ICategory
+  onPress?: (id: number) => void
+  active?: number[]
+}
+
+const Category = ({ item, onPress, active }: ICategoryProps) => (
   <Pressable
     style={({ pressed }) => [styles.item, { opacity: pressed ? 0.6 : 1 }]}
     onPress={() => onPress && onPress(item.id)}
@@ -25,11 +35,18 @@ const Category = ({ item, onPress }: { item: ICategory; onPress?: (id: number) =
     <View style={styles.icon}>
       {typeof item.icon === 'string' ? <SvgFromUri width={24} height={24} uri={item.icon} /> : item.icon}
     </View>
-    <Text style={styles.itemLabel}>{item.name}</Text>
+    <Typography
+      style={styles.itemLabel}
+      variant={TypographyVariants.body}
+      weight={active?.includes(item.id) ? 'bold' : 'normal'}
+      color={active?.includes(item.id) ? Colors.cadmiumOrange : undefined}
+    >
+      {item.name}
+    </Typography>
   </Pressable>
 )
 
-const Categories = forwardRef(({ data, onPress }: IProps, ref: ForwardedRef<ScrollView>) => {
+const Categories = forwardRef(({ data, onPress, active }: IProps, ref: ForwardedRef<ScrollView>) => {
   return (
     <ScrollView
       ref={ref}
@@ -39,7 +56,7 @@ const Categories = forwardRef(({ data, onPress }: IProps, ref: ForwardedRef<Scro
       contentContainerStyle={styles.scrollContent}
     >
       {map(data, (i, index) => (
-        <Category key={index} item={i} onPress={onPress} />
+        <Category key={index} active={active} item={i} onPress={onPress} />
       ))}
     </ScrollView>
   )

@@ -28,7 +28,7 @@ import { getFoodCategories } from 'store/foodCategories/thunks'
 import { getTrucks } from 'store/trucks/thunks'
 // selectors
 import { foodCategoriesSelector } from 'store/foodCategories/selectors'
-import { trucksSelector } from 'store/trucks/selectors'
+import { trucksSelector, filtersSelector } from 'store/trucks/selectors'
 import { AppDispatch } from 'store'
 // services
 import { useGetCurrentPosition } from 'services/geoLocation'
@@ -57,6 +57,8 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
   const foodCategories = useSelector(foodCategoriesSelector)
 
   const trucks = useSelector(trucksSelector)
+
+  const filters = useSelector(filtersSelector)
 
   const currentLocation = useGetCurrentPosition(true)
 
@@ -143,17 +145,19 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
   const onOnlyDeliveryPress = useCallback(async () => {
     setOnlyDelivery(!isOnlyDelivery)
     setLoading(true)
-    await dispatch(getTrucks({ supportDelivery: !isOnlyDelivery }))
+    await dispatch(getTrucks({ ...filters, supportDelivery: !isOnlyDelivery }))
     setLoading(false)
-  }, [setOnlyDelivery, setLoading, dispatch, isOnlyDelivery])
+  }, [setOnlyDelivery, setLoading, dispatch, isOnlyDelivery, filters])
 
   const handleCategoryPress = useCallback(
     async (categoryId) => {
       setLoading(true)
-      await dispatch(getTrucks({ foodCategoryIds: [categoryId] }))
+      const foodCategoryIds = new Set(filters.foodCategoryIds)
+      foodCategoryIds.has(categoryId) ? foodCategoryIds.delete(categoryId) : foodCategoryIds.add(categoryId)
+      await dispatch(getTrucks({ ...filters, foodCategoryIds: [...foodCategoryIds] }))
       setLoading(false)
     },
-    [setLoading, dispatch],
+    [setLoading, dispatch, filters],
   )
 
   return (
@@ -174,7 +178,12 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
           <Animated.Text style={[styles.listTitle, titleSwipeStyle]}>Top Pick Restaurants</Animated.Text>
 
           <NativeViewGestureHandler ref={horizontalScrollView} simultaneousHandlers={mainDrawer}>
-            <Categories swipePositionY={swipePositionY} data={foodCategories} onPress={handleCategoryPress} />
+            <Categories
+              active={filters.foodCategoryIds}
+              swipePositionY={swipePositionY}
+              data={foodCategories}
+              onPress={handleCategoryPress}
+            />
           </NativeViewGestureHandler>
 
           <SubNavigation

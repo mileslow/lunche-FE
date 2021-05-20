@@ -17,3 +17,5 @@ export const menuItemsSelector = createSelector(trucksModelSelector, (truck) => 
 export const truckCategoriesSelector = createSelector(truckSelector, (truck) =>
   map(truck.foodCategories, (i) => i.name),
 )
+
+export const filtersSelector = createSelector(trucksModelSelector, (trucks: TrucksSliceState) => trucks.filters)

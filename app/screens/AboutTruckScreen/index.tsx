@@ -112,6 +112,9 @@ const AboutTruckScreen = () => {
       >
         <View style={styles.truckImage}>
           <Carousel
+            autoplay
+            loop
+            autoplayInterval={5000}
             data={currentTruck.photos}
             inactiveSlideScale={1}
             renderItem={renderItem}

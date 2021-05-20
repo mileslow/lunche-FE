@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { Spacing, Fonts, FontSize, Colors } from 'styles'
+import { Spacing, Fonts, FontSize } from 'styles'
 
 export default StyleSheet.create({
   scroll: {
@@ -15,7 +15,6 @@ export default StyleSheet.create({
     marginRight: Spacing.medium,
   },
   itemLabel: {
-    color: Colors.midNightMoss,
     fontFamily: Fonts.regular,
     fontSize: FontSize.regular,
   },

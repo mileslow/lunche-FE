@@ -7,6 +7,9 @@ const initialState: TrucksSliceState = {
   resource: {
     mainPhoto: '',
   } as Truck,
+  filters: {
+    foodCategoryIds: [],
+  },
   meta: {
     total: 0,
     count: 0,
@@ -23,6 +26,9 @@ const foodCategoriesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getTrucks.pending, (state, { meta }) => {
+        state.filters = { ...meta.arg }
+      })
       .addCase(getTrucks.fulfilled, (state, { payload }) => {
         state.resources = payload.data
         state.meta = {

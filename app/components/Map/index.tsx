@@ -1,9 +1,18 @@
 import React, { FC, memo, useMemo } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import MapboxGL from '@react-native-mapbox-gl/maps'
+import MapboxGL, { Logger } from '@react-native-mapbox-gl/maps'
 import ENV from 'react-native-config'
 
 MapboxGL.setAccessToken(ENV.MAP_BOX_ACCESS_TOKEN)
+
+Logger.setLogCallback((log) => {
+  const { message } = log
+
+  return (
+    message.includes('Request failed due to a permanent error: Canceled') ||
+    message.includes('Request failed due to a permanent error: Socket Closed')
+  )
+})
 
 const styles = StyleSheet.create({
   map: {
