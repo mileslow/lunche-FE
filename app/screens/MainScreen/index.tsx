@@ -52,7 +52,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const swipePositionY = useSharedValue(0)
 
-  const scrollY = useSharedValue(0)
+  const scrollActive = useSharedValue(false)
 
   const foodCategories = useSelector(foodCategoriesSelector)
 
@@ -90,14 +90,14 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
       ctx.startY = swipePositionY.value
     },
     onActive: (event, ctx: { startY: number }) => {
-      if (scrollY.value > 0) {
+      if (scrollActive.value) {
         return
       }
       const distance = ctx.startY + event.translationY
       swipePositionY.value = distance > 0 ? distance : 0
     },
     onEnd: (event) => {
-      if (scrollY.value > 0) {
+      if (scrollActive.value) {
         return
       }
       if (event.translationY > 100 || event.velocityY > 200) {
@@ -131,7 +131,13 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const onRegisterScroll = useAnimatedScrollHandler({
     onBeginDrag: (e) => {
-      scrollY.value = e.contentOffset.y
+      scrollActive.value = e.contentOffset.y > 0 && true
+    },
+    onEndDrag: () => {
+      scrollActive.value = false
+    },
+    onMomentumEnd: () => {
+      scrollActive.value = false
     },
   })
 

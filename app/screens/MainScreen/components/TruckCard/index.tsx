@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react'
-import { Pressable, Image, Text } from 'react-native'
+import { Image, Text } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import map from 'lodash.map'
 // components
 import StringList from 'components/StringList'
@@ -25,7 +26,7 @@ const TrackCard: FC<IProps> = ({ onPress, item }) => {
   const categories = useMemo(() => map(item.foodCategories, (i) => i.name), [item.foodCategories])
 
   return (
-    <Pressable style={styles.card} onPress={onPress}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image
         style={styles.mainImage}
         source={{ uri: getImageBySize(item.mainPhoto, Metrics.truckListImgWidth, Metrics.truckListImgHeight) }}
@@ -33,7 +34,7 @@ const TrackCard: FC<IProps> = ({ onPress, item }) => {
       <Text style={styles.subhead}>{item.name}</Text>
       <StringList data={categories} style={styles.categories} />
       <InfoWithIconList data={info} style={styles.info} />
-    </Pressable>
+    </TouchableOpacity>
   )
 }
 

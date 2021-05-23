@@ -1,6 +1,7 @@
 import React, { memo, ReactElement, forwardRef, ForwardedRef } from 'react'
 // libs
-import { ScrollView, Pressable, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { SvgFromUri } from 'react-native-svg'
 import map from 'lodash.map'
 // components
@@ -28,10 +29,7 @@ interface ICategoryProps {
 }
 
 const Category = ({ item, onPress, active }: ICategoryProps) => (
-  <Pressable
-    style={({ pressed }) => [styles.item, { opacity: pressed ? 0.6 : 1 }]}
-    onPress={() => onPress && onPress(item.id)}
-  >
+  <TouchableOpacity style={styles.item} onPress={() => onPress && onPress(item.id)}>
     <View style={styles.icon}>
       {typeof item.icon === 'string' ? <SvgFromUri width={24} height={24} uri={item.icon} /> : item.icon}
     </View>
@@ -43,7 +41,7 @@ const Category = ({ item, onPress, active }: ICategoryProps) => (
     >
       {item.name}
     </Typography>
-  </Pressable>
+  </TouchableOpacity>
 )
 
 const Categories = forwardRef(({ data, onPress, active }: IProps, ref: ForwardedRef<ScrollView>) => {
