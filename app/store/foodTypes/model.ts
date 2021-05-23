@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { FootTypesSliceState } from 'store/foodTypes/types'
 import { getFoodTypes } from 'store/foodTypes/thunks'
+import { clearTruckScreen } from 'store/commonActions'
 
 const initialState: FootTypesSliceState = {
   resources: [],
@@ -12,9 +13,13 @@ const footTypesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getFoodTypes.fulfilled, (state, { payload }) => {
-      state.resources = payload
-    })
+    builder
+      .addCase(clearTruckScreen, (state) => {
+        state.resources = initialState.resources
+      })
+      .addCase(getFoodTypes.fulfilled, (state, { payload }) => {
+        state.resources = payload
+      })
   },
 })
 

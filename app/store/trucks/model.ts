@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Truck, TrucksSliceState } from 'store/trucks/types'
 import { getTrucks, getTruck, getTruckMenuItems } from 'store/trucks/thunks'
+import { clearTruckScreen } from 'store/commonActions'
 
 const initialState: TrucksSliceState = {
   resources: [],
@@ -20,12 +21,16 @@ const initialState: TrucksSliceState = {
 }
 
 // slice
-const foodCategoriesSlice = createSlice({
-  name: 'auth',
+const trucksSlice = createSlice({
+  name: 'trucks',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(clearTruckScreen, (state) => {
+        state.resource = initialState.resource
+        state.menuItems = initialState.menuItems
+      })
       .addCase(getTrucks.pending, (state, { meta }) => {
         state.filters = { ...meta.arg }
       })
@@ -47,6 +52,6 @@ const foodCategoriesSlice = createSlice({
   },
 })
 
-export const sliceName = foodCategoriesSlice.name
+export const sliceName = trucksSlice.name
 
-export default foodCategoriesSlice.reducer
+export default trucksSlice.reducer

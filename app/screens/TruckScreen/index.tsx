@@ -25,6 +25,7 @@ import Spinner from 'components/Spinner'
 import { AppDispatch } from 'store'
 import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
 import { getTruck, getTruckMenuItems } from 'store/trucks/thunks'
+import { clearTruckScreen } from 'store/commonActions'
 import { getFoodTypes } from 'store/foodTypes/thunks'
 import { foodTypesSelector } from 'store/foodTypes/selectors'
 // types
@@ -72,6 +73,9 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
       setLoading(false)
     }
     fetchData()
+    return () => {
+      dispatch(clearTruckScreen())
+    }
   }, [dispatch, setLoading, route.params.id])
 
   const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - Metrics.header - insets.top, [insets])
