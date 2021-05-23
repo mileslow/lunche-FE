@@ -9,7 +9,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import allSettled from 'promise.allsettled'
 import map from 'lodash.map'
 import filter from 'lodash.filter'
-import find from 'lodash.find'
+import includes from 'lodash.includes'
 // components
 import CategoriesList from 'components/CategoriesList'
 import Divider from 'components/Divider'
@@ -29,7 +29,6 @@ import { getFoodTypes } from 'store/foodTypes/thunks'
 import { foodTypesSelector } from 'store/foodTypes/selectors'
 // types
 import { RootNavigationStackParamsList, Routes } from 'navigation'
-import { MenuItem } from 'store/trucks/types'
 // hooks
 import useTruckInfo from 'hooks/useTruckInfo'
 // utils
@@ -50,7 +49,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
 
   const [isLoading, setLoading] = useState<boolean>(false)
 
-  const [filteredItems, setFilteredItems] = useState<MenuItem[]>([])
+  const [selectedTypes, setSelectedTypes] = useState<number[]>([])
 
   const currentTruck = useSelector(truckSelector)
 
@@ -84,19 +83,23 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   }, [navigation])
 
   const handlePressFoodType = useCallback(
-    (id) => setFilteredItems(filter(menuItems, (item) => !!find(item.foodTypes, { id }))),
-    [menuItems, setFilteredItems],
+    (id) => {
+      const foodTypeIds = new Set(selectedTypes)
+      foodTypeIds.has(id) ? foodTypeIds.delete(id) : foodTypeIds.add(id)
+      setSelectedTypes([...foodTypeIds])
+    },
+    [selectedTypes, setSelectedTypes],
   )
 
   const renderMenuItems = useMemo(() => {
-    const menu = filteredItems.length ? filteredItems : menuItems
+    const menu = selectedTypes.length ? filter(menuItems, (item) => includes(selectedTypes, item.id)) : menuItems
     return map(menu, (item) => (
       <Fragment key={item.id}>
         <Divider />
         <MealItem item={item} />
       </Fragment>
     ))
-  }, [filteredItems, menuItems])
+  }, [selectedTypes, menuItems])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y
@@ -150,7 +153,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
             <Typography variant={TypographyVariants.h3}>{t('truckScreen:menuTitle')}</Typography>
             <SearchButton onPress={() => null} />
           </View>
-          <CategoriesList data={foodTypes} onPress={handlePressFoodType} />
+          <CategoriesList active={selectedTypes} data={foodTypes} onPress={handlePressFoodType} />
         </Animated.View>
 
         {renderMenuItems}
