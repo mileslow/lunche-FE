@@ -1,20 +1,13 @@
 enum Routes {
-  Main = 'Main',
-
-  // auth stack
-  SignIn = 'SignIn',
-  SignUp = 'SignUp',
-  ForgotPassword = 'ForgotPassword',
+  MainTabsStack = 'MainTabsStack',
+  WelcomeScreen = 'WelcomeScreen',
 
   // tabs
   HomeTab = 'HomeTab',
   OrdersTab = 'OrdersTab',
   ProfileTab = 'ProfileTab',
 
-  ExampleStack = 'ExampleStack',
-  ExampleStackIndex = 'ExampleStackIndex',
-  ExampleStackChild = 'ExampleStackChild',
-
+  // HomeStack
   MainScreen = 'MainScreen',
   TruckScreen = 'TruckScreen',
   AboutTruckScreen = 'AboutTruckScreen',

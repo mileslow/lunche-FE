@@ -1,12 +1,11 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, memo, ReactNode } from 'react'
 // libs
 import { Text, StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { SvgProps } from 'react-native-svg'
 // navigation
 import { RootNavigationStackParamsList, Routes } from 'navigation'
-import ExmapleStackNavigator from 'navigation/navigators/ExampleStack'
-import MainStackNavigator from 'navigation/navigators/MainStack'
+import HomeStackNavigator from 'navigation/navigators/HomeStack'
 // localization
 import { useTranslation } from 'react-i18next'
 // assets
@@ -33,7 +32,7 @@ const MainTabsNavigator: FC = () => {
     <Tab.Navigator>
       <Tab.Screen
         name={Routes.HomeTab}
-        component={MainStackNavigator}
+        component={HomeStackNavigator}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, HomeIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:home')),
@@ -41,7 +40,7 @@ const MainTabsNavigator: FC = () => {
       />
       <Tab.Screen
         name={Routes.OrdersTab}
-        component={ExmapleStackNavigator}
+        component={HomeStackNavigator}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, OrdersIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:orders')),
@@ -49,7 +48,7 @@ const MainTabsNavigator: FC = () => {
       />
       <Tab.Screen
         name={Routes.ProfileTab}
-        component={ExmapleStackNavigator}
+        component={HomeStackNavigator}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, ProfileIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:profile')),
@@ -66,4 +65,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default MainTabsNavigator
+export default memo(MainTabsNavigator)

@@ -6,6 +6,7 @@ enum Spacing {
   medium = 12,
   regular = 14,
   double = 16,
+  doubleSmall = 20,
   large = 24,
 }
 

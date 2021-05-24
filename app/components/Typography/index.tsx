@@ -25,7 +25,7 @@ export enum TypographyVariants {
   // title1 = 'title1',
   // title2 = 'title2',
   // title3 = 'title3',
-  // headline = 'headline',
+  headline = 'headline',
   // callout = 'callout',
   // footnote = 'footnote',
   // caption1 = 'caption1',
@@ -52,6 +52,12 @@ const Typography: FC<PropsWithChildren<TypographyProps>> = ({ weight, variant, c
 }
 
 export const styles = StyleSheet.create({
+  headline: {
+    color: Colors.midNightMoss,
+    fontFamily: Fonts.regular,
+    fontSize: FontSize.headline,
+    fontWeight: TypographyWeights.bold,
+  },
   h3: {
     color: Colors.midNightMoss,
     fontFamily: Fonts.regular,
