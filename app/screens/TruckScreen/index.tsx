@@ -9,7 +9,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import allSettled from 'promise.allsettled'
 import map from 'lodash.map'
 import filter from 'lodash.filter'
-import includes from 'lodash.includes'
+import intersection from 'lodash.intersection'
 // components
 import CategoriesList from 'components/CategoriesList'
 import Divider from 'components/Divider'
@@ -96,7 +96,9 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   )
 
   const renderMenuItems = useMemo(() => {
-    const menu = selectedTypes.length ? filter(menuItems, (item) => includes(selectedTypes, item.id)) : menuItems
+    const menu = selectedTypes.length
+      ? filter(menuItems, (item) => !!intersection(selectedTypes, map(item.foodTypes, 'id')).length)
+      : menuItems
     return map(menu, (item) => (
       <Fragment key={item.id}>
         <Divider />
