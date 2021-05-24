@@ -1,0 +1,71 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  lane :bump_version_code do
+    path = '../android/app/build.gradle'
+    re = /versionCode\s+(\d+)/
+
+    s = File.read(path)
+    versionCode = s[re, 1].to_i
+    s[re, 1] = (versionCode + 1).to_s
+
+    f = File.new(path, 'w')
+    f.write(s)
+    f.close
+  end
+
+  lane :beta do
+    ensure_git_status_clean
+
+    # Bump version code for uploading
+    bump_version_code
+    gradle(task: 'clean', project_dir: './android')
+    gradle(
+      task: 'bundle',
+      project_dir: './android',
+      build_type: 'Release',
+      print_command: false,
+    )
+    supply(track: 'internal', release_status: 'draft')
+
+    git_commit(message: "Bump Version")
+    push_to_git_remote
+  end
+end
+
+platform :ios do
+  desc "Push a new dev build to TestFlight"
+  lane :dev do |options|
+    ensure_git_status_clean
+
+    increment_build_number(xcodeproj: "./ios/lunche.xcodeproj", build_number: options[:build_number])
+
+    if options[:version]
+      set_info_plist_value(path: "./ios/Info.plist", key: "CFBundleShortVersionString", value: options[:version])
+    end
+
+    sync_code_signing(type: "appstore", readonly: true)
+
+    build_app(workspace: "./ios/lunche.xcworkspace", scheme: "lunche", output_directory: "./ios/build")
+
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+
+    git_commit(message: "Bump Version")
+    push_to_git_remote
+  end
+end
