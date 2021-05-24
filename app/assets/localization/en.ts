@@ -18,6 +18,15 @@ export default {
     contacts: 'Contacts',
     schedule: 'Schedule',
   },
+  welcomeScreen: {
+    title1: 'Meet Lunché',
+    desc1: 'Finding Food Trucks has never been easier',
+    title2: 'Order Street Food',
+    desc2: 'It’s pretty easy in Lunché. We have more then 100 trucks food in base',
+    title3: 'Pickup & Delivery',
+    desc3: 'Choose options that will work for you better and we will take care about anything else',
+    orderButton: "LET'S ORDER",
+  },
 
   common: {
     welcome: 'Welcome!',

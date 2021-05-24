@@ -4,7 +4,7 @@ import { StatusBar } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 // navigators
-import MainTabsNavigator from 'navigation/navigators/MainTabs'
+import MainStackNavigator from 'navigation/navigators/MainStack'
 
 const RootStack = createStackNavigator()
 
@@ -15,7 +15,7 @@ const AppNavigationContainer: FC = () => {
 
       <NavigationContainer>
         <RootStack.Navigator screenOptions={{ headerShown: false }}>
-          <RootStack.Screen name='RootNavigator' component={MainTabsNavigator} />
+          <RootStack.Screen name='RootNavigator' component={MainStackNavigator} />
         </RootStack.Navigator>
       </NavigationContainer>
     </>

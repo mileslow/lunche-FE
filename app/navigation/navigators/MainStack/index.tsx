@@ -1,22 +1,55 @@
-import React, { FC } from 'react'
+import React, { memo, useEffect, useState } from 'react'
+// libs
 import { createStackNavigator } from '@react-navigation/stack'
-// navigation
-import { Routes, RootNavigationStackParamsList } from 'navigation'
+import { useSelector, useDispatch } from 'react-redux'
+// components
+import Spinner from 'components/Spinner'
 // screens
-import MainScreen from 'screens/MainScreen'
-import TruckScreen from 'screens/TruckScreen'
-import AboutTruckScreen from 'screens/AboutTruckScreen'
+import WelcomeScreen from 'screens/WelcomeScreen'
+// navigations
+import MainTabsNavigator from 'navigation/navigators/MainTabs'
+import Routes from 'navigation/routes'
+// store
+import { AppDispatch } from 'store'
+import { setShowWelcome } from 'store/general/model'
+import { isShowWelcomeSelector } from 'store/general/selectors'
+// utils
+import { getSkipWelcome } from 'services/storage'
+// types
+import { MainNavigationStackParamsList } from './types'
 
-const Stack = createStackNavigator<RootNavigationStackParamsList>()
+const MainStack = createStackNavigator<MainNavigationStackParamsList>()
 
-const MainStackNavigator: FC = () => {
+const MainStackNavigator = () => {
+  const [isLoading, setLoading] = useState<boolean>(true)
+
+  const isShowWelcome = useSelector(isShowWelcomeSelector)
+
+  const dispatch = useDispatch<AppDispatch>()
+
+  useEffect(() => {
+    const bootstrap = async () => {
+      setLoading(true)
+      const isSkipWelcome = await getSkipWelcome()
+      dispatch(setShowWelcome(!isSkipWelcome))
+      setLoading(false)
+    }
+    bootstrap()
+  }, [dispatch])
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
   return (
-    <Stack.Navigator headerMode='none'>
-      <Stack.Screen name={Routes.MainScreen} component={MainScreen} />
-      <Stack.Screen name={Routes.TruckScreen} component={TruckScreen} />
-      <Stack.Screen name={Routes.AboutTruckScreen} component={AboutTruckScreen} />
-    </Stack.Navigator>
+    <MainStack.Navigator headerMode='none'>
+      {isShowWelcome ? (
+        <MainStack.Screen name={Routes.WelcomeScreen} component={WelcomeScreen} />
+      ) : (
+        <MainStack.Screen name={Routes.MainTabsStack} component={MainTabsNavigator} />
+      )}
+    </MainStack.Navigator>
   )
 }
 
-export default MainStackNavigator
+export default memo(MainStackNavigator)
