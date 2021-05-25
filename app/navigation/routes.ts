@@ -1,4 +1,5 @@
 enum Routes {
+  RootNavigator = 'RootNavigator',
   MainTabsStack = 'MainTabsStack',
   WelcomeScreen = 'WelcomeScreen',
 
@@ -11,6 +12,9 @@ enum Routes {
   MainScreen = 'MainScreen',
   TruckScreen = 'TruckScreen',
   AboutTruckScreen = 'AboutTruckScreen',
+
+  // modals
+  DishModal = 'DishModal',
 }
 
 export default Routes

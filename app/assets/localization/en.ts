@@ -27,6 +27,9 @@ export default {
     desc3: 'Choose options that will work for you better and we will take care about anything else',
     orderButton: "LET'S ORDER",
   },
+  dishModal: {
+    addToOrderButton: 'Add to order',
+  },
 
   common: {
     welcome: 'Welcome!',

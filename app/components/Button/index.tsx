@@ -1,5 +1,5 @@
 import React, { FC, ReactChildren, ReactElement } from 'react'
-import { StyleSheet, Pressable, PressableProps } from 'react-native'
+import { StyleSheet, Pressable, PressableProps, TextStyle } from 'react-native'
 // styling
 import { Colors, FontSize } from 'styles'
 import Typography, { TypographyVariants } from 'components/Typography'
@@ -14,9 +14,10 @@ type ButtonProps = PressableProps & {
   title?: string
   type?: ButtonTypes
   children?: ReactChildren | ReactElement
+  textStyle?: TextStyle
 }
 
-const Button: FC<ButtonProps> = ({ title, type = ButtonTypes.primary, children, ...props }) => {
+const Button: FC<ButtonProps> = ({ title, type = ButtonTypes.primary, children, textStyle, ...props }) => {
   const typeButtonStyles = {
     [ButtonTypes.primary]: styles.primary,
     [ButtonTypes.link]: styles.link,
@@ -51,8 +52,8 @@ const Button: FC<ButtonProps> = ({ title, type = ButtonTypes.primary, children, 
       ) : (
         <Typography
           variant={TypographyVariants.smallBody}
-          weight='bold'
-          style={[styles.title, { color: typeButtonTextColor[type] }]}
+          weight='semiBold'
+          style={[styles.title, textStyle, { color: typeButtonTextColor[type] }]}
         >
           {title}
         </Typography>
@@ -71,7 +72,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: FontSize.regular,
-    fontWeight: '900',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
   },
   primary: {
     borderRadius: 8,

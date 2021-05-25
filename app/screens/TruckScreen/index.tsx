@@ -102,10 +102,13 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     return map(menu, (item) => (
       <Fragment key={item.id}>
         <Divider />
-        <MealItem item={item} />
+        <MealItem
+          item={item}
+          onPress={() => navigation.navigate(Routes.DishModal, { id: item.id, truckId: currentTruck.id })}
+        />
       </Fragment>
     ))
-  }, [selectedTypes, menuItems])
+  }, [selectedTypes, menuItems, currentTruck])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y
@@ -119,7 +122,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     <View style={styles.screen}>
       <Header translationY={translationY} />
 
-      <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16}>
+      <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
         <View style={styles.truckInfo}>
           {currentTruck.mainPhoto ? (
             <ImageBackground
