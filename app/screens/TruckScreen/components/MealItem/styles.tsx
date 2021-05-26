@@ -36,4 +36,17 @@ export default StyleSheet.create({
     right: 0,
     top: 0,
   },
+  greenLine: {
+    backgroundColor: Colors.primary,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: 4,
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 })

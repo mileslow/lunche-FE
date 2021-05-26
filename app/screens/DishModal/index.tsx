@@ -3,13 +3,9 @@ import React, { FC, memo, useCallback, useReducer, useRef, useState } from 'reac
 import { Image, View } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  NativeViewGestureHandler,
-  PanGestureHandler,
-  TapGestureHandler,
-  TouchableOpacity,
-} from 'react-native-gesture-handler'
+import { NativeViewGestureHandler, PanGestureHandler, TapGestureHandler } from 'react-native-gesture-handler'
 import Animated, {
+  Extrapolate,
   interpolate,
   runOnJS,
   useAnimatedGestureHandler,
@@ -17,7 +13,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Extrapolate,
 } from 'react-native-reanimated'
 import round from 'lodash.round'
 // components
@@ -28,6 +23,7 @@ import ItemCount from 'components/ItemCount'
 import Divider from 'components/Divider'
 // store
 import { getTruckMenuItem } from 'store/trucks/thunks'
+import { addItemToOrder } from 'store/orders/model'
 // services
 import { getImageBySize } from 'services/utils'
 // styles
@@ -166,8 +162,9 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
   })
 
   const handleAddButton = useCallback(() => {
+    dispatch(addItemToOrder({ menuItemId: route.params.id, itemCount: state.itemCount }))
     handleCloseModal()
-  }, [])
+  }, [dispatch, handleCloseModal, route, state.itemCount])
 
   const handlePresCounter = useCallback(
     (type: ActionType.IncrementCount | ActionType.DecrementCount) => () => {
@@ -196,9 +193,9 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
                   onScroll={onRegisterScroll}
                   showsVerticalScrollIndicator={false}
                 >
-                  <TouchableOpacity containerStyle={styles.closeBtn} onPress={handleCloseModal}>
+                  <Button type={ButtonTypes.icon} style={styles.closeBtn} onPress={handleCloseModal}>
                     <CloseIcon width={CLOSE_ICON_SIZE} height={CLOSE_ICON_SIZE} />
-                  </TouchableOpacity>
+                  </Button>
                   <Image
                     style={styles.mainImage}
                     source={{ uri: getImageBySize(state.dish.photo, Metrics.truckImgWidth, Metrics.truckImgHeight) }}
