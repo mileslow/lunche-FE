@@ -1,5 +1,7 @@
 import React, { FC, memo } from 'react'
 import { Image, View } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+// components
 import Typography, { TypographyVariants } from 'components/Typography'
 // assets
 import DiscountIcon from 'assets/svg/discount.svg'
@@ -17,10 +19,11 @@ interface IProps {
     description: string
     price: number
   }
+  onPress: () => void
 }
 
-const MealItem: FC<IProps> = ({ withDiscount, item }) => (
-  <View style={styles.meal}>
+const MealItem: FC<IProps> = ({ withDiscount, item, onPress }) => (
+  <TouchableOpacity style={styles.meal} onPress={onPress}>
     <Image
       style={styles.mealImg}
       source={{ uri: getImageBySize(item.photo, Metrics.menuItemSize, Metrics.menuItemSize) }}
@@ -50,7 +53,7 @@ const MealItem: FC<IProps> = ({ withDiscount, item }) => (
         )}
       </View>
     </View>
-  </View>
+  </TouchableOpacity>
 )
 
 export default memo(MealItem)
