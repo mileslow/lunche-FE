@@ -1,6 +1,8 @@
 export type OrdersSliceState = {
-  orderItems: OrderItem[]
+  orderItems: OrderItems
 }
+
+export type OrderItems = { [x: number]: OrderItem }
 
 export type OrderItem = {
   menuItemId: number

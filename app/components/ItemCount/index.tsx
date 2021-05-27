@@ -1,8 +1,8 @@
 import React, { memo, FC } from 'react'
 import { View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
+import Button, { ButtonTypes } from 'components/Button'
 // assets
 import MinusIcon from 'assets/svg/minus.svg'
 import PlusIcon from 'assets/svg/plus.svg'
@@ -18,15 +18,15 @@ interface IProps {
 const ItemCount: FC<IProps> = ({ value, onPressPlus, onPressMinus }) => {
   return (
     <View style={styles.countWrap}>
-      <TouchableOpacity onPress={onPressMinus}>
+      <Button type={ButtonTypes.icon} onPress={onPressMinus}>
         <MinusIcon />
-      </TouchableOpacity>
+      </Button>
       <Typography variant={TypographyVariants.body} style={styles.count}>
         {value}
       </Typography>
-      <TouchableOpacity onPress={onPressPlus}>
+      <Button type={ButtonTypes.icon} onPress={onPressPlus}>
         <PlusIcon />
-      </TouchableOpacity>
+      </Button>
     </View>
   )
 }

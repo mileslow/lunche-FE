@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, FC, useEffect, useState, Fragment } from 'react'
+import React, { useMemo, useCallback, FC, useEffect, useState } from 'react'
 // libs
 import { ImageBackground, View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
@@ -7,23 +7,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import allSettled from 'promise.allsettled'
-import map from 'lodash.map'
-import filter from 'lodash.filter'
-import intersection from 'lodash.intersection'
 // components
 import CategoriesList from 'components/CategoriesList'
-import Divider from 'components/Divider'
 import StringList from 'components/StringList'
 import InfoWithIconList from 'components/InfoWithIconList'
 import SearchButton from 'components/Button/SearchButton'
 import Typography, { TypographyVariants } from 'components/Typography'
-import MealItem from 'screens/TruckScreen/components/MealItem'
 import TruckGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
+import MenuItems from 'screens/TruckScreen/components/MenuItems'
 import Spinner from 'components/Spinner'
 // store
 import { AppDispatch } from 'store'
-import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
+import { truckSelector, truckCategoriesSelector } from 'store/trucks/selectors'
 import { getTruck, getTruckMenuItems } from 'store/trucks/thunks'
 import { clearTruckScreen } from 'store/commonActions'
 import { getFoodTypes } from 'store/foodTypes/thunks'
@@ -57,8 +53,6 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   const truckCategories = useSelector(truckCategoriesSelector)
 
   const foodTypes = useSelector(foodTypesSelector)
-
-  const menuItems = useSelector(menuItemsSelector)
 
   const translationY = useSharedValue(0)
 
@@ -94,21 +88,6 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     },
     [selectedTypes, setSelectedTypes],
   )
-
-  const renderMenuItems = useMemo(() => {
-    const menu = selectedTypes.length
-      ? filter(menuItems, (item) => !!intersection(selectedTypes, map(item.foodTypes, 'id')).length)
-      : menuItems
-    return map(menu, (item) => (
-      <Fragment key={item.id}>
-        <Divider />
-        <MealItem
-          item={item}
-          onPress={() => navigation.navigate(Routes.DishModal, { id: item.id, truckId: currentTruck.id })}
-        />
-      </Fragment>
-    ))
-  }, [selectedTypes, menuItems, currentTruck])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y
@@ -165,7 +144,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
           <CategoriesList active={selectedTypes} data={foodTypes} onPress={handlePressFoodType} />
         </Animated.View>
 
-        {renderMenuItems}
+        <MenuItems truckId={currentTruck.id} selectedTypes={selectedTypes} />
       </Animated.ScrollView>
       {isLoading && <Spinner />}
     </View>
