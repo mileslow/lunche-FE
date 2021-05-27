@@ -162,9 +162,16 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
   })
 
   const handleAddButton = useCallback(() => {
-    dispatch(addItemToOrder({ menuItemId: route.params.id, itemCount: state.itemCount }))
+    dispatch(
+      addItemToOrder({
+        menuItemId: route.params.id,
+        itemCount: state.itemCount,
+        name: state.dish.name,
+        price: state.dish.price,
+      }),
+    )
     handleCloseModal()
-  }, [dispatch, handleCloseModal, route, state.itemCount])
+  }, [dispatch, handleCloseModal, route, state])
 
   const handlePresCounter = useCallback(
     (type: ActionType.IncrementCount | ActionType.DecrementCount) => () => {
@@ -224,7 +231,9 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
         <Divider />
         <Button
           type={ButtonTypes.primary}
-          title={`${t('dishModal:addToOrderButton')} ($ ${round(state.dish.price * state.itemCount, 2)})`}
+          title={`${t('dishModal:addToOrderButton')} ($ ${
+            state.isLoading ? '' : round(state.dish.price * state.itemCount, 2)
+          })`}
           style={styles.button}
           onPress={handleAddButton}
         />

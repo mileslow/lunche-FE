@@ -5,6 +5,7 @@ enum Colors {
   primary = '#22A45D',
   darkSeaGreen = 'rgba(132, 189, 147, 0.1)',
   basic = '#FFFFFF',
+  alabaster = '#FBFBFB',
   concrete = '#F1F1F1',
   greyNurse = '#E7E7E7',
   midNightMoss = '#010F07',

@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, FC, useEffect, useState } from 'react'
+import React, { useMemo, useCallback, FC, useEffect, useState, memo } from 'react'
 // libs
 import { ImageBackground, View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
@@ -96,7 +96,9 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     [selectedTypes, setSelectedTypes],
   )
 
-  const handleGoToCart = useCallback(() => null, [])
+  const handleGoToCart = useCallback(() => {
+    navigation.navigate(Routes.CartScreen)
+  }, [navigation])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y
@@ -173,4 +175,4 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   )
 }
 
-export default TruckScreen
+export default memo(TruckScreen)

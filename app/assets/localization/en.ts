@@ -30,6 +30,15 @@ export default {
   dishModal: {
     addToOrderButton: 'Add to order',
   },
+  cartScreen: {
+    headerTitle: 'Your Order',
+    primaryBtn: 'Continue',
+    order: 'Order',
+    fee: 'Fee',
+    totalDiscounts: 'Total discounts',
+    total: 'Total (inc. VAT)',
+    commentPlaceholder: 'Add your comment here',
+  },
 
   common: {
     welcome: 'Welcome!',

@@ -7,7 +7,7 @@ import Button, { ButtonTypes } from 'components/Button'
 import { IAnimatedSvgIcon } from 'components/AnimatedSvgComponents/types'
 
 const BackButton: FC<{ fill?: string } & IAnimatedSvgIcon & PressableProps> = ({
-  fill,
+  fill = '#010F07',
   iconAnimatedProps,
   ...props
 }) => {
