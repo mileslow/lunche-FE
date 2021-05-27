@@ -17,6 +17,8 @@ import TruckGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
 import MenuItems from 'screens/TruckScreen/components/MenuItems'
 import Spinner from 'components/Spinner'
+import Divider from 'components/Divider'
+import Button, { ButtonTypes } from 'components/Button'
 // store
 import { AppDispatch } from 'store'
 import { truckSelector, truckCategoriesSelector } from 'store/trucks/selectors'
@@ -24,6 +26,7 @@ import { getTruck, getTruckMenuItems } from 'store/trucks/thunks'
 import { clearTruckScreen } from 'store/commonActions'
 import { getFoodTypes } from 'store/foodTypes/thunks'
 import { foodTypesSelector } from 'store/foodTypes/selectors'
+import { orderAmountSelector, orderItemsSelector } from 'store/orders/selectors'
 // types
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // hooks
@@ -53,6 +56,10 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   const truckCategories = useSelector(truckCategoriesSelector)
 
   const foodTypes = useSelector(foodTypesSelector)
+
+  const orderItems = useSelector(orderItemsSelector)
+
+  const orderAmount = useSelector(orderAmountSelector)
 
   const translationY = useSharedValue(0)
 
@@ -88,6 +95,8 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     },
     [selectedTypes, setSelectedTypes],
   )
+
+  const handleGoToCart = useCallback(() => null, [])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y
@@ -144,8 +153,21 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
           <CategoriesList active={selectedTypes} data={foodTypes} onPress={handlePressFoodType} />
         </Animated.View>
 
-        <MenuItems truckId={currentTruck.id} selectedTypes={selectedTypes} />
+        <MenuItems truckId={currentTruck.id} selectedTypes={selectedTypes} orderItems={orderItems} />
       </Animated.ScrollView>
+
+      {orderAmount ? (
+        <View style={styles.buttonWrap}>
+          <Divider />
+          <Button
+            type={ButtonTypes.primary}
+            title={`${t('dishModal:addToOrderButton')} ($ ${orderAmount})`}
+            style={styles.button}
+            onPress={handleGoToCart}
+          />
+        </View>
+      ) : null}
+
       {isLoading && <Spinner />}
     </View>
   )

@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import omit from 'lodash.omit'
-import { OrdersSliceState } from './types'
+import { OrdersSliceState, OrderItem } from './types'
 
 const initialState: OrdersSliceState = {
   orderItems: {},
@@ -11,7 +11,7 @@ const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
-    addItemToOrder: (state, { payload }) => {
+    addItemToOrder: (state, { payload }: PayloadAction<OrderItem>) => {
       state.orderItems = { ...state.orderItems, [payload.menuItemId]: payload }
     },
     removeItemFromOrder: (state, { payload }) => {

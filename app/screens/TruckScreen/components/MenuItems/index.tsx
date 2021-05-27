@@ -11,8 +11,7 @@ import Divider from 'components/Divider'
 import MealItem from 'screens/TruckScreen/components/MealItem'
 // store
 import { menuItemsSelector } from 'store/trucks/selectors'
-import { orderItemsSelector } from 'store/orders/selectors'
-import { OrderItem } from 'store/orders/types'
+import { OrderItem, OrderItems } from 'store/orders/types'
 import { addItemToOrder, removeItemFromOrder } from 'store/orders/model'
 // types
 import { AppDispatch } from 'store'
@@ -21,13 +20,12 @@ import { Routes, RootNavigationStackParamsList } from 'navigation'
 interface IProps {
   selectedTypes: number[]
   truckId: number
+  orderItems: OrderItems
 }
-const MenuItems: FC<IProps> = ({ selectedTypes, truckId }) => {
+const MenuItems: FC<IProps> = ({ selectedTypes, truckId, orderItems }) => {
   const dispatch = useDispatch<AppDispatch>()
 
   const navigation = useNavigation<StackNavigationProp<RootNavigationStackParamsList>>()
-
-  const orderItems = useSelector(orderItemsSelector)
 
   const menuItems = useSelector(menuItemsSelector)
 

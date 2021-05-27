@@ -65,4 +65,11 @@ export default StyleSheet.create({
   underLine: {
     textDecorationLine: 'underline',
   },
+  buttonWrap: {
+    backgroundColor: Colors.basic,
+  },
+  button: {
+    marginHorizontal: Spacing.double,
+    marginVertical: Spacing.double,
+  },
 })
