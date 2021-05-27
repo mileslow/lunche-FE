@@ -17,6 +17,9 @@ import { isShowWelcomeSelector } from 'store/general/selectors'
 import { getSkipWelcome } from 'services/storage'
 // types
 import { MainNavigationStackParamsList } from './types'
+import CartScreen from 'screens/CartScreen'
+import TruckScreen from 'screens/TruckScreen'
+import AboutTruckScreen from 'screens/AboutTruckScreen'
 
 const MainStack = createStackNavigator<MainNavigationStackParamsList>()
 
@@ -46,7 +49,12 @@ const MainStackNavigator = () => {
       {isShowWelcome ? (
         <MainStack.Screen name={Routes.WelcomeScreen} component={WelcomeScreen} />
       ) : (
-        <MainStack.Screen name={Routes.MainTabsStack} component={MainTabsNavigator} />
+        <>
+          <MainStack.Screen name={Routes.MainTabsStack} component={MainTabsNavigator} />
+          <MainStack.Screen name={Routes.CartScreen} component={CartScreen} />
+          <MainStack.Screen name={Routes.TruckScreen} component={TruckScreen} />
+          <MainStack.Screen name={Routes.AboutTruckScreen} component={AboutTruckScreen} />
+        </>
       )}
     </MainStack.Navigator>
   )

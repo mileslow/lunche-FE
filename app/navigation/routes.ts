@@ -12,6 +12,7 @@ enum Routes {
   MainScreen = 'MainScreen',
   TruckScreen = 'TruckScreen',
   AboutTruckScreen = 'AboutTruckScreen',
+  CartScreen = 'CartScreen',
 
   // modals
   DishModal = 'DishModal',

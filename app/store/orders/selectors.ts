@@ -6,19 +6,26 @@ import round from 'lodash.round'
 import { RootState } from 'store'
 import { OrdersSliceState } from 'store/orders/types'
 
-export const orderItemsSelector = createSelector(
+export const ordersSelector = createSelector(
   (state: RootState) => state.orders,
-  (orders: OrdersSliceState) => orders.orderItems,
+  (orders) => orders,
 )
+
+export const orderItemsSelector = createSelector(ordersSelector, (orders: OrdersSliceState) => orders.orderItems)
 
 export const orderAmountSelector = createSelector(
   (state: RootState) => state.orders.orderItems,
   (state: RootState) => state.trucks.menuItems,
   (orderItems, menuItems) =>
-    sumBy(
-      map(orderItems, (item) => {
-        const dish = find(menuItems, { id: item.menuItemId })
-        return dish ? round(dish.price * item.itemCount, 2) : 0
-      }),
+    round(
+      sumBy(
+        map(orderItems, (item) => {
+          const dish = find(menuItems, { id: item.menuItemId })
+          return dish ? dish.price * item.itemCount : 0
+        }),
+      ),
+      2,
     ),
 )
+
+export const commentOrderSelector = createSelector(ordersSelector, (orders) => orders.comment)

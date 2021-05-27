@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import React, { FC } from 'react'
+import { View, StyleSheet, ViewStyle } from 'react-native'
 import { Colors } from 'styles'
 
 const styles = StyleSheet.create({
@@ -10,6 +10,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const Divider = () => <View style={styles.divider} />
+const Divider: FC<{ style?: ViewStyle }> = ({ style }) => <View style={[styles.divider, style]} />
 
 export default Divider
