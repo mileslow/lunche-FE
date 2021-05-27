@@ -37,7 +37,7 @@ const CartScreen = () => {
 
   const handleCountPress = useCountOrderPress()
 
-  const handleDeleteDish = useCallback((id: number) => () => dispatch(removeItemFromOrder(id)), [dispatch])
+  const handleDeleteDish = useCallback((id: number) => dispatch(removeItemFromOrder(id)), [dispatch])
 
   const handleChangeText = useCallback(
     (text: string) => {
