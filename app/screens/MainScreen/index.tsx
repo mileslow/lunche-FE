@@ -26,12 +26,15 @@ import Categories from 'screens/MainScreen/components/Categories'
 // thunks
 import { getFoodCategories } from 'store/foodCategories/thunks'
 import { getTrucks } from 'store/trucks/thunks'
+// store actions
+import { setCurrentPosition } from 'store/general/model'
 // selectors
 import { foodCategoriesSelector } from 'store/foodCategories/selectors'
 import { trucksSelector, filtersSelector } from 'store/trucks/selectors'
+import { currentPositionSelector } from 'store/general/selectors'
 import { AppDispatch } from 'store'
 // services
-import { useGetCurrentPosition } from 'services/geoLocation'
+import { getCurrentLocation } from 'services/geoLocation'
 // constants
 import { END_POSITION } from './constants'
 // styles
@@ -60,12 +63,15 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const filters = useSelector(filtersSelector)
 
-  const currentLocation = useGetCurrentPosition(true)
+  const currentLocation = useSelector(currentPositionSelector)
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      await allSettled([dispatch(getFoodCategories()), dispatch(getTrucks())])
+      const locationResult = await getCurrentLocation(true)
+      dispatch(setCurrentPosition(locationResult))
+      const position = locationResult ? { latitude: locationResult.lat, longitude: locationResult.lng } : {}
+      await allSettled([dispatch(getFoodCategories()), dispatch(getTrucks(position))])
       setLoading(false)
     }
     fetchData()
@@ -168,7 +174,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   return (
     <>
-      <Map style={styles.map} zoomLevel={14} location={currentLocation} />
+      <Map style={styles.map} zoomLevel={14} location={currentLocation || undefined} />
 
       <HeaderWithLocation swipePositionY={swipePositionY} address={currentLocation?.address} />
 

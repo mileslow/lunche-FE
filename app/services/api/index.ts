@@ -4,6 +4,7 @@ import foodCategories from 'services/api/endpoints/foodCategories'
 import trucks from 'services/api/endpoints/trucks'
 import getFoodTypes from 'services/api/endpoints/getFoodTypes'
 import mapBox from 'services/api/endpoints/mapBox'
+import orders from 'services/api/endpoints/orders'
 
 export default {
   ...auth,
@@ -11,4 +12,5 @@ export default {
   ...trucks,
   ...getFoodTypes,
   ...mapBox,
+  ...orders,
 }
