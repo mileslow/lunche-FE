@@ -6,6 +6,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import Spinner from 'components/Spinner'
 // screens
 import WelcomeScreen from 'screens/WelcomeScreen'
+import CartScreen from 'screens/CartScreen'
+import TruckScreen from 'screens/TruckScreen'
+import AboutTruckScreen from 'screens/AboutTruckScreen'
+import CheckoutScreen from 'screens/CheckoutScreen'
 // navigations
 import MainTabsNavigator from 'navigation/navigators/MainTabs'
 import Routes from 'navigation/routes'
@@ -17,9 +21,6 @@ import { isShowWelcomeSelector } from 'store/general/selectors'
 import { getSkipWelcome } from 'services/storage'
 // types
 import { MainNavigationStackParamsList } from './types'
-import CartScreen from 'screens/CartScreen'
-import TruckScreen from 'screens/TruckScreen'
-import AboutTruckScreen from 'screens/AboutTruckScreen'
 
 const MainStack = createStackNavigator<MainNavigationStackParamsList>()
 
@@ -54,6 +55,7 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.CartScreen} component={CartScreen} />
           <MainStack.Screen name={Routes.TruckScreen} component={TruckScreen} />
           <MainStack.Screen name={Routes.AboutTruckScreen} component={AboutTruckScreen} />
+          <MainStack.Screen name={Routes.CheckoutScreen} component={CheckoutScreen} />
         </>
       )}
     </MainStack.Navigator>

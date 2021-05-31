@@ -6,6 +6,7 @@ import Typography, { TypographyVariants } from 'components/Typography'
 
 export enum ButtonTypes {
   primary = 'primary',
+  basic = 'basic',
   link = 'link',
   icon = 'icon',
 }
@@ -13,7 +14,7 @@ export enum ButtonTypes {
 type ButtonProps = PressableProps & {
   title?: string
   type?: ButtonTypes
-  children?: ReactChildren | ReactElement
+  children?: ReactChildren | ReactElement | ReactChildren[] | ReactElement[]
   textStyle?: TextStyle
 }
 
@@ -22,10 +23,12 @@ const Button: FC<ButtonProps> = ({ title, type = ButtonTypes.primary, children, 
     [ButtonTypes.primary]: styles.primary,
     [ButtonTypes.link]: styles.link,
     [ButtonTypes.icon]: styles.icon,
+    [ButtonTypes.basic]: styles.basic,
   }
 
   const typeButtonBackgroundColor = {
     [ButtonTypes.primary]: Colors.primary,
+    [ButtonTypes.basic]: Colors.concrete,
     [ButtonTypes.link]: undefined,
     [ButtonTypes.icon]: undefined,
   }
@@ -33,6 +36,7 @@ const Button: FC<ButtonProps> = ({ title, type = ButtonTypes.primary, children, 
   const typeButtonTextColor = {
     [ButtonTypes.primary]: Colors.basic,
     [ButtonTypes.link]: Colors.primary,
+    [ButtonTypes.basic]: Colors.midNightMoss,
     [ButtonTypes.icon]: undefined,
   }
 
@@ -86,6 +90,10 @@ const styles = StyleSheet.create({
     width: 24,
   },
   link: {},
+  basic: {
+    borderRadius: 4,
+    height: 36,
+  },
 })
 
 export default Button

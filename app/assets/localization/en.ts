@@ -39,6 +39,19 @@ export default {
     total: 'Total (inc. VAT)',
     commentPlaceholder: 'Add your comment here',
   },
+  checkoutScreen: {
+    headerTitle: 'Checkout',
+    pickUpBtn: 'Pick up',
+    deliveryBtn: 'Delivery',
+    pickUpLabel: 'Pick up',
+    asap: 'ASAP',
+    personalInfo: 'Personal information',
+    note: 'This information you should use as login for further enters to the app',
+    deliverAddress: 'Deliver address',
+    deliveryDate: 'Deliver time',
+    pickUpAddress: 'Pickup address',
+    submitBtn: 'Continue',
+  },
 
   common: {
     welcome: 'Welcome!',

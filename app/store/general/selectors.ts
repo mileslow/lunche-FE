@@ -6,3 +6,13 @@ export const isShowWelcomeSelector = createSelector(
   (state: RootState) => state.general,
   (general: GeneralSliceState) => general.isShowWelcome,
 )
+
+export const currentAddressSelector = createSelector(
+  (state: RootState) => state.general,
+  (general: GeneralSliceState) => general.currentPosition?.address,
+)
+
+export const currentPositionSelector = createSelector(
+  (state: RootState) => state.general,
+  (general: GeneralSliceState) => general.currentPosition,
+)

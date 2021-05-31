@@ -4,6 +4,7 @@ import { MainNavigationStackParamsList } from 'navigation/navigators/MainStack/t
 import { Routes } from 'navigation/index'
 
 export type RootNavigationStackParamsList = {
+  [Routes.RootNavigator]: undefined
   [Routes.DishModal]: { id: number; truckId: number }
 } & TabsNavigationParamsList &
   MainNavigationStackParamsList &

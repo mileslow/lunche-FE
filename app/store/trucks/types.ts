@@ -57,10 +57,17 @@ export type MenuItemResource = {
   price: number
 }
 
-export type TrucksFilters = { supportDelivery?: boolean; foodCategoryIds?: number[] }
+export type TrucksFilters = {
+  latitude?: number
+  longitude?: number
+  supportDelivery?: boolean
+  foodCategoryIds?: number[]
+}
 
 export type GetTrucksParams = TrucksFilters | undefined
 
 export type GetTruckMenuItemsParams = { id: number; params?: { foodTypeIds?: number[] } }
 
 export type GetTruckMenuItemParams = { id: number; truckId: number }
+
+export type GetTruckParams = { id: number; longitude?: number; latitude?: number }

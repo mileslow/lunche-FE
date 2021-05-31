@@ -16,35 +16,41 @@ const hasLocationPermission: () => Promise<boolean> = async () => {
   return some(permissions, (key) => statuses[key] === RESULTS.GRANTED)
 }
 
-export const getCurrentLocation: () => Promise<GeoPosition> = async () => {
+const GEOLOCATION_CONFIG = {
+  enableHighAccuracy: false,
+  timeout: 15000,
+  maximumAge: 10000,
+}
+export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocation> = async (withAddress = false) => {
   const isGranted = await hasLocationPermission()
   return new Promise((resolve, reject) => {
     if (isGranted) {
-      Geolocation.getCurrentPosition(resolve, reject, {
-        enableHighAccuracy: false,
-        timeout: 15000,
-        maximumAge: 10000,
-      })
+      Geolocation.getCurrentPosition(
+        (position: GeoPosition) => {
+          const location: CurrentLocation = { lng: position.coords.longitude, lat: position.coords.latitude }
+          if (withAddress) {
+            api.geocode({ latitude: location.lat, longitude: location.lng }).then((result) => {
+              resolve({ ...location, address: result.data?.features[0]?.text })
+            })
+            return
+          }
+          resolve(location)
+        },
+        reject,
+        GEOLOCATION_CONFIG,
+      )
     } else {
       reject('Permission to the location was denied')
     }
   })
 }
 
-type CurrentLocation = { lng: number; lat: number; address?: string }
-export const useGetCurrentPosition = (withAddress = false) => {
+export type CurrentLocation = { lng: number; lat: number; address?: string }
+export const useGetCurrentPosition = (withAddress?: boolean) => {
   const [currentPosition, setCurrentPosition] = useState<CurrentLocation>()
 
   useEffect(() => {
-    getCurrentLocation().then(async (position) => {
-      let location: CurrentLocation = { lng: position.coords.longitude, lat: position.coords.latitude }
-      if (withAddress) {
-        const result = await api.geocode({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        })
-        location = { ...location, address: result.data?.features[0]?.text }
-      }
+    getCurrentLocation(withAddress).then((location: CurrentLocation) => {
       setCurrentPosition(location)
     })
   }, [withAddress])

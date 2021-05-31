@@ -10,7 +10,6 @@ import dayjs from 'dayjs'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
 import StringList from 'components/StringList'
-import InfoWithIconList from 'components/InfoWithIconList'
 import TrackGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
 import FoodItem from 'screens/AboutTruckScreen/components/FoodItem'
@@ -18,7 +17,6 @@ import ContactItem from 'screens/AboutTruckScreen/components/ContactItem'
 // selectors
 import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
 // assets
-import RatingsIcon from 'assets/svg/ratings.svg'
 import AddressIcon from 'assets/svg/address.svg'
 import PhoneIcon from 'assets/svg/phone.svg'
 import TimeIcon from 'assets/svg/time.svg'
@@ -136,7 +134,6 @@ const AboutTruckScreen = () => {
           <Typography variant={TypographyVariants.h3} style={styles.subTitle}>
             {currentTruck.name}
           </Typography>
-          <InfoWithIconList data={[{ icon: <RatingsIcon />, text: `${currentTruck.rating}` }]} />
         </View>
         <StringList data={truckCategories} style={{ paddingHorizontal: Spacing.double }} />
         <Typography style={styles.subhead} variant={TypographyVariants.subhead}>

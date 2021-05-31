@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, memo, useMemo } from 'react'
+import React, { FC, Fragment, useCallback, memo, useMemo } from 'react'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import map from 'lodash.map'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
-import BackButton from 'components/Button/BackButton'
 import Button, { ButtonTypes } from 'components/Button'
-import Input from 'components/Forms/Input'
+import Header from 'components/Header'
+import Input from 'components/Form/Input'
 import Divider from 'components/Divider'
 import CartItem from 'screens/CartScreen/components/CartItem'
 // store
@@ -17,12 +17,15 @@ import { removeItemFromOrder, changeComment } from 'store/orders/model'
 import { AppDispatch } from 'store'
 // hooks
 import useCountOrderPress from 'hooks/useCountOrderPress'
+import useStatusBarStyle from 'hooks/useStatusBarStyle'
 // assets
 import CommentIcon from 'assets/svg/speech-bubble-comment.svg'
 // styles
 import styles from './styles'
+import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { StackScreenProps } from '@react-navigation/stack'
 
-const CartScreen = () => {
+const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CartScreen>> = ({ navigation }) => {
   const insets = useSafeAreaInsets()
 
   const { t } = useTranslation()
@@ -37,6 +40,8 @@ const CartScreen = () => {
 
   const handleCountPress = useCountOrderPress()
 
+  useStatusBarStyle('dark-content')
+
   const handleDeleteDish = useCallback((id: number) => dispatch(removeItemFromOrder(id)), [dispatch])
 
   const handleChangeText = useCallback(
@@ -45,6 +50,10 @@ const CartScreen = () => {
     },
     [dispatch],
   )
+
+  const redirectToCheckout = useCallback(() => {
+    navigation.navigate(Routes.CheckoutScreen)
+  }, [navigation])
 
   const inputIcon = useMemo(
     () => (
@@ -96,12 +105,7 @@ const CartScreen = () => {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <BackButton style={styles.headerIcon} />
-        <View style={styles.headerTitle} pointerEvents='none'>
-          <Typography variant={TypographyVariants.subhead}>{t('cartScreen:headerTitle')}</Typography>
-        </View>
-      </View>
+      <Header withBack title={t('cartScreen:headerTitle')} />
 
       <ScrollView style={styles.scrollStyle}>
         <Input
@@ -117,7 +121,12 @@ const CartScreen = () => {
 
       <View style={styles.totals}>
         {renderTotals}
-        <Button type={ButtonTypes.primary} style={styles.button} title={t('cartScreen:primaryBtn')} />
+        <Button
+          type={ButtonTypes.primary}
+          style={styles.button}
+          title={t('cartScreen:primaryBtn')}
+          onPress={redirectToCheckout}
+        />
       </View>
     </View>
   )
