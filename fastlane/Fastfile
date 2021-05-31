@@ -43,7 +43,7 @@ platform :android do
     )
     supply(track: 'internal', release_status: 'draft')
 
-    git_commit(message: "Bump Version")
+    git_commit(path: "*", message: "Bump Android Version")
     push_to_git_remote
   end
 end
@@ -63,9 +63,9 @@ platform :ios do
 
     build_app(workspace: "./ios/lunche.xcworkspace", scheme: "lunche", output_directory: "./ios/build")
 
-    upload_to_testflight(skip_waiting_for_build_processing: true)
+    upload_to_testflight(skip_waiting_for_build_processing: true, ipa: "./ios/build")
 
-    git_commit(message: "Bump Version")
+    git_commit(path: "*", message: "Bump IOS Version")
     push_to_git_remote
   end
 end
