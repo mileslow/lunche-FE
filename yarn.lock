@@ -1613,6 +1613,20 @@
   dependencies:
     "@types/lodash" "*"
 
+"@types/lodash.reduce@^4.6.6":
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.reduce/-/lodash.reduce-4.6.6.tgz#064fe105f1717d0af8d3d9894aedc57f51df3f11"
+  integrity sha512-Hb3rlWwyLEG+aEy3e6MosaJxHdtV33kp21q6Q9stVXRMdkcxZK0lBcWEbRPfgxh/Ly1YaMLu0tnWEOwGbs21rw==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash.reject@^4.6.6":
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.reject/-/lodash.reject-4.6.6.tgz#419a634a275ce0be7920fa464ed71ed2b907e8cf"
+  integrity sha512-rMsBoogO292gRTnc4lRSFRC0T80fB4bw0K5laOiQlI1Tyrz/DViygkhiudxeVDynvq5/6mX+3/pY5eqlylgZ5A==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.round@^4.0.6":
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/@types/lodash.round/-/lodash.round-4.0.6.tgz#dddd13d478baffaef66b5b65b88978140253fad3"
@@ -5401,6 +5415,16 @@ lodash.pick@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
   integrity sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=
+
+lodash.reduce@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.reduce/-/lodash.reduce-4.6.0.tgz#f1ab6b839299ad48f784abbf476596f03b914d3b"
+  integrity sha1-8atrg5KZrUj3hKu/R2WW8DuRTTs=
+
+lodash.reject@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.reject/-/lodash.reject-4.6.0.tgz#80d6492dc1470864bbf583533b651f42a9f52415"
+  integrity sha1-gNZJLcFHCGS79YNTO2UfQqn1JBU=
 
 lodash.round@^4.0.4:
   version "4.0.4"

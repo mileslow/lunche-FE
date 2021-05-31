@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 // navigators
 import MainStackNavigator from 'navigation/navigators/MainStack'
 import DishModal from 'screens/DishModal'
+import ChangeAddressModal from 'screens/ChangeAddressModal'
 // routs
 import Routes from 'navigation/routes'
 
@@ -39,9 +40,11 @@ const AppNavigationContainer: FC = () => {
             }),
           }}
           mode='modal'
+          // initialRouteName={Routes.ChangeAddressModal}
         >
           <RootStack.Screen name={Routes.RootNavigator} component={MainStackNavigator} />
           <RootStack.Screen name={Routes.DishModal} component={DishModal} />
+          <RootStack.Screen name={Routes.ChangeAddressModal} component={ChangeAddressModal} />
         </RootStack.Navigator>
       </NavigationContainer>
     </>

@@ -172,11 +172,19 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [setLoading, dispatch, filters],
   )
 
+  const redirectToChangeAddress = useCallback(() => {
+    navigation.navigate(Routes.ChangeAddressModal)
+  }, [navigation])
+
   return (
     <>
       <Map style={styles.map} zoomLevel={14} location={currentLocation || undefined} />
 
-      <HeaderWithLocation swipePositionY={swipePositionY} address={currentLocation?.address} />
+      <HeaderWithLocation
+        swipePositionY={swipePositionY}
+        address={currentLocation?.address}
+        onLocationPress={redirectToChangeAddress}
+      />
 
       <HeaderTransparent swipePositionY={swipePositionY} animateTo={animateTo} />
 

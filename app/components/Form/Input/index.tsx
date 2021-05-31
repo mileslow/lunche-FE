@@ -10,6 +10,7 @@ export type InputProps = TextInputProps & {
   rightIcon?: ReactElement
   containerStyle?: ViewStyle
   placeholderTextColor?: string
+  withError?: boolean
 }
 
 const Input: FC<InputProps> = ({
@@ -20,6 +21,7 @@ const Input: FC<InputProps> = ({
   leftIcon,
   rightIcon,
   placeholderTextColor = Colors.gunsmoke,
+  withError = true,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false)
@@ -62,9 +64,11 @@ const Input: FC<InputProps> = ({
         {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
         {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
       </View>
-      <View style={styles.errorContainer}>
-        {!!error && <Text style={[styles.error, { color: Colors.pigmentRed }]}>{error}</Text>}
-      </View>
+      {withError && (
+        <View style={styles.errorContainer}>
+          {!!error && <Text style={[styles.error, { color: Colors.pigmentRed }]}>{error}</Text>}
+        </View>
+      )}
     </View>
   )
 }

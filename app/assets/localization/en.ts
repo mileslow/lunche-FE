@@ -52,6 +52,12 @@ export default {
     pickUpAddress: 'Pickup address',
     submitBtn: 'Continue',
   },
+  changeAddressModal: {
+    title: 'Find restaurants near you',
+    description: 'Please enter your location or allow access to your location to find restaurants near you.',
+    savedLocations: 'Your location',
+    recentLocations: 'Recent locations',
+  },
 
   common: {
     welcome: 'Welcome!',
