@@ -1,6 +1,6 @@
 import React, { memo, FC } from 'react'
 // libs
-import { Text, View } from 'react-native'
+import { Text, Pressable } from 'react-native'
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -15,9 +15,10 @@ import styles from './styles'
 interface IProps {
   swipePositionY: Animated.SharedValue<number>
   address?: string
+  onLocationPress: () => void
 }
 
-const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address }) => {
+const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address, onLocationPress }) => {
   const insets = useSafeAreaInsets()
 
   const { t } = useTranslation()
@@ -33,10 +34,10 @@ const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address }) => {
       style={[styles.header, headerWithLocation, { paddingTop: insets.top, minHeight: Metrics.header + insets.top }]}
     >
       <Text style={styles.headerText}>{t('mainScreen:headerText')}</Text>
-      <View style={styles.currentLocationWrap}>
+      <Pressable style={styles.currentLocationWrap} onPress={onLocationPress} pointerEvents='box-only'>
         <Text style={styles.currentLocation}>{address || 'Los Angeles'}</Text>
         <PersonIcon />
-      </View>
+      </Pressable>
     </Animated.View>
   )
 }

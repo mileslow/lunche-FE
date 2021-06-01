@@ -3,6 +3,7 @@ import React, { FC, memo, useCallback, useReducer, useRef, useState } from 'reac
 import { Image, View } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useDispatch, useSelector } from 'react-redux'
 import { NativeViewGestureHandler, PanGestureHandler, TapGestureHandler } from 'react-native-gesture-handler'
 import Animated, {
   Extrapolate,
@@ -23,13 +24,13 @@ import ItemCount from 'components/ItemCount'
 import Divider from 'components/Divider'
 // store
 import { getTruckMenuItem } from 'store/trucks/thunks'
+import { orderItemSelector } from 'store/orders/selectors'
 import { addItemToOrder } from 'store/orders/model'
 // services
 import { getImageBySize } from 'services/utils'
 // styles
 import { Colors, Metrics } from 'styles'
 import styles, { CLOSE_ICON_SIZE } from './styles'
-import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'store'
 import { MenuItemResource } from 'store/trucks/types'
 // types
@@ -47,6 +48,8 @@ const reducer = (state: LocalState, action: Action): LocalState => {
       return { ...state, isLoading: false, dish: action.payload }
     case ActionType.IncrementCount:
       return { ...state, itemCount: state.itemCount + 1 }
+    case ActionType.SetInitialCount:
+      return { ...state, itemCount: action.payload }
     case ActionType.DecrementCount:
       return {
         ...state,
@@ -72,6 +75,8 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
 
   const dispatch = useDispatch<AppDispatch>()
 
+  const orderItem = useSelector(orderItemSelector(route.params.id))
+
   const [state, localDispatch] = useReducer(reducer, initialState)
 
   const mainDrawer = useRef()
@@ -88,12 +93,7 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
 
   const beginDrag = useSharedValue(0)
 
-  const stepPositions = useSharedValue([
-    TOP_PADDING.current,
-    Metrics.windowHeight * 0.2,
-    Metrics.windowHeight * 0.4,
-    Metrics.windowHeight * 0.6,
-  ])
+  const stepPositions = useSharedValue([TOP_PADDING.current, Metrics.windowHeight * 0.5])
 
   useFocusEffect(
     useCallback(() => {
@@ -103,6 +103,9 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
         if (getTruckMenuItem.fulfilled.match(result)) {
           localDispatch({ type: ActionType.GetMenuItemFulfilled, payload: result.payload })
         }
+      }
+      if (orderItem) {
+        localDispatch({ type: ActionType.SetInitialCount, payload: orderItem.itemCount })
       }
       fetchMenuItem()
     }, [route, dispatch]),
@@ -121,22 +124,13 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
     },
     onEnd: (e, ctx: { startY: number }) => {
       const endOffsetY = ctx.startY + e.translationY - beginDrag.value + 0.05 * e.velocityY
-
-      if (endOffsetY > stepPositions.value[stepPositions.value.length - 1]) {
+      if (endOffsetY > stepPositions.value[stepPositions.value.length - 1] || e.velocityY > 1500) {
         runOnJS(handleCloseModal)()
         return
       }
 
-      let destSnapPoint = stepPositions.value[0]
-      stepPositions.value.forEach((snapPoint) => {
-        const distFromSnap = Math.abs(snapPoint - endOffsetY)
-        if (distFromSnap < Math.abs(destSnapPoint - endOffsetY)) {
-          destSnapPoint = snapPoint
-        }
-      })
-
-      swipePositionY.value = withTiming(destSnapPoint, { duration: 300 })
-      runOnJS(setLastSnap)(destSnapPoint)
+      swipePositionY.value = withTiming(endOffsetY, { duration: 300 })
+      runOnJS(setLastSnap)(endOffsetY)
     },
   })
 
@@ -146,8 +140,8 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
         {
           translateY: interpolate(
             swipePositionY.value,
-            [stepPositions.value[0], stepPositions.value[stepPositions.value.length - 1]],
-            [stepPositions.value[0], stepPositions.value[stepPositions.value.length - 1]],
+            [stepPositions.value[0], Metrics.windowHeight],
+            [stepPositions.value[0], Metrics.windowHeight],
             Extrapolate.CLAMP,
           ),
         },

@@ -3,6 +3,7 @@ import { Platform } from 'react-native'
 import Geolocation, { GeoPosition } from 'react-native-geolocation-service'
 import { PERMISSIONS, RESULTS, requestMultiple } from 'react-native-permissions'
 import some from 'lodash.some'
+import find from 'lodash.find'
 import api from 'services/api'
 
 const hasLocationPermission: () => Promise<boolean> = async () => {
@@ -30,7 +31,10 @@ export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocat
           const location: CurrentLocation = { lng: position.coords.longitude, lat: position.coords.latitude }
           if (withAddress) {
             api.geocode({ latitude: location.lat, longitude: location.lng }).then((result) => {
-              resolve({ ...location, address: result.data?.features[0]?.text })
+              const response = result.data?.features[0]
+              const country = find(response?.context, (i) => i.id.includes('country'))?.short_code
+              const district = find(response?.context, (i) => i.id.includes('district'))?.text
+              resolve({ ...location, id: response?.id, address: response?.text, country, district })
             })
             return
           }
@@ -45,7 +49,14 @@ export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocat
   })
 }
 
-export type CurrentLocation = { lng: number; lat: number; address?: string }
+export type CurrentLocation = {
+  id?: string
+  lng: number
+  lat: number
+  address?: string
+  country?: string
+  district?: string
+}
 export const useGetCurrentPosition = (withAddress?: boolean) => {
   const [currentPosition, setCurrentPosition] = useState<CurrentLocation>()
 

@@ -12,6 +12,11 @@ export const currentAddressSelector = createSelector(
   (general: GeneralSliceState) => general.currentPosition?.address,
 )
 
+export const currentCountrySelector = createSelector(
+  (state: RootState) => state.general,
+  (general: GeneralSliceState) => general.currentPosition?.country,
+)
+
 export const currentPositionSelector = createSelector(
   (state: RootState) => state.general,
   (general: GeneralSliceState) => general.currentPosition,

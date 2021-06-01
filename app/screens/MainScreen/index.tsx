@@ -106,7 +106,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
       if (scrollActive.value) {
         return
       }
-      if (event.translationY > 100 || event.velocityY > 200) {
+      if (event.translationY > 100 || event.velocityY > 1500) {
         swipePositionY.value = withTiming(END_POSITION, { duration: 300 })
         return
       }
@@ -172,11 +172,19 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [setLoading, dispatch, filters],
   )
 
+  const redirectToChangeAddress = useCallback(() => {
+    navigation.navigate(Routes.ChangeAddressModal)
+  }, [navigation])
+
   return (
     <>
       <Map style={styles.map} zoomLevel={14} location={currentLocation || undefined} />
 
-      <HeaderWithLocation swipePositionY={swipePositionY} address={currentLocation?.address} />
+      <HeaderWithLocation
+        swipePositionY={swipePositionY}
+        address={currentLocation?.address}
+        onLocationPress={redirectToChangeAddress}
+      />
 
       <HeaderTransparent swipePositionY={swipePositionY} animateTo={animateTo} />
 

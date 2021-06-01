@@ -11,10 +11,12 @@ export type Action =
   | { type: ActionType.GetMenuItemFulfilled; payload: MenuItemResource }
   | { type: ActionType.IncrementCount }
   | { type: ActionType.DecrementCount }
+  | { type: ActionType.SetInitialCount; payload: number }
 
 export enum ActionType {
   SetLoading = 'SetLoading',
   GetMenuItemFulfilled = 'GetMenuItemFulfilled',
   IncrementCount = 'IncrementCount',
   DecrementCount = 'DecrementCount',
+  SetInitialCount = 'SetInitialCount',
 }

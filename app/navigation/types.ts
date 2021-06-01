@@ -6,6 +6,7 @@ import { Routes } from 'navigation/index'
 export type RootNavigationStackParamsList = {
   [Routes.RootNavigator]: undefined
   [Routes.DishModal]: { id: number; truckId: number }
+  [Routes.ChangeAddressModal]: undefined
 } & TabsNavigationParamsList &
   MainNavigationStackParamsList &
   HomeNavigationStackParamsList
