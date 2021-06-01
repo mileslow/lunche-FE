@@ -1,5 +1,5 @@
-import React, { FC, useState, memo, ReactElement } from 'react'
-import { TextInput, TextInputProps, StyleSheet, View, Text, ViewStyle } from 'react-native'
+import React, { FC, memo, ReactElement, useState } from 'react'
+import { StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from 'react-native'
 import Typography from 'components/Typography'
 import { Colors, Fonts, FontSize, Spacing } from 'styles'
 
@@ -48,7 +48,7 @@ const Input: FC<InputProps> = ({
           style={[
             styles.input,
             {
-              borderColor: error ? Colors.pigmentRed : isFocused ? Colors.primary : 'rgba(134, 134, 134, 0.1)',
+              borderColor: error ? Colors.pigmentRed : isFocused ? Colors.primary : Colors.borderColor,
               color: Colors.midNightMoss,
               backgroundColor: Colors.alabaster,
             },

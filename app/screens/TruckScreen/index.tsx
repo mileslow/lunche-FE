@@ -112,7 +112,12 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     <View style={styles.screen}>
       <Header translationY={translationY} />
 
-      <Animated.ScrollView onScroll={scrollHandler} scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView
+        bounces={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.truckInfo}>
           {currentTruck.mainPhoto ? (
             <ImageBackground

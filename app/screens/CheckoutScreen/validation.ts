@@ -18,7 +18,5 @@ export const schemaValidation = yup
       phone: yup.string().required(i18n.t('validation:required')),
     }),
     deliveryAddress: requiredDependType(DeliveryType.delivery),
-    deliveryDate: requiredDependType(DeliveryType.delivery),
-    pickupTime: requiredDependType(DeliveryType.pickup),
   })
   .defined()

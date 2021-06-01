@@ -1,24 +1,27 @@
 import React, { FC, memo, useCallback, useState } from 'react'
 // libs
-import { View, ScrollView } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Controller, useForm } from 'react-hook-form'
-import { useSelector, useDispatch } from 'react-redux'
-import round from 'lodash.round'
+import { useDispatch, useSelector } from 'react-redux'
+import { StackScreenProps } from '@react-navigation/stack'
 // components
 import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
-import Input from 'components/HookForm/Input'
 import Divider from 'components/Divider'
 import Spinner from 'components/Spinner'
+import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
+import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
+import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
 // thunks
 import { createOrder } from 'store/orders/thunks'
 // selectors
 import { currentAddressSelector } from 'store/general/selectors'
 import { truckSelector } from 'store/trucks/selectors'
 // types
+import { AppDispatch } from 'store'
 import { DeliveryType } from 'store/orders/types'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
@@ -27,23 +30,15 @@ import { schemaValidation } from './validation'
 // assets
 import PersonIcon from 'assets/svg/person-walking.svg'
 import TruckIcon from 'assets/svg/truck.svg'
-import ClockIcon from 'assets/svg/clock1.svg'
-import ProfileIcon from 'assets/svg/profile.svg'
-import MailIcon from 'assets/svg/mail.svg'
-import PhoneIcon from 'assets/svg/phone.svg'
-import AddressIcon from 'assets/svg/address.svg'
-import DistanceIcon from 'assets/svg/distance.svg'
 // styles
 import { Colors } from 'styles'
 import styles from './styles'
-import { AppDispatch } from 'store'
-import { StackScreenProps } from '@react-navigation/stack'
 
 export interface ICreateOrderFormData {
   type: keyof typeof DeliveryType
   deliveryAddress: string
   deliveryDate: string
-  pickupTime: string
+  pickupDate: string
   client: {
     name: string
     email: string
@@ -71,6 +66,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   } = useForm<ICreateOrderFormData>({
     defaultValues: {
       type: DeliveryType.pickup,
+      deliveryAddress: currentAddress,
     },
     resolver: yupResolver(schemaValidation),
   })
@@ -107,125 +103,45 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
                 <PersonIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.pickup)} />
                 <Typography color={activeTypeColor(DeliveryType.pickup)}>{t('checkoutScreen:pickUpBtn')}</Typography>
               </Button>
-              <Button
-                type={ButtonTypes.basic}
-                style={styles.deliveryBtn}
-                onPress={() => onChange(DeliveryType.delivery)}
-              >
-                <TruckIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.delivery)} />
-                <Typography color={activeTypeColor(DeliveryType.delivery)}>
-                  {t('checkoutScreen:deliveryBtn')}
-                </Typography>
-              </Button>
+              {currentTruck.supportDelivery && (
+                <Button
+                  type={ButtonTypes.basic}
+                  style={styles.deliveryBtn}
+                  onPress={() => onChange(DeliveryType.delivery)}
+                >
+                  <TruckIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.delivery)} />
+                  <Typography color={activeTypeColor(DeliveryType.delivery)}>
+                    {t('checkoutScreen:deliveryBtn')}
+                  </Typography>
+                </Button>
+              )}
             </View>
           )}
         />
+
         {typeDelivery === DeliveryType.pickup && (
-          <>
-            <Typography variant={TypographyVariants.subhead} style={styles.label}>
-              {t('checkoutScreen:pickUpAddress')}
-            </Typography>
-            <View style={styles.readOnlyField}>
-              <View style={styles.readonlyFieldPart}>
-                <AddressIcon fill={Colors.midNightMoss} style={styles.addressIcon} />
-                <Typography variant={TypographyVariants.body}>{currentTruck.address}</Typography>
-              </View>
-              <View style={styles.readonlyFieldPart}>
-                <DistanceIcon style={styles.addressIcon} />
-                <Typography variant={TypographyVariants.body}>{round(currentTruck.distance / 1000, 2)} km</Typography>
-              </View>
-            </View>
-
-            <Typography variant={TypographyVariants.subhead} style={styles.label}>
-              {t('checkoutScreen:pickUpLabel')}
-            </Typography>
-            <Input
-              shouldUnregister
-              control={control}
-              name='pickupTime'
-              defaultValue={t('checkoutScreen:asap')}
-              autoCapitalize='none'
-              autoCorrect={false}
-              error={errors?.pickupTime?.message}
-              leftIcon={<ClockIcon />}
-            />
-          </>
-        )}
-        {typeDelivery === DeliveryType.delivery && (
-          <>
-            <Typography variant={TypographyVariants.subhead} style={styles.label}>
-              {t('checkoutScreen:deliverAddress')}
-            </Typography>
-            <Input
-              shouldUnregister
-              control={control}
-              name='deliveryAddress'
-              defaultValue={currentAddress}
-              autoCapitalize='none'
-              autoCorrect={false}
-              error={errors?.deliveryAddress?.message}
-              leftIcon={<AddressIcon fill={Colors.midNightMoss} />}
-            />
-
-            <Typography variant={TypographyVariants.subhead} style={styles.label}>
-              {t('checkoutScreen:deliveryDate')}
-            </Typography>
-            <Input
-              shouldUnregister
-              control={control}
-              name='deliveryDate'
-              defaultValue={t('checkoutScreen:asap')}
-              autoCapitalize='none'
-              autoCorrect={false}
-              error={errors?.deliveryDate?.message}
-              leftIcon={<ClockIcon />}
-            />
-          </>
+          <PickUpFields control={control} distance={currentTruck.distance} address={currentTruck.address} />
         )}
 
-        <Typography variant={TypographyVariants.subhead} style={styles.label}>
-          {t('checkoutScreen:personalInfo')}
-        </Typography>
-        <Input
-          control={control}
-          name='client.name'
-          autoCapitalize='none'
-          autoCorrect={false}
-          error={errors?.client?.name?.message}
-          leftIcon={<ProfileIcon fill={Colors.midNightMoss} />}
-        />
-        <Input
-          control={control}
-          name='client.email'
-          autoCapitalize='none'
-          autoCompleteType='email'
-          autoCorrect={false}
-          keyboardType='email-address'
-          error={errors?.client?.email?.message}
-          leftIcon={<MailIcon />}
-        />
+        {typeDelivery === DeliveryType.delivery && <DeliveryFields control={control} errors={errors} />}
 
-        <Input
-          control={control}
-          name='client.phone'
-          autoCapitalize='none'
-          autoCorrect={false}
-          keyboardType='phone-pad'
-          error={errors?.client?.phone?.message}
-          leftIcon={<PhoneIcon fill={Colors.midNightMoss} />}
-        />
+        <PersonalInfoFields control={control} errors={errors} />
+
         <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
           <Typography color={Colors.cadmiumOrange}>*</Typography>
           {t('checkoutScreen:note')}
         </Typography>
       </ScrollView>
+
       <Divider />
+
       <Button
         type={ButtonTypes.primary}
         title={`${t('checkoutScreen:submitBtn')}`}
         style={styles.button}
         onPress={handleSubmit(onSubmit)}
       />
+
       {isLoading && <Spinner />}
     </View>
   )
