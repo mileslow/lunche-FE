@@ -106,7 +106,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
       if (scrollActive.value) {
         return
       }
-      if (event.translationY > 100 || event.velocityY > 200) {
+      if (event.translationY > 100 || event.velocityY > 1500) {
         swipePositionY.value = withTiming(END_POSITION, { duration: 300 })
         return
       }
