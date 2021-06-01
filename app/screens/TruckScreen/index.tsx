@@ -168,7 +168,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
           <Divider />
           <Button
             type={ButtonTypes.primary}
-            title={`${t('dishModal:addToOrderButton')} ($ ${orderAmount})`}
+            title={`${t('truckScreen:redirectButton')} ($ ${orderAmount})`}
             style={styles.button}
             onPress={handleGoToCart}
           />

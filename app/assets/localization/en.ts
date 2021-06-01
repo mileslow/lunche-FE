@@ -11,6 +11,7 @@ export default {
   truckScreen: {
     menuTitle: 'Menu',
     aboutUs: 'About us',
+    redirectButton: 'Go to cart',
   },
   aboutTrackScreen: {
     subhead: 'What to eat here',
