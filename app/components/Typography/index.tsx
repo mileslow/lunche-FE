@@ -21,6 +21,7 @@ export enum TypographyVariants {
   body = 'body',
   smallBody = 'smallBody',
   subhead = 'subhead',
+  caption = 'caption',
   // largeTitle = 'largeTitle',
   // title1 = 'title1',
   // title2 = 'title2',
@@ -81,6 +82,12 @@ export const styles = StyleSheet.create({
     fontFamily: Fonts.regular,
     fontSize: FontSize.subhead,
     fontWeight: TypographyWeights.medium,
+  },
+  caption: {
+    color: Colors.midNightMoss,
+    fontFamily: Fonts.regular,
+    fontSize: FontSize.caption,
+    fontWeight: TypographyWeights.normal,
   },
 })
 

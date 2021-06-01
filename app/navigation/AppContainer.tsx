@@ -40,7 +40,6 @@ const AppNavigationContainer: FC = () => {
             }),
           }}
           mode='modal'
-          // initialRouteName={Routes.ChangeAddressModal}
         >
           <RootStack.Screen name={Routes.RootNavigator} component={MainStackNavigator} />
           <RootStack.Screen name={Routes.DishModal} component={DishModal} />

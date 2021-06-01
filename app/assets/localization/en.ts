@@ -51,6 +51,8 @@ export default {
     deliveryDate: 'Deliver time',
     pickUpAddress: 'Pickup address',
     submitBtn: 'Continue',
+    scheduled: 'Scheduled',
+    chooseTime: 'Choose a time',
   },
   changeAddressModal: {
     title: 'Find restaurants near you',
@@ -76,6 +78,7 @@ export default {
     forgotPasswordSuccessTitle: 'Success',
     forgotPasswordSuccessMessage: 'Check you email for reset password',
     cancel: 'Cancel',
+    select: 'Select',
   },
   errors: {
     serverError: 'Server Error',
