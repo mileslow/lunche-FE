@@ -69,7 +69,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
       { label: t('cartScreen:order'), value: `$ ${orderAmount}` },
       { label: t('cartScreen:fee'), value: '$ 0' },
       { label: t('cartScreen:totalDiscounts'), value: '$ 0' },
-      { label: t('cartScreen:total'), value: `$ ${orderAmount}`, textVariant: TypographyVariants.smallBody },
+      { label: t('cartScreen:total'), value: `$ ${orderAmount}`, textVariant: TypographyVariants.body },
     ],
     [t, orderAmount],
   )
@@ -97,7 +97,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
       map(totals, ({ label, value, textVariant = TypographyVariants.smallBody }, index) => (
         <View key={index} style={styles.totalRow}>
           <Typography variant={textVariant}>{label}</Typography>
-          <Typography variant={TypographyVariants.smallBody}>{value}</Typography>
+          <Typography variant={textVariant}>{value}</Typography>
         </View>
       )),
     [totals],
