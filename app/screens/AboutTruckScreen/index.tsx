@@ -1,7 +1,8 @@
-import React, { Fragment, useCallback, useMemo, useState, memo } from 'react'
+import React, { Fragment, useCallback, useMemo, useState, memo, FC } from 'react'
 // libs
 import { View, Image, ScrollView } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { StackScreenProps } from '@react-navigation/stack'
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -22,12 +23,16 @@ import PhoneIcon from 'assets/svg/phone.svg'
 import TimeIcon from 'assets/svg/time.svg'
 // utils
 import { getImageBySize } from 'services/utils'
+// types
+import { RootNavigationStackParamsList, Routes } from 'navigation'
 // styles
 import { TRUCK_IMAGE_HEIGHT } from 'screens/TruckScreen/styles'
 import { Metrics, Spacing } from 'styles'
 import styles from './styles'
 
-const AboutTruckScreen = () => {
+const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.AboutTruckScreen>> = ({
+  navigation,
+}) => {
   const { t } = useTranslation()
 
   const currentTruck = useSelector(truckSelector)
@@ -63,11 +68,16 @@ const AboutTruckScreen = () => {
     () => (
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.foodList}>
         {map(menuItems, (item, index) => (
-          <FoodItem key={index} item={item} style={styles.foodItem} />
+          <FoodItem
+            key={index}
+            item={item}
+            style={styles.foodItem}
+            onPress={() => navigation.navigate(Routes.DishModal, { id: item.id, truckId: currentTruck.id })}
+          />
         ))}
       </ScrollView>
     ),
-    [menuItems],
+    [menuItems, navigation],
   )
 
   const contacts = useMemo(
@@ -107,6 +117,7 @@ const AboutTruckScreen = () => {
         contentContainerStyle={styles.content}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
+        bounces={false}
       >
         <View style={styles.truckImage}>
           <Carousel
