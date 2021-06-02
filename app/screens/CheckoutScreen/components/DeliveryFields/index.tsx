@@ -4,7 +4,6 @@ import styles from 'screens/CheckoutScreen/styles'
 import Input from 'components/HookForm/Input'
 import AddressIcon from 'assets/svg/address.svg'
 import { Colors } from 'styles'
-import TimeField from 'screens/CheckoutScreen/components/TimeField'
 import { useTranslation } from 'react-i18next'
 import { Control, FieldErrors } from 'react-hook-form'
 import { ICreateOrderFormData } from 'screens/CheckoutScreen'
@@ -34,8 +33,6 @@ const DeliveryFields: FC<IProps> = ({ control, errors }) => {
       <Typography variant={TypographyVariants.subhead} style={styles.label}>
         {t('checkoutScreen:deliveryDate')}
       </Typography>
-
-      <TimeField shouldUnregister name='deliveryDate' control={control} />
     </>
   )
 }

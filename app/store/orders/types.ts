@@ -25,7 +25,7 @@ export enum PaymentMethodType {
 export type CreateOrderData = {
   type: keyof typeof DeliveryType
   paymentMethod: keyof typeof PaymentMethodType
-  deliveryDate: string
+  orderTime: string
   deliveryAddress: string
   client: {
     name: string

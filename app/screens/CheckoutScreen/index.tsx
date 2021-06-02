@@ -15,6 +15,7 @@ import Spinner from 'components/Spinner'
 import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
+import TimeField from 'screens/CheckoutScreen/components/TimeField'
 // thunks
 import { createOrder } from 'store/orders/thunks'
 // selectors
@@ -37,8 +38,7 @@ import styles from './styles'
 export interface ICreateOrderFormData {
   type: keyof typeof DeliveryType
   deliveryAddress: string
-  deliveryDate: string
-  pickupDate: string
+  orderTime: string
   client: {
     name: string
     email: string
@@ -120,10 +120,12 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         />
 
         {typeDelivery === DeliveryType.pickup && (
-          <PickUpFields control={control} distance={currentTruck.distance} address={currentTruck.address} />
+          <PickUpFields distance={currentTruck.distance} address={currentTruck.address} />
         )}
 
         {typeDelivery === DeliveryType.delivery && <DeliveryFields control={control} errors={errors} />}
+
+        <TimeField shouldUnregister name='orderTime' control={control} />
 
         <PersonalInfoFields control={control} errors={errors} />
 
