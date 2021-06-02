@@ -63,7 +63,7 @@ platform :ios do
 
     build_app(workspace: "./ios/lunche.xcworkspace", scheme: "lunche", output_directory: "./ios/build")
 
-    upload_to_testflight(skip_waiting_for_build_processing: true, ipa: "./ios/build")
+    upload_to_testflight(skip_waiting_for_build_processing: true, ipa: "./ios/build/lunche.ipa")
 
     git_commit(path: "*", message: "Bump IOS Version")
     push_to_git_remote
