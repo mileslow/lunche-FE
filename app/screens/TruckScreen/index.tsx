@@ -68,7 +68,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
       setLoading(true)
       await allSettled([
         dispatch(getTruck(route.params.id)),
-        dispatch(getFoodTypes()),
+        dispatch(getFoodTypes(route.params.id)),
         dispatch(getTruckMenuItems({ id: route.params.id })),
       ])
       setLoading(false)
