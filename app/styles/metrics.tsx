@@ -4,6 +4,7 @@ const WINDOW = Dimensions.get('window')
 
 const Metrics = {
   header: 56,
+  bottomTab: 49,
   truckListImgWidth: 343,
   truckListImgHeight: 144,
   truckImgWidth: 375,

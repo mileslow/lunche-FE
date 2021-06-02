@@ -1,4 +1,4 @@
-import React, { FC, memo, ReactNode } from 'react'
+import React, { FC, memo, ReactNode, useMemo } from 'react'
 // libs
 import { Text, StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -13,7 +13,8 @@ import HomeIcon from 'assets/svg/home.svg'
 import OrdersIcon from 'assets/svg/orders.svg'
 import ProfileIcon from 'assets/svg/profile.svg'
 // styles
-import { Colors } from 'styles'
+import { Colors, Metrics, Spacing } from 'styles'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const Tab = createBottomTabNavigator<RootNavigationStackParamsList>()
 
@@ -28,8 +29,12 @@ const tabBarLabelRender = ({ focused }: { focused: boolean }, label: string): Re
 const MainTabsNavigator: FC = () => {
   const { t } = useTranslation()
 
+  const insets = useSafeAreaInsets()
+
+  const tabPadding = useMemo(() => (insets.bottom > 0 ? insets.bottom : Spacing.base), [insets])
+
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBarOptions={{ style: { height: Metrics.bottomTab + tabPadding, paddingBottom: tabPadding } }}>
       <Tab.Screen
         name={Routes.HomeTab}
         component={HomeStackNavigator}
