@@ -10,6 +10,7 @@ const initialState: TrucksSliceState = {
   } as Truck,
   filters: {
     foodCategoryIds: [],
+    supportDelivery: false,
   },
   meta: {
     total: 0,
@@ -32,7 +33,7 @@ const trucksSlice = createSlice({
         state.menuItems = initialState.menuItems
       })
       .addCase(getTrucks.pending, (state, { meta }) => {
-        state.filters = { ...meta.arg }
+        state.filters = meta.arg ? meta.arg : initialState.filters
       })
       .addCase(getTrucks.fulfilled, (state, { payload }) => {
         state.resources = payload.data

@@ -60,7 +60,7 @@ export type MenuItemResource = {
 export type TrucksFilters = {
   latitude?: number
   longitude?: number
-  supportDelivery?: boolean
+  supportDelivery: boolean
   foodCategoryIds?: number[]
 }
 

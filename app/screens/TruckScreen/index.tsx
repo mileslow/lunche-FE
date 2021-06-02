@@ -1,9 +1,8 @@
-import React, { useMemo, useCallback, FC, useEffect, useState, memo } from 'react'
+import React, { useCallback, FC, useEffect, useState, memo } from 'react'
 // libs
 import { ImageBackground, View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useTranslation } from 'react-i18next'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import allSettled from 'promise.allsettled'
@@ -31,10 +30,11 @@ import { orderAmountSelector, orderItemsSelector } from 'store/orders/selectors'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // hooks
 import useTruckInfo from 'hooks/useTruckInfo'
+import useAnimatedHeader from 'hooks/useAnimatedHeader'
 // utils
 import { getImageBySize } from 'services/utils'
 // styles
-import styles, { TRUCK_IMAGE_HEIGHT } from './styles'
+import styles from './styles'
 import { Colors, Metrics } from 'styles'
 
 const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.TruckScreen>> = ({
@@ -44,8 +44,6 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
-
-  const insets = useSafeAreaInsets()
 
   const [isLoading, setLoading] = useState<boolean>(false)
 
@@ -79,7 +77,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     }
   }, [dispatch, setLoading, route.params.id])
 
-  const END_ANIM_POSITION = useMemo(() => TRUCK_IMAGE_HEIGHT - Metrics.header - insets.top, [insets])
+  const { endAnimPosition } = useAnimatedHeader()
 
   const info = useTruckInfo(currentTruck)
 
@@ -105,7 +103,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   })
 
   const subNavStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translationY.value < END_ANIM_POSITION ? 0 : translationY.value - END_ANIM_POSITION }],
+    transform: [{ translateY: translationY.value < endAnimPosition ? 0 : translationY.value - endAnimPosition }],
   }))
 
   return (

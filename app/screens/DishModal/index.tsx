@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useReducer, useRef, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 // libs
 import { Image, View } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
@@ -89,11 +89,11 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
 
   const [lastSnap, setLastSnap] = useState(TOP_PADDING.current)
 
-  const swipePositionY = useSharedValue(TOP_PADDING.current)
+  const swipePositionY = useSharedValue(Metrics.windowHeight)
 
   const beginDrag = useSharedValue(0)
 
-  const stepPositions = useSharedValue([TOP_PADDING.current, Metrics.windowHeight * 0.5])
+  const stepPositions = useSharedValue([TOP_PADDING.current, Metrics.windowHeight * 0.6])
 
   useFocusEffect(
     useCallback(() => {
@@ -111,6 +111,10 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
     }, [route, dispatch]),
   )
 
+  useEffect(() => {
+    swipePositionY.value = withTiming(TOP_PADDING.current, { duration: 300 })
+  }, [])
+
   const handleCloseModal = useCallback(() => {
     navigation.goBack()
   }, [navigation])
@@ -124,8 +128,12 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
     },
     onEnd: (e, ctx: { startY: number }) => {
       const endOffsetY = ctx.startY + e.translationY - beginDrag.value + 0.05 * e.velocityY
-      if (endOffsetY > stepPositions.value[stepPositions.value.length - 1] || e.velocityY > 1500) {
-        runOnJS(handleCloseModal)()
+      if (endOffsetY > stepPositions.value[stepPositions.value.length - 1] || e.velocityY > 2000) {
+        swipePositionY.value = withTiming(
+          Metrics.windowHeight,
+          { duration: 300 },
+          (isFinished) => isFinished && runOnJS(handleCloseModal)(),
+        )
         return
       }
 

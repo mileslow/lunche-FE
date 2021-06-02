@@ -15,8 +15,8 @@ export default {
     apiMapbox.get(`/mapbox.places/${coords.longitude},${coords.latitude}.json?`, {
       params: { ...apiMapbox.defaults.params, types: ['address'] },
     }),
-  search: (searchText: string, country?: string): Promise<{ data: { features: LocationType[] } }> =>
+  search: (searchText: string): Promise<{ data: { features: LocationType[] } }> =>
     apiMapbox.get(`/mapbox.places/${searchText}.json`, {
-      params: { ...apiMapbox.defaults.params, types: ['address', 'region'], autocomplete: true, country, limit: 10 },
+      params: { ...apiMapbox.defaults.params, types: ['address', 'region'], autocomplete: true, limit: 10 },
     }),
 }

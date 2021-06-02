@@ -12,8 +12,8 @@ import Animated, {
 import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gesture-handler'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { StackScreenProps } from '@react-navigation/stack'
+import { useFocusEffect } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
-import allSettled from 'promise.allsettled'
 import map from 'lodash.map'
 // components
 import Spinner from 'components/Spinner'
@@ -49,9 +49,10 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const mainDrawer = useRef(null)
 
-  const [isOnlyDelivery, setOnlyDelivery] = useState<boolean>(false)
-
-  const [isLoading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<{ isLoadingLocation: boolean; isLoadingTruck: boolean }>({
+    isLoadingLocation: false,
+    isLoadingTruck: false,
+  })
 
   const swipePositionY = useSharedValue(0)
 
@@ -65,14 +66,31 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const currentLocation = useSelector(currentPositionSelector)
 
+  const isLocationLoaded = useRef<boolean>(false)
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        setLoading((prevState) => ({ ...prevState, isLoadingTruck: true }))
+        const position = currentLocation ? { latitude: currentLocation.lat, longitude: currentLocation.lng } : {}
+        await dispatch(getTrucks({ ...filters, ...position }))
+        setLoading((prevState) => ({ ...prevState, isLoadingTruck: false }))
+      }
+      if (isLocationLoaded.current) {
+        fetchData()
+      }
+    }, [currentLocation]),
+  )
+
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setLoading((prevState) => ({ ...prevState, isLoadingLocation: true }))
       const locationResult = await getCurrentLocation(true)
+      isLocationLoaded.current = true
       dispatch(setCurrentPosition(locationResult))
-      const position = locationResult ? { latitude: locationResult.lat, longitude: locationResult.lng } : {}
-      await allSettled([dispatch(getFoodCategories()), dispatch(getTrucks(position))])
-      setLoading(false)
+
+      await dispatch(getFoodCategories())
+      setLoading((prevState) => ({ ...prevState, isLoadingLocation: false }))
     }
     fetchData()
   }, [setLoading, dispatch])
@@ -155,19 +173,18 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
   )
 
   const onOnlyDeliveryPress = useCallback(async () => {
-    setOnlyDelivery(!isOnlyDelivery)
-    setLoading(true)
-    await dispatch(getTrucks({ ...filters, supportDelivery: !isOnlyDelivery }))
-    setLoading(false)
-  }, [setOnlyDelivery, setLoading, dispatch, isOnlyDelivery, filters])
+    setLoading((prevState) => ({ ...prevState, isLoadingTruck: true }))
+    await dispatch(getTrucks({ ...filters, supportDelivery: !filters.supportDelivery }))
+    setLoading((prevState) => ({ ...prevState, isLoadingTruck: false }))
+  }, [setLoading, dispatch, filters])
 
   const handleCategoryPress = useCallback(
     async (categoryId) => {
-      setLoading(true)
+      setLoading((prevState) => ({ ...prevState, isLoadingTruck: true }))
       const foodCategoryIds = new Set(filters.foodCategoryIds)
       foodCategoryIds.has(categoryId) ? foodCategoryIds.delete(categoryId) : foodCategoryIds.add(categoryId)
       await dispatch(getTrucks({ ...filters, foodCategoryIds: [...foodCategoryIds] }))
-      setLoading(false)
+      setLoading((prevState) => ({ ...prevState, isLoadingTruck: false }))
     },
     [setLoading, dispatch, filters],
   )
@@ -208,7 +225,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
           <SubNavigation
             swipePositionY={swipePositionY}
-            isOnlyDelivery={isOnlyDelivery}
+            isOnlyDelivery={filters.supportDelivery}
             onLocationPress={animateTo(END_POSITION)}
             onOnlyDeliveryPress={onOnlyDeliveryPress}
           />
@@ -227,7 +244,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
           </NativeViewGestureHandler>
         </Animated.View>
       </PanGestureHandler>
-      {isLoading && <Spinner />}
+      {(loading.isLoadingLocation || loading.isLoadingTruck) && <Spinner />}
     </>
   )
 }

@@ -73,7 +73,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   const fetchTrucks = useCallback(
     async (search: string) => {
       if (search.length > 2) {
-        const result = await api.search(search, country)
+        const result = await api.search(search)
         setSearchResult(map(result.data.features, (loc) => createLocationObject(loc)))
       } else {
         setSearchResult([])
