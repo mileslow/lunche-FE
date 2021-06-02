@@ -17,6 +17,7 @@ enum Routes {
   AboutTruckScreen = 'AboutTruckScreen',
   CartScreen = 'CartScreen',
   CheckoutScreen = 'CheckoutScreen',
+  PaymentScreen = 'PaymentScreen',
 
   // Profile
   AccountScreen = 'AccountScreen',
@@ -25,6 +26,7 @@ enum Routes {
   DishModal = 'DishModal',
   ChangeAddressModal = 'ChangeAddressModal',
   SearchTruckModal = 'SearchTruckModal',
+  CardModal = 'CardModal',
 }
 
 export default Routes

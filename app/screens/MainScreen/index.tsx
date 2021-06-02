@@ -66,7 +66,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     swipePositionY,
   } = useSwipeAnimation()
 
-  const fetchTruck = useCallback(async (params: GetTrucksParams) => {
+  const fetchTruck = useCallback(async (params?: GetTrucksParams) => {
     localDispatch({ type: ActionType.FetchingTruckPending, payload: params })
     const resultTruck = await dispatch(getTrucks(params))
     if (getTrucks.fulfilled.match(resultTruck)) {
@@ -88,12 +88,17 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
   useEffect(() => {
     const fetchData = async () => {
       localDispatch({ type: ActionType.SetLoadingLocation, payload: true })
-      const locationResult = await getCurrentLocation(true)
-      isLocationLoaded.current = true
-      dispatch(setCurrentPosition(locationResult))
+      try {
+        const locationResult = await getCurrentLocation(true)
+        isLocationLoaded.current = true
+        dispatch(setCurrentPosition(locationResult))
 
-      await dispatch(getFoodCategories())
-      localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
+        await dispatch(getFoodCategories())
+        localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
+      } catch {
+        await fetchTruck()
+        localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
+      }
     }
     fetchData()
   }, [dispatch])

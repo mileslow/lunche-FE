@@ -167,7 +167,7 @@ const SearchTruckModal: FC<StackScreenProps<RootNavigationStackParamsList, Route
         </View>
       ),
     }),
-    [searchResult, foodCategories],
+    [searchResult, foodCategories, renderSearchItem],
   )
 
   return (

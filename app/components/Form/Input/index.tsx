@@ -1,6 +1,7 @@
 import React, { FC, memo, ReactElement, useState } from 'react'
-import { StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native'
+import { StyleSheet, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native'
 import Typography from 'components/Typography'
+import Error from 'components/Form/Error'
 import { Colors, Fonts, FontSize, Spacing } from 'styles'
 
 export type InputProps = TextInputProps & {
@@ -67,11 +68,7 @@ const Input: FC<InputProps> = ({
         {leftIcon && <View style={styles.leftIcon}>{leftIcon()}</View>}
         {rightIcon && <View style={styles.rightIcon}>{rightIcon()}</View>}
       </View>
-      {withError && (
-        <View style={styles.errorContainer}>
-          {!!error && <Text style={[styles.error, { color: Colors.pigmentRed }]}>{error}</Text>}
-        </View>
-      )}
+      {withError && <Error error={error} />}
     </View>
   )
 }
@@ -91,13 +88,6 @@ const styles = StyleSheet.create({
   disabledInput: {
     borderStyle: 'dashed',
     opacity: 0.8,
-  },
-  errorContainer: {
-    marginTop: Spacing.tiny,
-    minHeight: 14,
-  },
-  error: {
-    fontSize: FontSize.base,
   },
   leftIcon: {
     alignItems: 'center',

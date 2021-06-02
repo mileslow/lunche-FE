@@ -26,6 +26,8 @@ import { getSkipWelcome, getAuthToken } from 'services/storage'
 // types
 import { MainNavigationStackParamsList } from './types'
 import { Colors } from 'styles'
+import PaymentScreen from 'screens/PaymentScreen'
+import { getCurrentProfile } from 'store/auth/thunks'
 
 const MainStack = createStackNavigator<MainNavigationStackParamsList>()
 
@@ -39,7 +41,7 @@ const MainStackNavigator = () => {
   useEffect(() => {
     const bootstrap = async () => {
       setLoading(true)
-      const [isSkipWelcome, token] = await allsettled([getSkipWelcome(), getAuthToken()])
+      const [isSkipWelcome, token] = await allsettled([getSkipWelcome(), getAuthToken(), dispatch(getCurrentProfile())])
       dispatch(setAuthorized(token.status === 'fulfilled' && !!token.value))
       dispatch(setShowWelcome(isSkipWelcome.status === 'fulfilled' && !isSkipWelcome.value))
       setLoading(false)
@@ -64,6 +66,7 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.CheckoutScreen} component={CheckoutScreen} />
           <MainStack.Screen name={Routes.SignInScreen} component={SignInScreen} />
           <MainStack.Screen name={Routes.VerifyCodeScreen} component={VerifyCodeScreen} />
+          <MainStack.Screen name={Routes.PaymentScreen} component={PaymentScreen} />
         </>
       )}
     </MainStack.Navigator>
