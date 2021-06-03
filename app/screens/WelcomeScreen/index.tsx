@@ -17,7 +17,7 @@ import { setSkipWelcome } from 'services/storage'
 import IllustrationGreenImage from 'assets/svg/illustration_green.svg'
 import IllustrationImage from 'assets/svg/illustration.svg'
 // styles
-import { Colors, Metrics } from 'styles'
+import { Colors, Metrics, Spacing } from 'styles'
 import styles, { IMAGE_SIZE } from './styles'
 
 const WelcomeScreen = () => {
@@ -77,7 +77,7 @@ const WelcomeScreen = () => {
   }, [dispatch])
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom + Spacing.double }]}>
       <Carousel
         autoplay
         loop

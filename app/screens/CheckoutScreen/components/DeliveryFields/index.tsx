@@ -11,8 +11,9 @@ import { ICreateOrderFormData } from 'screens/CheckoutScreen'
 interface IProps {
   control: Control<ICreateOrderFormData>
   errors: FieldErrors<ICreateOrderFormData>
+  address?: string
 }
-const DeliveryFields: FC<IProps> = ({ control, errors }) => {
+const DeliveryFields: FC<IProps> = ({ control, errors, address }) => {
   const { t } = useTranslation()
 
   return (
@@ -23,6 +24,7 @@ const DeliveryFields: FC<IProps> = ({ control, errors }) => {
       <Input
         shouldUnregister
         control={control}
+        defaultValue={address}
         name='deliveryAddress'
         autoCapitalize='none'
         autoCorrect={false}

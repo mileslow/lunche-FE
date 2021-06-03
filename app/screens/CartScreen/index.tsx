@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useCallback, memo, useMemo } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, View, Keyboard } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -107,7 +107,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Header withBack title={t('cartScreen:headerTitle')} />
 
-      <ScrollView style={styles.scrollStyle}>
+      <ScrollView keyboardShouldPersistTaps='always' style={styles.scrollStyle} onScrollBeginDrag={Keyboard.dismiss}>
         <Input
           containerStyle={styles.input}
           leftIcon={inputIcon}

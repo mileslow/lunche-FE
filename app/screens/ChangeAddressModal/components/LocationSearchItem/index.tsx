@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
 
 interface IProps {
   item: {
-    address?: string
-    district?: string
+    combinedAddress?: string
+    place?: string
   }
   Icon: FC<SvgProps>
   onPress: () => void
@@ -40,9 +40,9 @@ const LocationSearchItem = ({ item, Icon, onPress }: IProps) => (
     <Icon width={24} style={styles.searchIcon} />
     <View style={styles.locationInfo}>
       <Typography style={styles.title} variant={TypographyVariants.body}>
-        {item.address}
+        {item.combinedAddress}
       </Typography>
-      <Typography variant={TypographyVariants.smallBody}>{item.district}</Typography>
+      <Typography variant={TypographyVariants.smallBody}>{item.place}</Typography>
       <Divider style={styles.divider} />
     </View>
   </Pressable>

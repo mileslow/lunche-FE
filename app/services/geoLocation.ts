@@ -34,7 +34,17 @@ export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocat
               const response = result.data?.features[0]
               const country = find(response?.context, (i) => i.id.includes('country'))?.short_code
               const district = find(response?.context, (i) => i.id.includes('district'))?.text
-              resolve({ ...location, id: response?.id, address: response?.text, country, district })
+              const combinedAddress = `${response?.address ? `${response?.address} ` : ''}${response?.text}`
+              const place = find(response?.context, (i) => i.id.includes('place'))?.text
+              resolve({
+                ...location,
+                id: response?.id,
+                address: response?.text,
+                country,
+                district,
+                combinedAddress,
+                place,
+              })
             })
             return
           }
@@ -54,8 +64,10 @@ export type CurrentLocation = {
   lng: number
   lat: number
   address?: string
+  combinedAddress?: string
   country?: string
   district?: string
+  place?: string
 }
 export const useGetCurrentPosition = (withAddress?: boolean) => {
   const [currentPosition, setCurrentPosition] = useState<CurrentLocation>()

@@ -123,7 +123,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           <PickUpFields distance={currentTruck.distance} address={currentTruck.address} />
         )}
 
-        {typeDelivery === DeliveryType.delivery && <DeliveryFields control={control} errors={errors} />}
+        {typeDelivery === DeliveryType.delivery && (
+          <DeliveryFields control={control} errors={errors} address={currentAddress} />
+        )}
 
         <TimeField shouldUnregister name='orderTime' control={control} />
 

@@ -12,7 +12,8 @@ import {
 
 export default {
   getTrucks: (params: GetTrucksParams): Promise<DataWithMeta<Truck[]>> => axios.get('/food-trucks', { params }),
-  getTruck: ({ id }: GetTruckParams): Promise<Truck> => axios.get(`/food-trucks/${id}`),
+  getTruck: ({ id, params }: { id: number; params: GetTruckParams }): Promise<Truck> =>
+    axios.get(`/food-trucks/${id}`, { params }),
   getTruckMenuItems: ({ id, params }: GetTruckMenuItemsParams): Promise<MenuItem[]> =>
     axios.get(`/food-trucks/${id}/menu-items`, { params }),
   getTruckMenuItem: ({ id, truckId }: GetTruckMenuItemParams): Promise<MenuItemResource> =>

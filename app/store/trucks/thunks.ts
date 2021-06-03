@@ -19,7 +19,7 @@ export const getTruck = createAsyncThunk<Truck, number, { state: RootState }>(
   'trucks/GET_TRUCK',
   async (id, { getState }) => {
     const currentPosition = getState().general.currentPosition
-    return await api.getTruck({ id, latitude: currentPosition?.lat, longitude: currentPosition?.lng })
+    return await api.getTruck({ id, params: { latitude: currentPosition?.lat, longitude: currentPosition?.lng } })
   },
 )
 

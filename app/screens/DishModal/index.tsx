@@ -112,7 +112,7 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
   )
 
   useEffect(() => {
-    swipePositionY.value = withTiming(TOP_PADDING.current, { duration: 300 })
+    swipePositionY.value = withTiming(TOP_PADDING.current, { duration: 700 })
   }, [])
 
   const handleCloseModal = useCallback(() => {
@@ -131,7 +131,7 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
       if (endOffsetY > stepPositions.value[stepPositions.value.length - 1] || e.velocityY > 2000) {
         swipePositionY.value = withTiming(
           Metrics.windowHeight,
-          { duration: 300 },
+          { duration: 700 },
           (isFinished) => isFinished && runOnJS(handleCloseModal)(),
         )
         return

@@ -199,7 +199,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
       <HeaderWithLocation
         swipePositionY={swipePositionY}
-        address={currentLocation?.address}
+        address={currentLocation?.combinedAddress}
         onLocationPress={redirectToChangeAddress}
       />
 

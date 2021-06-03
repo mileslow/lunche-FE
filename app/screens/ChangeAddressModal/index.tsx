@@ -38,11 +38,12 @@ import { ButtonTypes } from 'components/Button'
 
 const createLocationObject = (location: LocationType): CurrentLocation => ({
   id: location.id,
+  combinedAddress: `${location.address ? `${location.address} ` : ''}${location.text}`,
   address: location.text,
   lng: location.geometry.coordinates[0],
   lat: location.geometry.coordinates[1],
   country: find(location.context, (i) => i.id.includes('country'))?.short_code,
-  district: find(location.context, (i) => i.id.includes('district'))?.text,
+  place: find(location.context, (i) => i.id.includes('place'))?.text,
 })
 
 const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.ChangeAddressModal>> = ({
@@ -82,7 +83,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
     [setSearchResult, country],
   )
 
-  const debouncedFetchTrucks = useRef(debounce(fetchTrucks, 300)).current
+  const debouncedFetchTrucks = useRef(debounce(fetchTrucks, 700)).current
 
   useEffect(() => {
     debouncedFetchTrucks(searchText)

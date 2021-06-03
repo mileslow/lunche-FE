@@ -70,4 +70,4 @@ export type GetTruckMenuItemsParams = { id: number; params?: { foodTypeIds?: num
 
 export type GetTruckMenuItemParams = { id: number; truckId: number }
 
-export type GetTruckParams = { id: number; longitude?: number; latitude?: number }
+export type GetTruckParams = { longitude?: number; latitude?: number }

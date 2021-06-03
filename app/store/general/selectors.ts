@@ -9,7 +9,7 @@ export const isShowWelcomeSelector = createSelector(
 
 export const currentAddressSelector = createSelector(
   (state: RootState) => state.general,
-  (general: GeneralSliceState) => general.currentPosition?.address,
+  (general: GeneralSliceState) => general.currentPosition?.combinedAddress,
 )
 
 export const currentCountrySelector = createSelector(
