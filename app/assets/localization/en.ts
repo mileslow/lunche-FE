@@ -61,6 +61,11 @@ export default {
     savedLocations: 'Your location',
     recentLocations: 'Recent locations',
   },
+  searchTruckModal: {
+    inputPlaceholder: 'Type here what you want',
+    notFound: 'No found',
+    placeholder: 'But don’t worry try again',
+  },
 
   common: {
     welcome: 'Welcome!',

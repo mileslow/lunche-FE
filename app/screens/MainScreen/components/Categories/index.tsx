@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated
 // components
 import CategoriesList from 'components/CategoriesList'
 // constants
-import { END_POSITION } from 'screens/MainScreen/constants'
+import { END_POSITION } from 'screens/MainScreen/useSwipeAnimation'
 import { FoodCategory } from 'store/foodCategories/types'
 import { ScrollView } from 'react-native'
 

@@ -29,7 +29,7 @@ const DeliveryFields: FC<IProps> = ({ control, errors, address }) => {
         autoCapitalize='none'
         autoCorrect={false}
         error={errors?.deliveryAddress?.message}
-        leftIcon={<AddressIcon fill={Colors.midNightMoss} />}
+        leftIcon={() => <AddressIcon fill={Colors.midNightMoss} />}
       />
 
       <Typography variant={TypographyVariants.subhead} style={styles.label}>

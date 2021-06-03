@@ -21,7 +21,7 @@ const FoodItem: FC<IProps> = ({ style, item, onPress }) => (
   <Button type={ButtonTypes.link} style={style} onPress={onPress}>
     <Image
       style={styles.foodImage}
-      source={{ uri: getImageBySize(item.photo, Metrics.foodItemSize, Metrics.foodItemSize) }}
+      source={{ uri: getImageBySize(item.photo, Metrics.foodItemSize, Metrics.foodItemSize), cache: 'force-cache' }}
     />
     <Typography variant={TypographyVariants.body} style={styles.title}>
       {item.name}

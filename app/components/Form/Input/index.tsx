@@ -6,8 +6,8 @@ import { Colors, Fonts, FontSize, Spacing } from 'styles'
 export type InputProps = TextInputProps & {
   label?: string
   error?: string
-  leftIcon?: ReactElement
-  rightIcon?: ReactElement
+  leftIcon?: () => ReactElement
+  rightIcon?: () => ReactElement
   containerStyle?: ViewStyle
   placeholderTextColor?: string
   withError?: boolean
@@ -61,8 +61,8 @@ const Input: FC<InputProps> = ({
             props.style,
           ]}
         />
-        {leftIcon && <View style={styles.leftIcon}>{leftIcon}</View>}
-        {rightIcon && <View style={styles.rightIcon}>{rightIcon}</View>}
+        {leftIcon && <View style={styles.leftIcon}>{leftIcon()}</View>}
+        {rightIcon && <View style={styles.rightIcon}>{rightIcon()}</View>}
       </View>
       {withError && (
         <View style={styles.errorContainer}>

@@ -29,7 +29,10 @@ const TrackCard: FC<IProps> = ({ onPress, item }) => {
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <Image
         style={styles.mainImage}
-        source={{ uri: getImageBySize(item.mainPhoto, Metrics.truckListImgWidth, Metrics.truckListImgHeight) }}
+        source={{
+          uri: getImageBySize(item.mainPhoto, Metrics.truckListImgWidth, Metrics.truckListImgHeight),
+          cache: 'force-cache',
+        }}
       />
       <Text style={styles.subhead}>{item.name}</Text>
       <StringList data={categories} style={styles.categories} />

@@ -1,20 +1,13 @@
-import React, { memo, useRef, useState, useCallback, FC, useEffect, useMemo } from 'react'
+import React, { memo, useRef, useCallback, FC, useEffect, useMemo } from 'react'
 // libs
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  useAnimatedGestureHandler,
-  withTiming,
-  useAnimatedScrollHandler,
-  useAnimatedProps,
-  interpolate,
-} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gesture-handler'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import map from 'lodash.map'
+import is from 'lodash.isequal'
 // components
 import Spinner from 'components/Spinner'
 import Map from 'components/Map'
@@ -30,15 +23,18 @@ import { getTrucks } from 'store/trucks/thunks'
 import { setCurrentPosition } from 'store/general/model'
 // selectors
 import { foodCategoriesSelector } from 'store/foodCategories/selectors'
-import { trucksSelector, filtersSelector } from 'store/trucks/selectors'
 import { currentPositionSelector } from 'store/general/selectors'
+// types
 import { AppDispatch } from 'store'
+import { GetTrucksParams } from 'store/trucks/types'
 // services
-import { getCurrentLocation } from 'services/geoLocation'
-// constants
-import { END_POSITION } from './constants'
+import { CurrentLocation, getCurrentLocation } from 'services/geoLocation'
+// hooks
+import useSwipeAnimation, { END_POSITION } from './useSwipeAnimation'
 // styles
 import styles from './styles'
+// reducer
+import { useMainScreenReducer, ActionType } from './reducer'
 
 const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.MainScreen>> = ({ navigation }) => {
   const dispatch = useDispatch<AppDispatch>()
@@ -49,58 +45,58 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const mainDrawer = useRef(null)
 
-  const [loading, setLoading] = useState<{ isLoadingLocation: boolean; isLoadingTruck: boolean }>({
-    isLoadingLocation: false,
-    isLoadingTruck: false,
-  })
-
-  const swipePositionY = useSharedValue(0)
-
-  const scrollActive = useSharedValue(false)
+  const [state, localDispatch] = useMainScreenReducer()
 
   const foodCategories = useSelector(foodCategoriesSelector)
-
-  const trucks = useSelector(trucksSelector)
-
-  const filters = useSelector(filtersSelector)
 
   const currentLocation = useSelector(currentPositionSelector)
 
   const isLocationLoaded = useRef<boolean>(false)
 
+  const prevLocation = useRef<CurrentLocation | null>(null)
+
+  const {
+    animatedProps,
+    onRegisterScroll,
+    swipeBarStyle,
+    titleSwipeStyle,
+    animatedStyle,
+    gestureHandler,
+    animateTo,
+    swipePositionY,
+  } = useSwipeAnimation()
+
+  const fetchTruck = useCallback(async (params: GetTrucksParams) => {
+    localDispatch({ type: ActionType.FetchingTruckPending, payload: params })
+    const resultTruck = await dispatch(getTrucks(params))
+    if (getTrucks.fulfilled.match(resultTruck)) {
+      localDispatch({ type: ActionType.FetchingTruckFullfilled, payload: resultTruck.payload.data })
+    } else {
+      localDispatch({ type: ActionType.SetLoadingTruck, payload: false })
+    }
+  }, [])
+
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
-        setLoading((prevState) => ({ ...prevState, isLoadingTruck: true }))
-        const position = currentLocation ? { latitude: currentLocation.lat, longitude: currentLocation.lng } : {}
-        await dispatch(getTrucks({ ...filters, ...position }))
-        setLoading((prevState) => ({ ...prevState, isLoadingTruck: false }))
-      }
-      if (isLocationLoaded.current) {
-        fetchData()
+      if (isLocationLoaded.current && !is(currentLocation, prevLocation.current)) {
+        prevLocation.current = currentLocation
+        fetchTruck({ latitude: currentLocation?.lat, longitude: currentLocation?.lng })
       }
     }, [currentLocation]),
   )
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading((prevState) => ({ ...prevState, isLoadingLocation: true }))
+      localDispatch({ type: ActionType.SetLoadingLocation, payload: true })
       const locationResult = await getCurrentLocation(true)
       isLocationLoaded.current = true
       dispatch(setCurrentPosition(locationResult))
 
       await dispatch(getFoodCategories())
-      setLoading((prevState) => ({ ...prevState, isLoadingLocation: false }))
+      localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
     }
     fetchData()
-  }, [setLoading, dispatch])
-
-  const animateTo = useCallback(
-    (position: number) => () => {
-      swipePositionY.value = withTiming(position, { duration: 300 })
-    },
-    [swipePositionY],
-  )
+  }, [dispatch])
 
   const navigateToTruck = useCallback(
     (id) => {
@@ -109,88 +105,32 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [navigation],
   )
 
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (event, ctx: { startY: number }) => {
-      ctx.startY = swipePositionY.value
-    },
-    onActive: (event, ctx: { startY: number }) => {
-      if (scrollActive.value) {
-        return
-      }
-      const distance = ctx.startY + event.translationY
-      swipePositionY.value = distance > 0 ? distance : 0
-    },
-    onEnd: (event) => {
-      if (scrollActive.value) {
-        return
-      }
-      if (event.translationY > 100 || event.velocityY > 1500) {
-        swipePositionY.value = withTiming(END_POSITION, { duration: 300 })
-        return
-      }
-      swipePositionY.value = withTiming(0, { duration: 300 })
-    },
-  })
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const borderRadius = swipePositionY.value > 0 ? 16 : 0
-    return {
-      borderTopLeftRadius: borderRadius,
-      borderTopRightRadius: borderRadius,
-      transform: [
-        {
-          translateY: swipePositionY.value,
-        },
-      ],
-    }
-  })
-
-  const swipeBarStyle = useAnimatedStyle(() => ({
-    opacity: swipePositionY.value > 0 ? 1 : 0,
-  }))
-
-  const titleSwipeStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(swipePositionY.value, [0, END_POSITION], [0, 1]),
-  }))
-
-  const onRegisterScroll = useAnimatedScrollHandler({
-    onBeginDrag: (e) => {
-      scrollActive.value = e.contentOffset.y > 0 && true
-    },
-    onEndDrag: () => {
-      scrollActive.value = false
-    },
-    onMomentumEnd: () => {
-      scrollActive.value = false
-    },
-  })
-
-  const animatedProps = useAnimatedProps(() => ({ scrollEnabled: swipePositionY.value < END_POSITION }))
-
   const renderTrucks = useMemo(
-    () => map(trucks, (truck) => <TruckCard key={truck.id} onPress={() => navigateToTruck(truck.id)} item={truck} />),
-    [trucks, navigateToTruck],
+    () =>
+      map(state.trucks, (truck) => <TruckCard key={truck.id} onPress={() => navigateToTruck(truck.id)} item={truck} />),
+    [state.trucks, navigateToTruck],
   )
 
-  const onOnlyDeliveryPress = useCallback(async () => {
-    setLoading((prevState) => ({ ...prevState, isLoadingTruck: true }))
-    await dispatch(getTrucks({ ...filters, supportDelivery: !filters.supportDelivery }))
-    setLoading((prevState) => ({ ...prevState, isLoadingTruck: false }))
-  }, [setLoading, dispatch, filters])
+  const onOnlyDeliveryPress = useCallback(
+    () => fetchTruck({ ...state.filters, supportDelivery: !state.filters.supportDelivery }),
+    [state.filters, fetchTruck],
+  )
 
   const handleCategoryPress = useCallback(
-    async (categoryId) => {
-      setLoading((prevState) => ({ ...prevState, isLoadingTruck: true }))
-      const foodCategoryIds = new Set(filters.foodCategoryIds)
+    (categoryId) => {
+      const foodCategoryIds = new Set(state.filters.foodCategoryIds)
       foodCategoryIds.has(categoryId) ? foodCategoryIds.delete(categoryId) : foodCategoryIds.add(categoryId)
-      await dispatch(getTrucks({ ...filters, foodCategoryIds: [...foodCategoryIds] }))
-      setLoading((prevState) => ({ ...prevState, isLoadingTruck: false }))
+      fetchTruck({ ...state.filters, foodCategoryIds: [...foodCategoryIds] })
     },
-    [setLoading, dispatch, filters],
+    [fetchTruck, state.filters],
   )
 
   const redirectToChangeAddress = useCallback(() => {
     navigation.navigate(Routes.ChangeAddressModal)
+  }, [navigation])
+
+  const redirectToSearch = useCallback(() => {
+    navigation.navigate(Routes.SearchTruckModal)
   }, [navigation])
 
   return (
@@ -216,7 +156,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
           <NativeViewGestureHandler ref={horizontalScrollView} simultaneousHandlers={mainDrawer}>
             <Categories
-              active={filters.foodCategoryIds}
+              active={state.filters.foodCategoryIds}
               swipePositionY={swipePositionY}
               data={foodCategories}
               onPress={handleCategoryPress}
@@ -225,8 +165,9 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
           <SubNavigation
             swipePositionY={swipePositionY}
-            isOnlyDelivery={filters.supportDelivery}
+            isOnlyDelivery={!!state.filters.supportDelivery}
             onLocationPress={animateTo(END_POSITION)}
+            onSearchPress={redirectToSearch}
             onOnlyDeliveryPress={onOnlyDeliveryPress}
           />
 
@@ -244,7 +185,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
           </NativeViewGestureHandler>
         </Animated.View>
       </PanGestureHandler>
-      {(loading.isLoadingLocation || loading.isLoadingTruck) && <Spinner />}
+      {(state.loading.isLoadingLocation || state.loading.isLoadingTruck) && <Spinner />}
     </>
   )
 }

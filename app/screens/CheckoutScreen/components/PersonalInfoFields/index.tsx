@@ -33,7 +33,7 @@ const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
         autoCapitalize='none'
         autoCorrect={false}
         error={errors?.client?.name?.message}
-        leftIcon={<ProfileIcon fill={Colors.midNightMoss} />}
+        leftIcon={() => <ProfileIcon fill={Colors.midNightMoss} />}
       />
       <Input
         control={control}
@@ -43,7 +43,7 @@ const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
         autoCorrect={false}
         keyboardType='email-address'
         error={errors?.client?.email?.message}
-        leftIcon={<MailIcon />}
+        leftIcon={() => <MailIcon />}
       />
 
       <Input
@@ -53,7 +53,7 @@ const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
         autoCorrect={false}
         keyboardType='phone-pad'
         error={errors?.client?.phone?.message}
-        leftIcon={<PhoneIcon fill={Colors.midNightMoss} />}
+        leftIcon={() => <PhoneIcon fill={Colors.midNightMoss} />}
       />
     </>
   )

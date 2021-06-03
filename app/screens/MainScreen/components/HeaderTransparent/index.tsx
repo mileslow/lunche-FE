@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 // components
 import Button, { ButtonTypes } from 'components/Button'
 // constants
-import { END_POSITION } from 'screens/MainScreen/constants'
+import { END_POSITION } from 'screens/MainScreen/useSwipeAnimation'
 // assets
 import BackIcon from 'assets/svg/back.svg'
 import ListIcon from 'assets/svg/list.svg'

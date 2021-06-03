@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* luncheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* luncheTests.m */; };
+		031C012F2668F64C00FF9596 /* Fix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 031C012E2668F64C00FF9596 /* Fix.swift */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -33,7 +34,8 @@
 		00E356EE1AD99517003FC87E /* luncheTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = luncheTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* luncheTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = luncheTests.m; sourceTree = "<group>"; };
-		035B23EA26443E7A00F252A9 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		031C012D2668F64B00FF9596 /* lunche-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "lunche-Bridging-Header.h"; sourceTree = "<group>"; };
+		031C012E2668F64C00FF9596 /* Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fix.swift; sourceTree = "<group>"; };
 		03BF5BCD263BEA7A00BF3840 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* lunche.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lunche.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lunche/AppDelegate.h; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				035B23EA26443E7A00F252A9 /* File.swift */,
+				031C012E2668F64C00FF9596 /* Fix.swift */,
 				03BF5BCD263BEA7A00BF3840 /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* lunche */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -143,6 +145,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				B7396D88A3136DA973EE6EF3 /* Pods */,
 				820C35F9123C469FADBA01C1 /* Resources */,
+				031C012D2668F64B00FF9596 /* lunche-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -228,7 +231,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -435,6 +438,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				031C012F2668F64C00FF9596 /* Fix.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,6 +458,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 44702EA17139ED161FE571E5 /* Pods-lunche-luncheTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -481,6 +486,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5410C95EC89713C872F24183 /* Pods-lunche-luncheTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = luncheTests/Info.plist;
@@ -523,6 +529,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lunche.dev;
 				PRODUCT_NAME = lunche;
+				SWIFT_OBJC_BRIDGING_HEADER = "lunche-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -550,6 +557,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.lunche.dev;
 				PRODUCT_NAME = lunche;
+				SWIFT_OBJC_BRIDGING_HEADER = "lunche-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

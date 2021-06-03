@@ -41,7 +41,7 @@ const MealItem: FC<IProps> = ({ withDiscount, item, onPress, orderItem, onCountP
     {orderItem ? <View style={styles.greenLine} /> : null}
     <Image
       style={styles.mealImg}
-      source={{ uri: getImageBySize(item.photo, Metrics.menuItemSize, Metrics.menuItemSize) }}
+      source={{ uri: getImageBySize(item.photo, Metrics.menuItemSize, Metrics.menuItemSize), cache: 'force-cache' }}
     />
     <View style={styles.mealInfo}>
       <View>

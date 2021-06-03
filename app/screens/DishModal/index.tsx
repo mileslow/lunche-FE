@@ -207,7 +207,10 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
                   </Button>
                   <Image
                     style={styles.mainImage}
-                    source={{ uri: getImageBySize(state.dish.photo, Metrics.truckImgWidth, Metrics.truckImgHeight) }}
+                    source={{
+                      uri: getImageBySize(state.dish.photo, Metrics.truckImgWidth, Metrics.truckImgHeight),
+                      cache: 'force-cache',
+                    }}
                   />
                   <View style={styles.info}>
                     <Typography variant={TypographyVariants.h3} style={styles.title}>
