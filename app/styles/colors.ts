@@ -3,6 +3,7 @@ enum Colors {
   shadowColor = 'rgba(0, 0, 0, 0.15)',
   borderColor = 'rgba(134, 134, 134, 0.1)',
   bgOverlay = 'rgba(0, 0, 0, 0.8)',
+  black = '#000000',
   primary = '#22A45D',
   darkSeaGreen = 'rgba(132, 189, 147, 0.1)',
   basic = '#FFFFFF',

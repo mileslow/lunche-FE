@@ -18,6 +18,7 @@ enum Routes {
   // modals
   DishModal = 'DishModal',
   ChangeAddressModal = 'ChangeAddressModal',
+  SearchTruckModal = 'SearchTruckModal',
 }
 
 export default Routes

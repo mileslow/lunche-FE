@@ -54,7 +54,7 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
       <View>
         <Image
           style={{ width: Metrics.windowWidth, height: TRUCK_IMAGE_HEIGHT }}
-          source={{ uri: getImageBySize(item, Metrics.truckImgWidth, Metrics.truckImgHeight) }}
+          source={{ uri: getImageBySize(item, Metrics.truckImgWidth, Metrics.truckImgHeight), cache: 'force-cache' }}
         />
         <TrackGradient />
       </View>

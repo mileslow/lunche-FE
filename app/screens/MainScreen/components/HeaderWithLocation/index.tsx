@@ -5,7 +5,7 @@ import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 // constants
-import { END_POSITION } from 'screens/MainScreen/constants'
+import { END_POSITION } from 'screens/MainScreen/useSwipeAnimation'
 // assets
 import PersonIcon from 'assets/svg/person.svg'
 // styles

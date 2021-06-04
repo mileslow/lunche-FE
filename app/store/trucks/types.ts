@@ -1,12 +1,8 @@
-import { Meta } from 'services/api/types'
 import { FoodType } from 'store/foodTypes/types'
 
 export type TrucksSliceState = {
-  resources: Truck[]
   resource: Truck
-  meta: Meta
   menuItems: MenuItem[]
-  filters: TrucksFilters
 }
 
 export type Truck = {
@@ -60,8 +56,9 @@ export type MenuItemResource = {
 export type TrucksFilters = {
   latitude?: number
   longitude?: number
-  supportDelivery: boolean
+  supportDelivery?: boolean
   foodCategoryIds?: number[]
+  search?: string
 }
 
 export type GetTrucksParams = TrucksFilters | undefined

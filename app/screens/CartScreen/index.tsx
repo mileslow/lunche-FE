@@ -55,7 +55,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
     navigation.navigate(Routes.CheckoutScreen)
   }, [navigation])
 
-  const inputIcon = useMemo(
+  const inputIcon = useCallback(
     () => (
       <View style={styles.inputIcon}>
         <CommentIcon />

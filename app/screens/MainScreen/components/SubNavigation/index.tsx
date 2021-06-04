@@ -10,18 +10,25 @@ import SearchButton from 'components/Button/SearchButton'
 // assets
 import LocationIcon from 'assets/svg/location.svg'
 // constants
-import { END_POSITION } from 'screens/MainScreen/constants'
+import { END_POSITION } from 'screens/MainScreen/useSwipeAnimation'
 // styles
 import styles from './styles'
 
 interface IProps {
   onLocationPress: () => void
+  onSearchPress: () => void
   isOnlyDelivery: boolean
   onOnlyDeliveryPress: () => void
   swipePositionY: Animated.SharedValue<number>
 }
 
-const SubNavigation: FC<IProps> = ({ onLocationPress, isOnlyDelivery, onOnlyDeliveryPress, swipePositionY }) => {
+const SubNavigation: FC<IProps> = ({
+  onLocationPress,
+  isOnlyDelivery,
+  onOnlyDeliveryPress,
+  swipePositionY,
+  onSearchPress,
+}) => {
   const { t } = useTranslation()
 
   const subNavigationStyle = useAnimatedStyle(() => ({
@@ -34,7 +41,7 @@ const SubNavigation: FC<IProps> = ({ onLocationPress, isOnlyDelivery, onOnlyDeli
         <Button type={ButtonTypes.icon} style={styles.subNavigationAction} onPress={onLocationPress}>
           <LocationIcon />
         </Button>
-        <SearchButton onPress={() => null} />
+        <SearchButton onPress={onSearchPress} />
       </View>
       <Pressable style={styles.subNavigationBlock} onPress={onOnlyDeliveryPress} pointerEvents='box-only'>
         <Checkbox checked={isOnlyDelivery} type='radio' />

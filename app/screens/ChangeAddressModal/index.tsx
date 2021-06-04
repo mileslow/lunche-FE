@@ -121,7 +121,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
     [],
   )
 
-  const renderRightIcon = useMemo(
+  const renderRightIcon = useCallback(
     () => (
       <Pressable onPress={() => setSearchText('')}>
         <CloseIcon />
@@ -148,6 +148,8 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
     [navigation],
   )
 
+  const addressIcon = useCallback(() => <AddressIcon fill={Colors.gunsmoke} />, [])
+
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Header left={closeModalIcon} />
@@ -163,7 +165,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
       </Typography>
       <Input
         containerStyle={styles.input}
-        leftIcon={<AddressIcon fill={Colors.gunsmoke} />}
+        leftIcon={addressIcon}
         rightIcon={renderRightIcon}
         onChangeText={setSearchText}
         value={searchText}
