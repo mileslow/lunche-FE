@@ -6,12 +6,15 @@ import { SvgProps } from 'react-native-svg'
 // navigation
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import HomeStackNavigator from 'navigation/navigators/HomeStack'
+// screen
+import FavoritePlacesScreen from 'screens/FavoritePlacesScreen'
 // localization
 import { useTranslation } from 'react-i18next'
 // assets
 import HomeIcon from 'assets/svg/home.svg'
 import OrdersIcon from 'assets/svg/orders.svg'
 import ProfileIcon from 'assets/svg/profile.svg'
+import FavoriteIcon from 'assets/svg/favorite-place.svg'
 // styles
 import { Colors, Metrics, Spacing } from 'styles'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -49,6 +52,14 @@ const MainTabsNavigator: FC = () => {
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, OrdersIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:orders')),
+        }}
+      />
+      <Tab.Screen
+        name={Routes.PlacesTab}
+        component={FavoritePlacesScreen}
+        options={{
+          tabBarIcon: (props) => tabBarIconRender(props, FavoriteIcon),
+          tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:places')),
         }}
       />
       <Tab.Screen

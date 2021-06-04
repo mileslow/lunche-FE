@@ -9,6 +9,7 @@ export type Truck = {
   address: string
   createdAt: string
   distance: number
+  isFavorite: boolean
   foodCategories: Array<{
     createdAt: string
     icon: string
@@ -59,6 +60,7 @@ export type TrucksFilters = {
   supportDelivery?: boolean
   foodCategoryIds?: number[]
   search?: string
+  onlyFavorite?: boolean
 }
 
 export type GetTrucksParams = TrucksFilters | undefined

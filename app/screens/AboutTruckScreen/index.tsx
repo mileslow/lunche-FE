@@ -21,6 +21,8 @@ import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store
 import AddressIcon from 'assets/svg/address.svg'
 import PhoneIcon from 'assets/svg/phone.svg'
 import TimeIcon from 'assets/svg/time.svg'
+// hooks
+import useToggleFavoritePress from 'hooks/useToggleFavoritePress'
 // utils
 import { getImageBySize } from 'services/utils'
 // types
@@ -42,6 +44,8 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
   const [activeSlide, setActiveSlide] = useState(0)
 
   const menuItems = useSelector(menuItemsSelector)
+
+  const { toggleFavoritePress } = useToggleFavoritePress()
 
   const translationY = useSharedValue(0)
 
@@ -111,7 +115,7 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
 
   return (
     <View style={styles.screen}>
-      <Header translationY={translationY} />
+      <Header translationY={translationY} onFavoritePress={toggleFavoritePress} />
       <Animated.ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}

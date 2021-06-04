@@ -1,6 +1,6 @@
 import axios from 'services/api/axios'
-import { CreateOrderData } from 'store/orders/types'
+import { CreateOrderData, CreateOrderResponse } from 'store/orders/types'
 
 export default {
-  createOrder: (data: CreateOrderData): Promise<unknown> => axios.post('/orders', data),
+  createOrder: (data: CreateOrderData): Promise<CreateOrderResponse> => axios.post('/orders', data),
 }

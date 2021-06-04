@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native'
-import { Colors, Fonts, FontSize, Spacing, Metrics } from 'styles'
+import { Colors, Spacing, Metrics } from 'styles'
 
 export default StyleSheet.create({
   card: {
@@ -24,9 +24,6 @@ export default StyleSheet.create({
     width: '100%',
   },
   subhead: {
-    color: Colors.midNightMoss,
-    fontFamily: Fonts.regular,
-    fontSize: FontSize.subhead,
     marginBottom: Spacing.base,
     paddingHorizontal: Spacing.double,
   },
@@ -36,5 +33,14 @@ export default StyleSheet.create({
   },
   info: {
     marginBottom: Spacing.small,
+  },
+  nameBlock: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  likeBtn: {
+    paddingHorizontal: Spacing.double,
+    paddingVertical: Spacing.tiny,
   },
 })

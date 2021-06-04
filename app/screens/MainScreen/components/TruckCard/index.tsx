@@ -1,5 +1,5 @@
-import React, { FC, useMemo } from 'react'
-import { Image, Text } from 'react-native'
+import React, { FC, useMemo, memo } from 'react'
+import { Image, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import map from 'lodash.map'
 // components
@@ -11,16 +11,20 @@ import { Truck } from 'store/trucks/types'
 import useTruckInfo from 'hooks/useTruckInfo'
 // services
 import { getImageBySize } from 'services/utils'
+// assets
+import HeartIcon from 'assets/svg/heart.svg'
 // styles
-import { Metrics } from 'styles'
+import { Colors, Metrics } from 'styles'
 import styles from './styles'
+import Typography, { TypographyVariants } from 'components/Typography'
 
 interface IProps {
   item: Truck
   onPress: () => void
+  onFavoritePress?: () => void
 }
 
-const TrackCard: FC<IProps> = ({ onPress, item }) => {
+const TrackCard: FC<IProps> = ({ onPress, item, onFavoritePress }) => {
   const info = useTruckInfo(item)
 
   const categories = useMemo(() => map(item.foodCategories, (i) => i.name), [item.foodCategories])
@@ -34,11 +38,20 @@ const TrackCard: FC<IProps> = ({ onPress, item }) => {
           cache: 'force-cache',
         }}
       />
-      <Text style={styles.subhead}>{item.name}</Text>
+      <View style={styles.nameBlock}>
+        <Typography variant={TypographyVariants.subhead} style={styles.subhead}>
+          {item.name}
+        </Typography>
+        {onFavoritePress ? (
+          <TouchableOpacity style={styles.likeBtn} onPress={onFavoritePress}>
+            <HeartIcon fill={Colors.midNightMoss} />
+          </TouchableOpacity>
+        ) : null}
+      </View>
       <StringList data={categories} style={styles.categories} />
       <InfoWithIconList data={info} style={styles.info} />
     </TouchableOpacity>
   )
 }
 
-export default TrackCard
+export default memo(TrackCard)

@@ -3,6 +3,7 @@ export default {
     home: 'Home',
     orders: 'Orders',
     profile: 'Profile',
+    places: 'Places',
   },
   mainScreen: {
     headerText: 'Delivery to',
@@ -65,6 +66,9 @@ export default {
     inputPlaceholder: 'Type here what you want',
     notFound: 'No found',
     placeholder: 'But don’t worry try again',
+  },
+  favoritePlacesScreen: {
+    headerTitle: 'Saved Places',
   },
 
   common: {

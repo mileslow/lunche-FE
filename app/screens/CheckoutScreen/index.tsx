@@ -28,6 +28,8 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schemaValidation } from './validation'
+// services
+import { setAuthData } from 'services/storage'
 // assets
 import PersonIcon from 'assets/svg/person-walking.svg'
 import TruckIcon from 'assets/svg/truck.svg'
@@ -76,7 +78,13 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   const onSubmit = useCallback(
     async (data: ICreateOrderFormData) => {
       setLoading(true)
-      await dispatch(createOrder(data))
+      const result = await dispatch(createOrder(data))
+      if (createOrder.fulfilled.match(result)) {
+        await setAuthData({
+          accessToken: result.payload.metadata.tokens.accessToken,
+          refreshToken: result.payload.metadata.tokens.refreshToken,
+        })
+      }
       navigation.reset({
         index: 0,
         routes: [{ name: Routes.MainTabsStack }],

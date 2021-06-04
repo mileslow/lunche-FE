@@ -7,6 +7,7 @@ enum Routes {
   HomeTab = 'HomeTab',
   OrdersTab = 'OrdersTab',
   ProfileTab = 'ProfileTab',
+  PlacesTab = 'PlacesTab',
 
   // HomeStack
   MainScreen = 'MainScreen',

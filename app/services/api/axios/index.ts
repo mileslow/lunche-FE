@@ -4,13 +4,11 @@ import axios, { AxiosRequestConfig } from 'axios'
 import Config from 'react-native-config'
 import debounce from 'lodash.debounce'
 // services
-import { getAuthToken } from 'services/storage'
+import { getAuthToken, getRefreshToken, setAuthData } from 'services/storage'
 // localization
 import i18n from 'services/localization'
 
-export const handlerEnabled = (config: AxiosRequestConfig): boolean => {
-  return config?.params?.handlerEnabled || true
-}
+export const isAuth = (config: AxiosRequestConfig): boolean => config?.params?.isAuth || true
 
 export const showErrorAlert = debounce((title: string, message?: string) => {
   Alert.alert(title, message, [{ text: 'OK' }], {
@@ -26,9 +24,8 @@ const axiosInstance = axios.create({
 /* request interceptor */
 axiosInstance.interceptors.request.use(
   async (config): Promise<AxiosRequestConfig> => {
-    if (handlerEnabled(config)) {
+    if (isAuth(config)) {
       const authToken = await getAuthToken()
-
       config.headers.authorization = `Bearer ${authToken || ''}`
     }
 
@@ -40,10 +37,30 @@ axiosInstance.interceptors.request.use(
 /* response interceptor */
 axiosInstance.interceptors.response.use(
   ({ data }) => data,
-  (responseData = {}) => {
-    const { response, message } = responseData
+  async (originalError = {}) => {
+    const { response, message, config } = originalError
     const data = response?.data
     const status = response?.status as number
+    if (status === 401 && !config._retry && !config.url.includes('refresh-session')) {
+      config._retry = true
+      const refreshToken = await getRefreshToken()
+
+      return axiosInstance
+        .post<{ refreshToken: string }, { accessToken: string; refreshToken: string }>('/auth/refresh-token', {
+          refreshToken,
+        })
+        .then(async (refreshResult) => {
+          config.headers.Authorization = `Bearer ${refreshResult.accessToken}`
+          await setAuthData({ accessToken: refreshResult.accessToken, refreshToken: refreshResult.refreshToken })
+          return axios(config)
+        })
+        .catch(async (err) => {
+          if (err.config.url.includes('refresh-session')) {
+            return Promise.reject(originalError)
+          }
+          return Promise.reject(err)
+        })
+    }
 
     if (status >= 500) {
       showErrorAlert(

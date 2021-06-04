@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Truck, TrucksSliceState } from 'store/trucks/types'
 import { getTruck, getTruckMenuItems } from 'store/trucks/thunks'
+import { createFavorite, removeFavorite } from 'store/favorites/thunks'
 import { clearTruckScreen } from 'store/commonActions'
 
 const initialState: TrucksSliceState = {
@@ -26,6 +27,16 @@ const trucksSlice = createSlice({
       })
       .addCase(getTruckMenuItems.fulfilled, (state, { payload }) => {
         state.menuItems = payload
+      })
+      .addCase(createFavorite.fulfilled, (state, { meta }) => {
+        if (state.resource.id === meta.arg) {
+          state.resource.isFavorite = true
+        }
+      })
+      .addCase(removeFavorite.fulfilled, (state, { meta }) => {
+        if (state.resource.id === meta.arg) {
+          state.resource.isFavorite = false
+        }
       })
   },
 })
