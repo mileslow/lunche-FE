@@ -3,6 +3,7 @@ enum Routes {
   MainTabsStack = 'MainTabsStack',
   WelcomeScreen = 'WelcomeScreen',
   SignInScreen = 'SignInScreen',
+  VerifyCodeScreen = 'VerifyCodeScreen',
 
   // tabs
   HomeTab = 'HomeTab',
@@ -16,6 +17,9 @@ enum Routes {
   AboutTruckScreen = 'AboutTruckScreen',
   CartScreen = 'CartScreen',
   CheckoutScreen = 'CheckoutScreen',
+
+  // Profile
+  AccountScreen = 'AccountScreen',
 
   // modals
   DishModal = 'DishModal',

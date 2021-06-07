@@ -8,4 +8,5 @@ export type MainNavigationStackParamsList = {
   [Routes.AboutTruckScreen]: undefined
   [Routes.CheckoutScreen]: undefined
   [Routes.SignInScreen]: undefined
+  [Routes.VerifyCodeScreen]: { phoneNumber: string }
 }

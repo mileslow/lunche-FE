@@ -9,13 +9,19 @@ const requiredDependType = (compareType: keyof typeof DeliveryType) =>
     then: yup.string().required(i18n.t('validation:required')),
   })
 
+const requiredForUnAuthorized = (field: yup.StringSchema) =>
+  yup.string().when('$isAuthorized', {
+    is: false,
+    then: field.required(i18n.t('validation:required')),
+  })
+
 export const schemaValidation = yup
   .object()
   .shape({
     client: yup.object({
-      email: yup.string().email(i18n.t('validation:invalidEmail')).required(i18n.t('validation:required')),
-      name: yup.string().required(i18n.t('validation:required')),
-      phone: yup.string().required(i18n.t('validation:required')),
+      email: requiredForUnAuthorized(yup.string().email(i18n.t('validation:invalidEmail'))),
+      name: requiredForUnAuthorized(yup.string()),
+      phone: requiredForUnAuthorized(yup.string()),
     }),
     deliveryAddress: requiredDependType(DeliveryType.delivery),
   })

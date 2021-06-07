@@ -38,6 +38,7 @@ const Input: FC<InputProps> = ({
       <View>
         <TextInput
           {...props}
+          editable={editable}
           placeholderTextColor={placeholderTextColor}
           onFocus={(e) => {
             setIsFocused(true)

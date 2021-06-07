@@ -8,6 +8,8 @@ export const getImageBySize = (url: string, w: number, h: number) => {
   return `${firstPart}/${round(w)}x${round(h)}/${lastPart}`
 }
 
+export const onlyNumbers = (value: string) => value.replace(/[^\d]/g, '')
+
 export const formatPhoneNumber = (phoneNumberString: string) => {
   const onlyNums = phoneNumberString.replace(/[^\d]/g, '')
   if (onlyNums.length <= 3) {

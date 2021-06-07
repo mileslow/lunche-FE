@@ -37,4 +37,7 @@ export default StyleSheet.create({
   inputWrap: {
     marginBottom: Spacing.large,
   },
+  inputContainerStyle: {
+    flex: 1,
+  },
 })

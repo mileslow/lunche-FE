@@ -1,11 +1,14 @@
 // redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 // entities
-import { AuthSliceState, User, Token } from 'store/auth/types'
+import { AuthSliceState } from 'store/auth/types'
+// thunks
+import { signInConfirm, getCurrentProfile } from 'store/auth/thunks'
 
 const initialState: AuthSliceState = {
   token: null,
   user: null,
+  isAuthorized: false,
 }
 
 // slice
@@ -13,21 +16,22 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    updateAuthUser(state, { payload }: PayloadAction<User>): void {
+    setAuthorized: (state, { payload }: PayloadAction<boolean>) => {
+      state.isAuthorized = payload
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(signInConfirm.fulfilled, (state) => {
+      state.isAuthorized = true
+    })
+    builder.addCase(getCurrentProfile.fulfilled, (state, { payload }) => {
       state.user = payload
-    },
-    updateAuthToken(state, { payload }: PayloadAction<Token>): void {
-      state.token = payload
-    },
-    clearAuth(state): void {
-      state.token = null
-      state.user = null
-    },
+    })
   },
 })
 
 export const sliceName = authSlice.name
 
-export const { updateAuthUser, updateAuthToken, clearAuth } = authSlice.actions
+export const { setAuthorized } = authSlice.actions
 
 export default authSlice.reducer
