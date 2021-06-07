@@ -61,6 +61,7 @@ export type TrucksFilters = {
   foodCategoryIds?: number[]
   search?: string
   onlyFavorite?: boolean
+  page?: number
 }
 
 export type GetTrucksParams = TrucksFilters | undefined

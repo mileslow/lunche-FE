@@ -1,6 +1,6 @@
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { FC, memo, useCallback, useReducer } from 'react'
 // libs
-import { FlatList, View } from 'react-native'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useFocusEffect } from '@react-navigation/native'
@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import reject from 'lodash.reject'
 // components
 import Header from 'components/Header'
-import Spinner from 'components/Spinner'
+import InfinityScroll from 'components/InfinityScroll'
 import TruckCard from 'screens/MainScreen/components/TruckCard'
 // store
 import { Truck } from 'store/trucks/types'
@@ -21,12 +21,31 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 // styles
 import styles from './styles'
 
+type State = {
+  isLoading: boolean
+  trucks: Truck[]
+  meta: {
+    page: number
+    pageCount: number
+  }
+}
+
+const initialState = {
+  isLoading: false,
+  trucks: [],
+  meta: {
+    page: 1,
+    pageCount: 1,
+  },
+}
+
 const FavoritePlacesScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.PlacesTab>> = ({
   navigation,
 }) => {
-  const [isLoading, setLoading] = useState<boolean>(false)
-
-  const [searchResult, setSearchResult] = useState<Truck[]>([])
+  const [state, setState] = useReducer(
+    (store: State, newStore: Partial<State>) => ({ ...store, ...newStore }),
+    initialState,
+  )
 
   const insets = useSafeAreaInsets()
 
@@ -34,31 +53,41 @@ const FavoritePlacesScreen: FC<StackScreenProps<RootNavigationStackParamsList, R
 
   const dispatch = useDispatch<AppDispatch>()
 
+  const fetchTrucks = useCallback(
+    async (params?: { page: number }) => {
+      setState({ isLoading: true })
+      const result = await dispatch(getTrucks({ onlyFavorite: true, page: params?.page }))
+      if (getTrucks.fulfilled.match(result)) {
+        setState({
+          isLoading: false,
+          trucks: params?.page === 1 ? result.payload.data : [...state.trucks, ...result.payload.data],
+          meta: { page: result.payload.page, pageCount: result.payload.pageCount },
+        })
+        return
+      }
+      setState({ isLoading: false })
+    },
+    [dispatch, state.trucks],
+  )
+
   useFocusEffect(
     useCallback(() => {
-      const fetchTrucks = async () => {
-        setLoading(true)
-        const result = await dispatch(getTrucks({ onlyFavorite: true }))
-        if (getTrucks.fulfilled.match(result)) {
-          setSearchResult(result.payload.data)
-        }
-        setLoading(false)
-      }
-
       fetchTrucks()
     }, []),
   )
 
-  const handleFavoritePress = useCallback(async (id: number) => {
-    setLoading(true)
-    const result = await dispatch(removeFavorite(id))
-    if (removeFavorite.fulfilled.match(result)) {
-      setSearchResult((prevState) => reject(prevState, ['id', id]))
-    }
-    setLoading(false)
-  }, [])
-
-  const keyExtractor = useCallback((item: Truck) => `${item.id}`, [])
+  const handleFavoritePress = useCallback(
+    async (id: number) => {
+      setState({ isLoading: true })
+      const result = await dispatch(removeFavorite(id))
+      if (removeFavorite.fulfilled.match(result)) {
+        setState({ isLoading: false, trucks: reject(state.trucks, ['id', id]) })
+        return
+      }
+      setState({ isLoading: false })
+    },
+    [state.trucks, dispatch],
+  )
 
   const renderSearchItem = useCallback(
     ({ item }) => (
@@ -68,21 +97,22 @@ const FavoritePlacesScreen: FC<StackScreenProps<RootNavigationStackParamsList, R
         onPress={() => navigation.navigate(Routes.TruckScreen, { id: item.id })}
       />
     ),
-    [navigation],
+    [navigation, handleFavoritePress],
   )
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Header withBack title={t('favoritePlacesScreen:headerTitle')} />
-      <FlatList
+      <InfinityScroll
         keyboardShouldPersistTaps='always'
         contentContainerStyle={styles.searchContent}
-        data={searchResult}
+        data={state.trucks}
         renderItem={renderSearchItem}
-        keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
+        meta={state.meta}
+        loadResources={fetchTrucks}
+        isLoading={state.isLoading}
       />
-      {isLoading && <Spinner />}
     </View>
   )
 }
