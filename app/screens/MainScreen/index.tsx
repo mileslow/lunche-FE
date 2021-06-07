@@ -1,4 +1,4 @@
-import React, { memo, useRef, useCallback, FC, useEffect, useMemo } from 'react'
+import React, { memo, useRef, useCallback, FC, useEffect } from 'react'
 // libs
 import Animated from 'react-native-reanimated'
 import { PanGestureHandler, NativeViewGestureHandler } from 'react-native-gesture-handler'
@@ -6,11 +6,11 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
-import map from 'lodash.map'
 import is from 'lodash.isequal'
 // components
 import Spinner from 'components/Spinner'
 import Map from 'components/Map'
+import InfinityScroll from 'components/InfinityScroll'
 import TruckCard from 'screens/MainScreen/components/TruckCard'
 import SubNavigation from 'screens/MainScreen/components/SubNavigation'
 import HeaderWithLocation from 'screens/MainScreen/components/HeaderWithLocation'
@@ -26,7 +26,7 @@ import { foodCategoriesSelector } from 'store/foodCategories/selectors'
 import { currentPositionSelector } from 'store/general/selectors'
 // types
 import { AppDispatch } from 'store'
-import { GetTrucksParams } from 'store/trucks/types'
+import { GetTrucksParams, Truck } from 'store/trucks/types'
 // services
 import { CurrentLocation, getCurrentLocation } from 'services/geoLocation'
 // hooks
@@ -70,7 +70,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     localDispatch({ type: ActionType.FetchingTruckPending, payload: params })
     const resultTruck = await dispatch(getTrucks(params))
     if (getTrucks.fulfilled.match(resultTruck)) {
-      localDispatch({ type: ActionType.FetchingTruckFullfilled, payload: resultTruck.payload.data })
+      localDispatch({ type: ActionType.FetchingTruckFulfilled, payload: resultTruck.payload })
     } else {
       localDispatch({ type: ActionType.SetLoadingTruck, payload: false })
     }
@@ -105,12 +105,6 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [navigation],
   )
 
-  const renderTrucks = useMemo(
-    () =>
-      map(state.trucks, (truck) => <TruckCard key={truck.id} onPress={() => navigateToTruck(truck.id)} item={truck} />),
-    [state.trucks, navigateToTruck],
-  )
-
   const onOnlyDeliveryPress = useCallback(
     () => fetchTruck({ ...state.filters, supportDelivery: !state.filters.supportDelivery }),
     [state.filters, fetchTruck],
@@ -125,6 +119,8 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     [fetchTruck, state.filters],
   )
 
+  const loadMore = useCallback(({ page }) => fetchTruck({ ...state.filters, page }), [state.filters, fetchTruck])
+
   const redirectToChangeAddress = useCallback(() => {
     navigation.navigate(Routes.ChangeAddressModal)
   }, [navigation])
@@ -132,6 +128,11 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
   const redirectToSearch = useCallback(() => {
     navigation.navigate(Routes.SearchTruckModal)
   }, [navigation])
+
+  const renderItem = useCallback(
+    ({ item }) => <TruckCard key={item.id} onPress={() => navigateToTruck(item.id)} item={item} />,
+    [navigateToTruck],
+  )
 
   return (
     <>
@@ -172,20 +173,23 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
           />
 
           <NativeViewGestureHandler ref={scrollView} simultaneousHandlers={mainDrawer}>
-            <Animated.ScrollView
-              animatedProps={animatedProps}
+            <InfinityScroll<Truck>
+              isAnimated
               bounces={false}
-              scrollEventThrottle={16}
+              animatedProps={animatedProps}
+              renderItem={renderItem}
+              loadResources={loadMore}
+              isLoading={state.loading.isLoadingTruck}
               onScroll={onRegisterScroll}
               contentContainerStyle={styles.content}
               showsVerticalScrollIndicator={false}
-            >
-              {renderTrucks}
-            </Animated.ScrollView>
+              data={state.trucks}
+              meta={state.meta}
+            />
           </NativeViewGestureHandler>
         </Animated.View>
       </PanGestureHandler>
-      {(state.loading.isLoadingLocation || state.loading.isLoadingTruck) && <Spinner />}
+      {state.loading.isLoadingLocation && <Spinner />}
     </>
   )
 }

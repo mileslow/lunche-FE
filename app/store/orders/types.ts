@@ -35,3 +35,13 @@ export type CreateOrderData = {
   orderItems: OrderItem[]
   comment?: string
 }
+
+export type CreateOrderResponse = {
+  metadata: {
+    tokens: {
+      accessToken: string
+      refreshToken: string
+    }
+  }
+  [x: string]: unknown
+}

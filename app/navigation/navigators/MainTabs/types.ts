@@ -6,4 +6,5 @@ export type TabsNavigationParamsList = {
   [Routes.HomeTab]: TabNavigationParams
   [Routes.OrdersTab]: TabNavigationParams
   [Routes.ProfileTab]: TabNavigationParams
+  [Routes.PlacesTab]: TabNavigationParams
 }

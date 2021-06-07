@@ -31,6 +31,7 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 // hooks
 import useTruckInfo from 'hooks/useTruckInfo'
 import useAnimatedHeader from 'hooks/useAnimatedHeader'
+import useToggleFavoritePress from 'hooks/useToggleFavoritePress'
 // utils
 import { getImageBySize } from 'services/utils'
 // styles
@@ -106,9 +107,11 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
     transform: [{ translateY: translationY.value < endAnimPosition ? 0 : translationY.value - endAnimPosition }],
   }))
 
+  const { toggleFavoritePress, isLoadingFavorite } = useToggleFavoritePress()
+
   return (
     <View style={styles.screen}>
-      <Header translationY={translationY} />
+      <Header translationY={translationY} onFavoritePress={toggleFavoritePress} />
 
       <Animated.ScrollView
         bounces={false}
@@ -173,7 +176,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
         </View>
       ) : null}
 
-      {isLoading && <Spinner />}
+      {(isLoading || isLoadingFavorite) && <Spinner />}
     </View>
   )
 }

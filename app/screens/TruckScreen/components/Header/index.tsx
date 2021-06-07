@@ -19,11 +19,12 @@ import useAnimatedHeader from 'hooks/useAnimatedHeader'
 
 interface IProps {
   translationY: Animated.SharedValue<number>
+  onFavoritePress: () => void
 }
 
 const setBarStyle = (style: StatusBarStyle) => StatusBar.setBarStyle(style)
 
-const Header: FC<IProps> = ({ translationY }) => {
+const Header: FC<IProps> = ({ translationY, onFavoritePress }) => {
   const insets = useSafeAreaInsets()
 
   const statusBarStyle = useStatusBarStyle('light-content')
@@ -67,7 +68,7 @@ const Header: FC<IProps> = ({ translationY }) => {
     >
       <BackButton style={{ marginHorizontal: Spacing.base }} iconAnimatedProps={backIconAnimatedProps} />
       <View style={styles.rightNav}>
-        <Button type={ButtonTypes.icon} onPress={() => null} style={{ marginHorizontal: Spacing.base }}>
+        <Button type={ButtonTypes.icon} onPress={onFavoritePress} style={{ marginHorizontal: Spacing.base }}>
           <HeartIcon iconAnimatedProps={heartIconAnimatedProps} />
         </Button>
         <Button type={ButtonTypes.icon} onPress={() => null} style={{ marginHorizontal: Spacing.base }}>

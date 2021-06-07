@@ -1,7 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CurrentLocation } from 'services/geoLocation'
 
-export const getAuthToken = async () => await AsyncStorage.getItem('auth_token')
+export const getAuthToken = async () => await AsyncStorage.getItem('access_token')
+
+export const getRefreshToken = async () => await AsyncStorage.getItem('refresh_token')
+
+export const setAuthData = async ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) =>
+  await AsyncStorage.multiSet([
+    ['access_token', accessToken],
+    ['refresh_token', refreshToken],
+  ])
 
 export const getSkipWelcome = async () => {
   const isSkip = await AsyncStorage.getItem('is_skip_welcome')
