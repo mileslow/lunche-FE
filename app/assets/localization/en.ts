@@ -70,6 +70,12 @@ export default {
   favoritePlacesScreen: {
     headerTitle: 'Saved Places',
   },
+  signInScreen: {
+    title: 'Welcome',
+    subhead: 'Enter your Phone number or Email for sign in',
+    signInButton: 'Sign in',
+    phoneNumberLabel: 'Phone Number',
+  },
 
   common: {
     welcome: 'Welcome!',

@@ -10,6 +10,7 @@ import CartScreen from 'screens/CartScreen'
 import TruckScreen from 'screens/TruckScreen'
 import AboutTruckScreen from 'screens/AboutTruckScreen'
 import CheckoutScreen from 'screens/CheckoutScreen'
+import SignInScreen from 'screens/SignInScreen'
 // navigations
 import MainTabsNavigator from 'navigation/navigators/MainTabs'
 import Routes from 'navigation/routes'
@@ -56,6 +57,7 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.TruckScreen} component={TruckScreen} />
           <MainStack.Screen name={Routes.AboutTruckScreen} component={AboutTruckScreen} />
           <MainStack.Screen name={Routes.CheckoutScreen} component={CheckoutScreen} />
+          <MainStack.Screen name={Routes.SignInScreen} component={SignInScreen} />
         </>
       )}
     </MainStack.Navigator>

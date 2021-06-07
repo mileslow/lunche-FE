@@ -1,6 +1,6 @@
 import React, { FC, memo, ReactNode, useMemo } from 'react'
 // libs
-import { Text, StyleSheet } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { SvgProps } from 'react-native-svg'
 // navigation
@@ -8,6 +8,7 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 import HomeStackNavigator from 'navigation/navigators/HomeStack'
 // screen
 import FavoritePlacesScreen from 'screens/FavoritePlacesScreen'
+import SignInScreen from 'screens/SignInScreen'
 // localization
 import { useTranslation } from 'react-i18next'
 // assets
@@ -64,7 +65,7 @@ const MainTabsNavigator: FC = () => {
       />
       <Tab.Screen
         name={Routes.ProfileTab}
-        component={HomeStackNavigator}
+        component={SignInScreen}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, ProfileIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:profile')),

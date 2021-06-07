@@ -2,6 +2,7 @@ enum Routes {
   RootNavigator = 'RootNavigator',
   MainTabsStack = 'MainTabsStack',
   WelcomeScreen = 'WelcomeScreen',
+  SignInScreen = 'SignInScreen',
 
   // tabs
   HomeTab = 'HomeTab',

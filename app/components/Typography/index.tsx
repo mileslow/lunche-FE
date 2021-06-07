@@ -17,6 +17,7 @@ export enum TypographyWeights {
 }
 
 export enum TypographyVariants {
+  h1 = 'h1',
   h3 = 'h3',
   body = 'body',
   smallBody = 'smallBody',
@@ -53,6 +54,12 @@ const Typography: FC<PropsWithChildren<TypographyProps>> = ({ weight, variant, c
 }
 
 export const styles = StyleSheet.create({
+  h1: {
+    color: Colors.midNightMoss,
+    fontFamily: Fonts.regular,
+    fontSize: FontSize.h1,
+    fontWeight: TypographyWeights.medium,
+  },
   headline: {
     color: Colors.midNightMoss,
     fontFamily: Fonts.regular,

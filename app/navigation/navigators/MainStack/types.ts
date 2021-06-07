@@ -7,4 +7,5 @@ export type MainNavigationStackParamsList = {
   [Routes.TruckScreen]: { id: number }
   [Routes.AboutTruckScreen]: undefined
   [Routes.CheckoutScreen]: undefined
+  [Routes.SignInScreen]: undefined
 }
