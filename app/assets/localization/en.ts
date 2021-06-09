@@ -84,6 +84,11 @@ export default {
     notReceive: "Didn't receive code?",
     resend: 'Resend Again',
   },
+  ordersScreen: {
+    headerTitle: 'Orders',
+    reorder: 'Reorder',
+    orderTracker: 'Order Tracker',
+  },
 
   common: {
     welcome: 'Welcome!',

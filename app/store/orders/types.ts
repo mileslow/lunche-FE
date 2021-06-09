@@ -48,3 +48,22 @@ export type CreateOrderResponse = {
   }
   [x: string]: unknown
 }
+
+export enum OrderStatus {
+  Draft = 'draft',
+  Approving = 'approving',
+  Cooking = 'cooking',
+  Ready = 'ready',
+  Rejected = 'rejected',
+}
+
+export type Order = {
+  id: number
+  totalSum: number
+  foodTruck: {
+    name: string
+    mainPhoto: string
+  }
+  status: OrderStatus
+  orderItems: Array<OrderItem & { menuItem: { name: string } }>
+}

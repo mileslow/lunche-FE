@@ -8,7 +8,7 @@ import filter from 'lodash.filter'
 import intersection from 'lodash.intersection'
 // components
 import Divider from 'components/Divider'
-import MealItem from 'screens/TruckScreen/components/MealItem'
+import CommonCard from 'components/CommonCard'
 // store
 import { menuItemsSelector } from 'store/trucks/selectors'
 import { OrderItems } from 'store/orders/types'
@@ -16,6 +16,7 @@ import { OrderItems } from 'store/orders/types'
 import useCountOrderPress from 'hooks/useCountOrderPress'
 // types
 import { Routes, RootNavigationStackParamsList } from 'navigation'
+import ItemCount from 'components/ItemCount'
 
 interface IProps {
   selectedTypes: number[]
@@ -44,16 +45,30 @@ const MenuItems: FC<IProps> = ({ selectedTypes, truckId, orderItems }) => {
     [navigation, truckId],
   )
 
+  const renderBottomRightBlock = useCallback(
+    (id) => () => {
+      const order = orderItems[id]
+      return order ? (
+        <ItemCount
+          onPressPlus={() => handleCountPress(order)(1)}
+          onPressMinus={() => handleCountPress(order)(-1)}
+          value={order.itemCount}
+        />
+      ) : null
+    },
+    [orderItems, handleCountPress],
+  )
+
   return (
     <>
       {map(menu, (item) => (
         <Fragment key={item.id}>
           <Divider />
-          <MealItem
+          <CommonCard
             item={item}
-            orderItem={orderItems[item.id]}
+            active={!!orderItems[item.id]}
             onPress={handleMenuItemPress(item.id)}
-            onCountPress={handleCountPress(orderItems[item.id])}
+            renderBottomRightBlock={renderBottomRightBlock(item.id)}
           />
         </Fragment>
       ))}
