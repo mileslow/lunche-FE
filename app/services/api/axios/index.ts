@@ -52,10 +52,10 @@ axiosInstance.interceptors.response.use(
         .then(async (refreshResult) => {
           config.headers.Authorization = `Bearer ${refreshResult.accessToken}`
           await setAuthData({ accessToken: refreshResult.accessToken, refreshToken: refreshResult.refreshToken })
-          return axios(config)
+          return axiosInstance(config)
         })
         .catch(async (err) => {
-          if (err.config.url.includes('refresh-session')) {
+          if (err.config.url.includes('refresh-token')) {
             return Promise.reject(originalError)
           }
           return Promise.reject(err)
