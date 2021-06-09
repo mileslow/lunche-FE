@@ -28,13 +28,13 @@ const trucksSlice = createSlice({
       .addCase(getTruckMenuItems.fulfilled, (state, { payload }) => {
         state.menuItems = payload
       })
-      .addCase(createFavorite.fulfilled, (state, { meta }) => {
-        if (state.resource.id === meta.arg) {
+      .addCase(createFavorite.fulfilled, (state, { meta, payload }) => {
+        if (state.resource.id === meta.arg && payload.success) {
           state.resource.isFavorite = true
         }
       })
-      .addCase(removeFavorite.fulfilled, (state, { meta }) => {
-        if (state.resource.id === meta.arg) {
+      .addCase(removeFavorite.fulfilled, (state, { meta, payload }) => {
+        if (state.resource.id === meta.arg && payload.success) {
           state.resource.isFavorite = false
         }
       })

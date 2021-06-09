@@ -115,7 +115,7 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
 
   return (
     <View style={styles.screen}>
-      <Header translationY={translationY} onFavoritePress={toggleFavoritePress} />
+      <Header translationY={translationY} onFavoritePress={toggleFavoritePress} isFavorite={currentTruck.isFavorite} />
       <Animated.ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}

@@ -72,4 +72,7 @@ export default StyleSheet.create({
     marginHorizontal: Spacing.double,
     marginVertical: Spacing.double,
   },
+  headerIcon: {
+    position: 'absolute',
+  },
 })
