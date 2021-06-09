@@ -8,6 +8,7 @@ export enum FontSize {
   caption = 12,
   base = 14,
   regular = 16,
+  medium = 18,
   subhead = 20,
   h3 = 24,
   headline = 30,

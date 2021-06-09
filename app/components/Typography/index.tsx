@@ -23,15 +23,8 @@ export enum TypographyVariants {
   smallBody = 'smallBody',
   subhead = 'subhead',
   caption = 'caption',
-  // largeTitle = 'largeTitle',
-  // title1 = 'title1',
-  // title2 = 'title2',
-  // title3 = 'title3',
+  cardTitle = 'cardTitle',
   headline = 'headline',
-  // callout = 'callout',
-  // footnote = 'footnote',
-  // caption1 = 'caption1',
-  // caption2 = 'caption2',
 }
 
 export type TypographyProps = TextProps & {
@@ -54,6 +47,12 @@ const Typography: FC<PropsWithChildren<TypographyProps>> = ({ weight, variant, c
 }
 
 export const styles = StyleSheet.create({
+  cardTitle: {
+    color: Colors.midNightMoss,
+    fontFamily: Fonts.regular,
+    fontSize: FontSize.medium,
+    fontWeight: TypographyWeights.medium,
+  },
   h1: {
     color: Colors.midNightMoss,
     fontFamily: Fonts.regular,

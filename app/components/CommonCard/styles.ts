@@ -6,18 +6,18 @@ export default StyleSheet.create({
     flexDirection: 'row',
     padding: Spacing.base,
   },
-  mealImg: {
+  itemImg: {
     borderRadius: 8,
     height: Metrics.menuItemSize,
     margin: Spacing.base,
     width: Metrics.menuItemSize,
   },
-  mealInfo: {
+  itemInfo: {
     flex: 1,
     justifyContent: 'space-between',
     paddingVertical: Spacing.base,
   },
-  mealName: {
+  itemName: {
     marginBottom: Spacing.tiny,
     paddingRight: Spacing.large,
   },
