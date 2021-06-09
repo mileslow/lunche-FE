@@ -1,5 +1,5 @@
 import React, { FC, memo, ReactElement, useState } from 'react'
-import { StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from 'react-native'
+import { StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native'
 import Typography from 'components/Typography'
 import { Colors, Fonts, FontSize, Spacing } from 'styles'
 
@@ -9,6 +9,7 @@ export type InputProps = TextInputProps & {
   leftIcon?: () => ReactElement
   rightIcon?: () => ReactElement
   containerStyle?: ViewStyle
+  labelStyle?: TextStyle
   placeholderTextColor?: string
   withError?: boolean
 }
@@ -22,6 +23,7 @@ const Input: FC<InputProps> = ({
   rightIcon,
   placeholderTextColor = Colors.gunsmoke,
   withError = true,
+  labelStyle,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false)
@@ -30,12 +32,13 @@ const Input: FC<InputProps> = ({
     <View style={containerStyle}>
       {label && (
         <View style={styles.labelContainer}>
-          <Typography>{label}</Typography>
+          <Typography style={labelStyle}>{label}</Typography>
         </View>
       )}
       <View>
         <TextInput
           {...props}
+          editable={editable}
           placeholderTextColor={placeholderTextColor}
           onFocus={(e) => {
             setIsFocused(true)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, View, StyleSheet } from 'react-native'
+import { ActivityIndicator, View, StyleSheet, ViewStyle } from 'react-native'
 import { Colors } from 'styles'
 
 const styles = StyleSheet.create({
@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
   },
 })
 
-const Spinner = () => {
+const Spinner = ({ style }: { style?: ViewStyle }) => {
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, style]}>
       <ActivityIndicator size='large' color={Colors.primary} animating />
     </View>
   )

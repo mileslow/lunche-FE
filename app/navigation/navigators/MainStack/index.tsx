@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from 'react'
 // libs
 import { createStackNavigator } from '@react-navigation/stack'
 import { useSelector, useDispatch } from 'react-redux'
+import allsettled from 'promise.allsettled'
 // components
 import Spinner from 'components/Spinner'
 // screens
@@ -10,17 +11,21 @@ import CartScreen from 'screens/CartScreen'
 import TruckScreen from 'screens/TruckScreen'
 import AboutTruckScreen from 'screens/AboutTruckScreen'
 import CheckoutScreen from 'screens/CheckoutScreen'
+import SignInScreen from 'screens/SignInScreen'
+import VerifyCodeScreen from 'screens/VerifyCodeScreen'
 // navigations
 import MainTabsNavigator from 'navigation/navigators/MainTabs'
 import Routes from 'navigation/routes'
 // store
 import { AppDispatch } from 'store'
+import { setAuthorized } from 'store/auth/model'
 import { setShowWelcome } from 'store/general/model'
 import { isShowWelcomeSelector } from 'store/general/selectors'
 // utils
-import { getSkipWelcome } from 'services/storage'
+import { getSkipWelcome, getAuthToken } from 'services/storage'
 // types
 import { MainNavigationStackParamsList } from './types'
+import { Colors } from 'styles'
 
 const MainStack = createStackNavigator<MainNavigationStackParamsList>()
 
@@ -34,15 +39,16 @@ const MainStackNavigator = () => {
   useEffect(() => {
     const bootstrap = async () => {
       setLoading(true)
-      const isSkipWelcome = await getSkipWelcome()
-      dispatch(setShowWelcome(!isSkipWelcome))
+      const [isSkipWelcome, token] = await allsettled([getSkipWelcome(), getAuthToken()])
+      dispatch(setAuthorized(token.status === 'fulfilled' && !!token.value))
+      dispatch(setShowWelcome(isSkipWelcome.status === 'fulfilled' && !isSkipWelcome.value))
       setLoading(false)
     }
     bootstrap()
   }, [dispatch])
 
   if (isLoading) {
-    return <Spinner />
+    return <Spinner style={{ backgroundColor: Colors.basic }} />
   }
 
   return (
@@ -56,6 +62,8 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.TruckScreen} component={TruckScreen} />
           <MainStack.Screen name={Routes.AboutTruckScreen} component={AboutTruckScreen} />
           <MainStack.Screen name={Routes.CheckoutScreen} component={CheckoutScreen} />
+          <MainStack.Screen name={Routes.SignInScreen} component={SignInScreen} />
+          <MainStack.Screen name={Routes.VerifyCodeScreen} component={VerifyCodeScreen} />
         </>
       )}
     </MainStack.Navigator>

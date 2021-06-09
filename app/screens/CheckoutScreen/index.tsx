@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useState } from 'react'
 // libs
 import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -18,9 +18,11 @@ import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFi
 import TimeField from 'screens/CheckoutScreen/components/TimeField'
 // thunks
 import { createOrder } from 'store/orders/thunks'
+import { getCurrentProfile, signIn } from 'store/auth/thunks'
 // selectors
 import { currentAddressSelector } from 'store/general/selectors'
 import { truckSelector } from 'store/trucks/selectors'
+import { isAuthorizedSelector, currentProfileSelector } from 'store/auth/selectors'
 // types
 import { AppDispatch } from 'store'
 import { DeliveryType } from 'store/orders/types'
@@ -28,8 +30,6 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schemaValidation } from './validation'
-// services
-import { setAuthData } from 'services/storage'
 // assets
 import PersonIcon from 'assets/svg/person-walking.svg'
 import TruckIcon from 'assets/svg/truck.svg'
@@ -58,20 +58,52 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const currentTruck = useSelector(truckSelector)
 
+  const isAuthorized = useSelector(isAuthorizedSelector)
+
+  const currentProfile = useSelector(currentProfileSelector)
+
   const [isLoading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (isAuthorized && !currentProfile) {
+        setLoading(true)
+        await dispatch(getCurrentProfile())
+        setLoading(false)
+      }
+    }
+
+    fetchProfile()
+  }, [])
 
   const {
     control,
     handleSubmit,
     watch,
     formState: { errors },
+    setValue,
   } = useForm<ICreateOrderFormData>({
     defaultValues: {
       type: DeliveryType.pickup,
-      deliveryAddress: currentAddress,
+      client: {
+        email: currentProfile?.email,
+        phone: currentProfile?.phone,
+        name: currentProfile?.name,
+      },
     },
+    context: { isAuthorized },
     resolver: yupResolver(schemaValidation),
   })
+
+  useEffect(() => {
+    if (currentProfile) {
+      setValue('client', {
+        email: currentProfile.email,
+        phone: currentProfile.phone,
+        name: currentProfile.name,
+      })
+    }
+  }, [currentProfile, setValue])
 
   const typeDelivery = watch('type')
 
@@ -80,17 +112,20 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
       setLoading(true)
       const result = await dispatch(createOrder(data))
       if (createOrder.fulfilled.match(result)) {
-        await setAuthData({
-          accessToken: result.payload.metadata.tokens.accessToken,
-          refreshToken: result.payload.metadata.tokens.refreshToken,
-        })
+        if (isAuthorized) {
+          setLoading(false)
+          navigation.reset({
+            index: 0,
+            routes: [{ name: Routes.MainTabsStack }],
+          })
+        } else {
+          await dispatch(signIn({ phone: data.client.phone }))
+          setLoading(false)
+          navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone })
+        }
       }
-      navigation.reset({
-        index: 0,
-        routes: [{ name: Routes.MainTabsStack }],
-      })
     },
-    [navigation, dispatch],
+    [navigation, dispatch, isAuthorized],
   )
 
   const activeTypeColor = useCallback(
@@ -137,7 +172,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
         <TimeField shouldUnregister name='orderTime' control={control} />
 
-        <PersonalInfoFields control={control} errors={errors} />
+        <PersonalInfoFields editable={!isAuthorized} control={control} errors={errors} />
 
         <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
           <Typography color={Colors.cadmiumOrange}>*</Typography>

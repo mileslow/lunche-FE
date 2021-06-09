@@ -70,6 +70,20 @@ export default {
   favoritePlacesScreen: {
     headerTitle: 'Saved Places',
   },
+  signInScreen: {
+    title: 'Welcome',
+    subhead: 'Enter your Phone number or Email for sign in',
+    signInButton: 'Sign in',
+    phoneNumberLabel: 'Phone Number',
+  },
+  verifyCodeScreen: {
+    title: 'Verify phone number',
+    subhead: 'Enter the 4-Digit code sent to you at',
+    confirmButton: 'Verify',
+    terms: 'By Signing up you agree to our Terms Conditions & Privacy Policy.',
+    notReceive: "Didn't receive code?",
+    resend: 'Resend Again',
+  },
 
   common: {
     welcome: 'Welcome!',

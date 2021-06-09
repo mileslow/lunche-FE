@@ -1,15 +1,28 @@
 export type AuthSliceState = {
   token: Token | null
   user: User | null
+  isAuthorized: boolean
 }
 
 export type Token = string
 
 export type User = {
   id: number
-  email: string | null
-  provider: string
-  socialId?: string | null
-  firstName: string | null
-  lastName: string | null
+  name: string
+  email: string
+  phone: string
+}
+
+export type SignInParams = {
+  phone: string
+}
+
+export type SignInConfirmParams = {
+  code: string
+  phone: string
+}
+
+export type Tokens = {
+  accessToken: string
+  refreshToken: string
 }

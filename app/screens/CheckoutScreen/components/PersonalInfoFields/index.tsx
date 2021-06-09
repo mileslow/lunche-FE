@@ -17,9 +17,10 @@ import ProfileIcon from 'assets/svg/profile.svg'
 interface IProps {
   control: Control<ICreateOrderFormData>
   errors: FieldErrors<ICreateOrderFormData>
+  editable: boolean
 }
 
-const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
+const PersonalInfoFields: FC<IProps> = ({ control, errors, editable }) => {
   const { t } = useTranslation()
 
   return (
@@ -28,6 +29,7 @@ const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
         {t('checkoutScreen:personalInfo')}
       </Typography>
       <Input
+        editable={editable}
         control={control}
         name='client.name'
         autoCapitalize='none'
@@ -36,6 +38,7 @@ const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
         leftIcon={() => <ProfileIcon fill={Colors.midNightMoss} />}
       />
       <Input
+        editable={editable}
         control={control}
         name='client.email'
         autoCapitalize='none'
@@ -47,6 +50,7 @@ const PersonalInfoFields: FC<IProps> = ({ control, errors }) => {
       />
 
       <Input
+        editable={editable}
         control={control}
         name='client.phone'
         autoCapitalize='none'

@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
     const { response, message, config } = originalError
     const data = response?.data
     const status = response?.status as number
-    if (status === 401 && !config._retry && !config.url.includes('refresh-session')) {
+    if (status === 401 && !config._retry && !config.url.includes('refresh-token')) {
       config._retry = true
       const refreshToken = await getRefreshToken()
 

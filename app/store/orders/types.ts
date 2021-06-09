@@ -37,6 +37,9 @@ export type CreateOrderData = {
 }
 
 export type CreateOrderResponse = {
+  client: {
+    phone: string
+  }
   metadata: {
     tokens: {
       accessToken: string

@@ -1,11 +1,6 @@
 import React, { FC, memo } from 'react'
-import styles from 'screens/TruckScreen/styles'
-import { Colors, Spacing } from 'styles'
-import BackButton from 'components/Button/BackButton'
+// libs
 import { StatusBar, StatusBarStyle, View } from 'react-native'
-import Button, { ButtonTypes } from 'components/Button'
-import HeartIcon from 'components/AnimatedSvgComponents/HeartIcon'
-import ShareIcon from 'components/AnimatedSvgComponents/ShareIcon'
 import Animated, {
   interpolateColor,
   runOnJS,
@@ -14,17 +9,28 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+// components
+import BackButton from 'components/Button/BackButton'
+import Button, { ButtonTypes } from 'components/Button'
+import HeartIcon from 'components/AnimatedSvgComponents/HeartIcon'
+import EmptyHeartIcon from 'components/AnimatedSvgComponents/EmptyHeartIcon'
+import ShareIcon from 'components/AnimatedSvgComponents/ShareIcon'
+// hooks
 import useStatusBarStyle from 'hooks/useStatusBarStyle'
 import useAnimatedHeader from 'hooks/useAnimatedHeader'
+// styles
+import styles from 'screens/TruckScreen/styles'
+import { Colors, Spacing } from 'styles'
 
 interface IProps {
   translationY: Animated.SharedValue<number>
   onFavoritePress: () => void
+  isFavorite: boolean
 }
 
 const setBarStyle = (style: StatusBarStyle) => StatusBar.setBarStyle(style)
 
-const Header: FC<IProps> = ({ translationY, onFavoritePress }) => {
+const Header: FC<IProps> = ({ translationY, onFavoritePress, isFavorite }) => {
   const insets = useSafeAreaInsets()
 
   const statusBarStyle = useStatusBarStyle('light-content')
@@ -57,19 +63,29 @@ const Header: FC<IProps> = ({ translationY, onFavoritePress }) => {
     fill: interpolateColor(translationY.value, [0, endAnimPosition], [Colors.basic, Colors.midNightMoss]),
   }))
 
+  const heartEmptyIconAnimatedProps = useAnimatedProps(() => ({
+    fill: interpolateColor(translationY.value, [0, endAnimPosition], [Colors.basic, Colors.midNightMoss]),
+  }))
+
   const shareIconAnimatedProps = useAnimatedProps(() => ({
     fill: interpolateColor(translationY.value, [0, endAnimPosition], [Colors.basic, Colors.midNightMoss]),
   }))
 
   return (
-    <Animated.View
-      pointerEvents='box-none'
-      style={[styles.header, { paddingTop: insets.top, height: headerHeight }, headerStyle]}
-    >
+    <Animated.View style={[styles.header, { paddingTop: insets.top, height: headerHeight }, headerStyle]}>
       <BackButton style={{ marginHorizontal: Spacing.base }} iconAnimatedProps={backIconAnimatedProps} />
       <View style={styles.rightNav}>
         <Button type={ButtonTypes.icon} onPress={onFavoritePress} style={{ marginHorizontal: Spacing.base }}>
-          <HeartIcon iconAnimatedProps={heartIconAnimatedProps} />
+          <HeartIcon
+            style={styles.headerIcon}
+            iconAnimatedProps={heartIconAnimatedProps}
+            opacity={isFavorite ? 1 : 0}
+          />
+          <EmptyHeartIcon
+            style={styles.headerIcon}
+            iconAnimatedProps={heartEmptyIconAnimatedProps}
+            opacity={isFavorite ? 0 : 1}
+          />
         </Button>
         <Button type={ButtonTypes.icon} onPress={() => null} style={{ marginHorizontal: Spacing.base }}>
           <ShareIcon iconAnimatedProps={shareIconAnimatedProps} />
