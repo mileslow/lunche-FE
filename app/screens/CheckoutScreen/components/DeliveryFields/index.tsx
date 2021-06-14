@@ -31,10 +31,6 @@ const DeliveryFields: FC<IProps> = ({ control, errors, address }) => {
         error={errors?.deliveryAddress?.message}
         leftIcon={() => <AddressIcon fill={Colors.midNightMoss} />}
       />
-
-      <Typography variant={TypographyVariants.subhead} style={styles.label}>
-        {t('checkoutScreen:deliveryDate')}
-      </Typography>
     </>
   )
 }

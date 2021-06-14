@@ -1,4 +1,4 @@
-import React, { FC, ReactChildren, ReactElement } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { StyleSheet, Pressable, PressableProps, TextStyle } from 'react-native'
 // styling
 import { Colors, FontSize } from 'styles'
@@ -14,7 +14,7 @@ export enum ButtonTypes {
 type ButtonProps = PressableProps & {
   title?: string
   type?: ButtonTypes
-  children?: ReactChildren | ReactElement | ReactChildren[] | ReactElement[]
+  children?: ReactNode
   textStyle?: TextStyle
 }
 

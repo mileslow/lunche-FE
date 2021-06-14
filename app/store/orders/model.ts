@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import omit from 'lodash.omit'
+import { createOrder } from './thunks'
 import { OrdersSliceState, PreSaveOrderItem } from './types'
 
 const initialState: OrdersSliceState = {
@@ -21,6 +22,11 @@ const ordersSlice = createSlice({
     changeComment: (state, { payload }: PayloadAction<string>) => {
       state.comment = payload
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(createOrder.fulfilled, (state) => {
+      state.orderItems = {}
+    })
   },
 })
 

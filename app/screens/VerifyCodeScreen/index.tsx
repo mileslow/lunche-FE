@@ -11,7 +11,7 @@ import Typography, { TypographyVariants } from 'components/Typography'
 import Button from 'components/Button'
 import Spinner from 'components/Spinner'
 // thunks
-import { signIn, signInConfirm } from 'store/auth/thunks'
+import { signIn, signInConfirm, getCurrentProfile } from 'store/auth/thunks'
 // services
 import { setAuthData } from 'services/storage'
 // types
@@ -43,12 +43,17 @@ const VerifyCodeScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
     setLoading(false)
     if (signInConfirm.fulfilled.match(result)) {
       await setAuthData(result.payload)
-      navigation.reset({
-        index: 0,
-        routes: [{ name: Routes.MainTabsStack }],
-      })
+      await dispatch(getCurrentProfile())
+      if (route.params?.popRouteCount) {
+        navigation.pop(route.params.popRouteCount)
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: Routes.MainTabsStack }],
+        })
+      }
     }
-  }, [code, dispatch, route.params.phoneNumber, navigation])
+  }, [code, dispatch, route.params.phoneNumber, navigation, route.params.popRouteCount])
 
   const handleResendCode = useCallback(async () => {
     setLoading(true)

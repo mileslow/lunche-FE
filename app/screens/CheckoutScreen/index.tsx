@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 // libs
 import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
+import find from 'lodash.find'
 // components
 import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
@@ -16,16 +17,19 @@ import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
 import TimeField from 'screens/CheckoutScreen/components/TimeField'
+import PaymentMethodField from 'screens/CheckoutScreen/components/PaymentMethodField'
 // thunks
 import { createOrder } from 'store/orders/thunks'
-import { getCurrentProfile, signIn } from 'store/auth/thunks'
+import { signIn } from 'store/auth/thunks'
+import { createPayment, getCreditCards } from 'store/payments/thunks'
 // selectors
 import { currentAddressSelector } from 'store/general/selectors'
 import { truckSelector } from 'store/trucks/selectors'
-import { isAuthorizedSelector, currentProfileSelector } from 'store/auth/selectors'
+import { currentProfileSelector, isAuthorizedSelector } from 'store/auth/selectors'
+import { cardsSelector } from 'store/payments/selectors'
 // types
 import { AppDispatch } from 'store'
-import { DeliveryType } from 'store/orders/types'
+import { DeliveryType, PaymentMethodType } from 'store/orders/types'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -38,7 +42,8 @@ import { Colors } from 'styles'
 import styles from './styles'
 
 export interface ICreateOrderFormData {
-  type: keyof typeof DeliveryType
+  type: DeliveryType
+  paymentMethod: PaymentMethodType
   deliveryAddress: string
   orderTime: string
   client: {
@@ -47,7 +52,10 @@ export interface ICreateOrderFormData {
     phone: string
   }
 }
-const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CheckoutScreen>> = ({ navigation }) => {
+const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CheckoutScreen>> = ({
+  navigation,
+  route,
+}) => {
   const insets = useSafeAreaInsets()
 
   const { t } = useTranslation()
@@ -62,19 +70,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const currentProfile = useSelector(currentProfileSelector)
 
+  const cards = useSelector(cardsSelector)
+
   const [isLoading, setLoading] = useState(false)
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (isAuthorized && !currentProfile) {
-        setLoading(true)
-        await dispatch(getCurrentProfile())
-        setLoading(false)
-      }
-    }
-
-    fetchProfile()
-  }, [])
 
   const {
     control,
@@ -96,6 +94,24 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   })
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      if (isAuthorized && currentProfile && !cards.length) {
+        setLoading(true)
+        const cardResult = await dispatch(getCreditCards({ id: currentProfile.id }))
+        if (getCreditCards.fulfilled.match(cardResult)) {
+          navigation.setParams({
+            cardId: cardResult.payload[0].id,
+            paymentMethod: cardResult.payload[0] && PaymentMethodType.card,
+          })
+        }
+        setLoading(false)
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
+  useEffect(() => {
     if (currentProfile) {
       setValue('client', {
         email: currentProfile.email,
@@ -103,7 +119,10 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         name: currentProfile.name,
       })
     }
-  }, [currentProfile, setValue])
+    if (route.params?.paymentMethod) {
+      setValue('paymentMethod', route.params.paymentMethod)
+    }
+  }, [currentProfile, setValue, route.params?.paymentMethod])
 
   const typeDelivery = watch('type')
 
@@ -112,25 +131,62 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
       setLoading(true)
       const result = await dispatch(createOrder(data))
       if (createOrder.fulfilled.match(result)) {
+        // User has already authorized because he chose card
+        if (data.paymentMethod === PaymentMethodType.card) {
+          await dispatch(createPayment({ id: result.payload.id, params: { cardId: route.params?.cardId } }))
+          setLoading(false)
+          navigation.reset({
+            index: 0,
+            routes: [{ name: Routes.MainTabsStack }],
+          })
+          return
+        }
+
         if (isAuthorized) {
           setLoading(false)
           navigation.reset({
             index: 0,
             routes: [{ name: Routes.MainTabsStack }],
           })
-        } else {
-          await dispatch(signIn({ phone: data.client.phone }))
-          setLoading(false)
-          navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone })
+          return
         }
+
+        await dispatch(signIn({ phone: data.client.phone }))
+        setLoading(false)
+        navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone })
       }
     },
-    [navigation, dispatch, isAuthorized],
+    [navigation, dispatch, isAuthorized, route.params?.cardId],
   )
 
   const activeTypeColor = useCallback(
     (type: ICreateOrderFormData['type']) => (typeDelivery === type ? Colors.primary : Colors.midNightMoss),
     [typeDelivery],
+  )
+
+  const payment = useMemo(
+    () => ({ paymentMethod: route.params?.paymentMethod, card: find(cards, ['id', route.params?.cardId]) }),
+    [route.params, cards],
+  )
+
+  const handlePaymentPress = useCallback(() => {
+    if (isAuthorized) {
+      navigation.navigate(Routes.PaymentScreen, {
+        cardId: payment.card?.id,
+        paymentMethod: payment.paymentMethod,
+        typeDelivery,
+      })
+    } else {
+      navigation.navigate(Routes.SignInScreen)
+    }
+  }, [navigation, payment, typeDelivery, isAuthorized])
+
+  const timeFieldLabel = useMemo(
+    () => ({
+      [DeliveryType.pickup]: t('checkoutScreen:pickupAt'),
+      [DeliveryType.delivery]: t('checkoutScreen:deliveryDate'),
+    }),
+    [t],
   )
 
   return (
@@ -170,7 +226,13 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           <DeliveryFields control={control} errors={errors} address={currentAddress} />
         )}
 
+        <Typography variant={TypographyVariants.subhead} style={styles.label}>
+          {timeFieldLabel[typeDelivery]}
+        </Typography>
+
         <TimeField shouldUnregister name='orderTime' control={control} />
+
+        <PaymentMethodField onPress={handlePaymentPress} payment={payment} errors={errors} />
 
         <PersonalInfoFields editable={!isAuthorized} control={control} errors={errors} />
 

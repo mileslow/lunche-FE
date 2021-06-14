@@ -37,6 +37,7 @@ export type CreateOrderData = {
 }
 
 export type CreateOrderResponse = {
+  id: number
   client: {
     phone: string
   }

@@ -51,10 +51,13 @@ export default {
     note: 'This information you should use as login for further enters to the app',
     deliverAddress: 'Deliver address',
     deliveryDate: 'Deliver time',
+    pickupAt: 'Pickup at',
     pickUpAddress: 'Pickup address',
     submitBtn: 'Continue',
     scheduled: 'Scheduled',
     chooseTime: 'Choose a time',
+    paymentLabel: 'Payment method',
+    changePaymentMethod: 'Change method',
   },
   changeAddressModal: {
     title: 'Find restaurants near you',
@@ -88,6 +91,19 @@ export default {
     headerTitle: 'Orders',
     reorder: 'Reorder',
     orderTracker: 'Order Tracker',
+  },
+  paymentScreen: {
+    headerTitle: 'Order Summary',
+    cache: 'Cache',
+    addNewCard: 'Add a new card',
+    chooseMethod: 'Choose method',
+    saveMethod: 'Save method',
+  },
+  cardModal: {
+    headerTitle: 'Add a new card',
+    cardDetails: 'Card details',
+    note: 'This card will only be charged when you place an order.',
+    saveCard: 'Save card',
   },
 
   common: {

@@ -7,6 +7,7 @@ import trucks from 'store/trucks/model'
 import foodTypes from 'store/foodTypes/model'
 import general from 'store/general/model'
 import orders from 'store/orders/model'
+import payments from 'store/payments/model'
 
 const rootReducer = combineReducers({
   auth,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   foodTypes,
   general,
   orders,
+  payments,
 })
 
 export default rootReducer

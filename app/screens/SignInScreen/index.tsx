@@ -18,7 +18,7 @@ import { AppDispatch } from 'store'
 // types
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // services
-import { formatPhoneNumber, onlyNumbers } from 'services/utils'
+// import { formatPhoneNumber, onlyNumbers } from 'services/utils'
 // assets
 import FlagIcon from 'assets/svg/flag.svg'
 import ChevronIcon from 'assets/svg/chevron.svg'
@@ -40,16 +40,18 @@ const SignInScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Si
   const [isLoading, setLoading] = useState<boolean>(false)
 
   const handleChange = useCallback((value) => {
-    setPhoneNumber(formatPhoneNumber(value))
+    // setPhoneNumber(formatPhoneNumber(value))
+    setPhoneNumber(value)
   }, [])
 
   const handleSubmit = useCallback(async () => {
-    const phone = `${PHONE_CODE}${onlyNumbers(phoneNumber)}`
+    // const phone = `${PHONE_CODE}${onlyNumbers(phoneNumber)}`
+    const phone = phoneNumber
     setLoading(true)
     const result = await dispatch(signIn({ phone }))
     setLoading(false)
     if (signIn.fulfilled.match(result)) {
-      navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: phone })
+      navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: phone, popRouteCount: 2 })
     }
   }, [navigation, phoneNumber, dispatch])
 

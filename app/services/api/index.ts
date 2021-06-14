@@ -6,6 +6,7 @@ import getFoodTypes from 'services/api/endpoints/getFoodTypes'
 import mapBox from 'services/api/endpoints/mapBox'
 import orders from 'services/api/endpoints/orders'
 import favorites from 'services/api/endpoints/favorites'
+import payments from 'services/api/endpoints/payments'
 
 export default {
   ...auth,
@@ -15,4 +16,5 @@ export default {
   ...mapBox,
   ...orders,
   ...favorites,
+  ...payments,
 }

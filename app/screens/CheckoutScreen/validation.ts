@@ -24,5 +24,6 @@ export const schemaValidation = yup
       phone: requiredForUnAuthorized(yup.string()),
     }),
     deliveryAddress: requiredDependType(DeliveryType.delivery),
+    paymentMethod: yup.string().required(i18n.t('validation:required')),
   })
   .defined()

@@ -9,6 +9,7 @@ export type RootNavigationStackParamsList = {
   [Routes.DishModal]: { id: number; truckId: number }
   [Routes.ChangeAddressModal]: undefined
   [Routes.SearchTruckModal]: undefined
+  [Routes.CardModal]: undefined
 } & TabsNavigationParamsList &
   MainNavigationStackParamsList &
   HomeNavigationStackParamsList &
