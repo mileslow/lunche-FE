@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react'
 // libs
 import { createStackNavigator } from '@react-navigation/stack'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import allsettled from 'promise.allsettled'
 // components
 import Spinner from 'components/Spinner'
@@ -13,16 +13,18 @@ import AboutTruckScreen from 'screens/AboutTruckScreen'
 import CheckoutScreen from 'screens/CheckoutScreen'
 import SignInScreen from 'screens/SignInScreen'
 import VerifyCodeScreen from 'screens/VerifyCodeScreen'
+import SearchTruckModal from 'screens/SearchTruckModal'
 // navigations
 import MainTabsNavigator from 'navigation/navigators/MainTabs'
 import Routes from 'navigation/routes'
+import { modalCardStyleInterpolator } from 'navigation/utils'
 // store
 import { AppDispatch } from 'store'
 import { setAuthorized } from 'store/auth/model'
 import { setShowWelcome } from 'store/general/model'
 import { isShowWelcomeSelector } from 'store/general/selectors'
 // utils
-import { getSkipWelcome, getAuthToken } from 'services/storage'
+import { getAuthToken, getSkipWelcome } from 'services/storage'
 // types
 import { MainNavigationStackParamsList } from './types'
 import { Colors } from 'styles'
@@ -54,7 +56,12 @@ const MainStackNavigator = () => {
   }
 
   return (
-    <MainStack.Navigator headerMode='none'>
+    <MainStack.Navigator
+      headerMode='none'
+      screenOptions={({ route }) =>
+        route.name === Routes.SearchTruckModal ? { cardStyleInterpolator: modalCardStyleInterpolator } : {}
+      }
+    >
       {isShowWelcome ? (
         <MainStack.Screen name={Routes.WelcomeScreen} component={WelcomeScreen} />
       ) : (
@@ -67,6 +74,7 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.SignInScreen} component={SignInScreen} />
           <MainStack.Screen name={Routes.VerifyCodeScreen} component={VerifyCodeScreen} />
           <MainStack.Screen name={Routes.PaymentScreen} component={PaymentScreen} />
+          <MainStack.Screen name={Routes.SearchTruckModal} component={SearchTruckModal} />
         </>
       )}
     </MainStack.Navigator>

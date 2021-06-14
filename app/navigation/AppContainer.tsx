@@ -7,10 +7,10 @@ import { createStackNavigator } from '@react-navigation/stack'
 import MainStackNavigator from 'navigation/navigators/MainStack'
 import DishModal from 'screens/DishModal'
 import ChangeAddressModal from 'screens/ChangeAddressModal'
-import SearchTruckModal from 'screens/SearchTruckModal'
 import CardModal from 'screens/CardModal'
 // routs
 import Routes from 'navigation/routes'
+import { modalCardStyleInterpolator } from 'navigation/utils'
 
 const RootStack = createStackNavigator()
 
@@ -25,28 +25,13 @@ const AppNavigationContainer: FC = () => {
             headerShown: false,
             cardStyle: { backgroundColor: 'transparent' },
             cardOverlayEnabled: true,
-            cardStyleInterpolator: ({ current: { progress } }) => ({
-              cardStyle: {
-                opacity: progress.interpolate({
-                  inputRange: [0, 0.5, 0.9, 1],
-                  outputRange: [0, 0.25, 0.7, 1],
-                }),
-              },
-              overlayStyle: {
-                opacity: progress.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 0.5],
-                  extrapolate: 'clamp',
-                }),
-              },
-            }),
+            cardStyleInterpolator: modalCardStyleInterpolator,
           }}
           mode='modal'
         >
           <RootStack.Screen name={Routes.RootNavigator} component={MainStackNavigator} />
           <RootStack.Screen name={Routes.DishModal} component={DishModal} />
           <RootStack.Screen name={Routes.ChangeAddressModal} component={ChangeAddressModal} />
-          <RootStack.Screen name={Routes.SearchTruckModal} component={SearchTruckModal} />
           <RootStack.Screen name={Routes.CardModal} component={CardModal} />
         </RootStack.Navigator>
       </NavigationContainer>

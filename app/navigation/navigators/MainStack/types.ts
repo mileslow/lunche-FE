@@ -11,4 +11,5 @@ export type MainNavigationStackParamsList = {
   [Routes.SignInScreen]: undefined
   [Routes.VerifyCodeScreen]: { phoneNumber: string; popRouteCount?: number }
   [Routes.PaymentScreen]: { cardId?: number; paymentMethod?: PaymentMethodType; typeDelivery?: DeliveryType }
+  [Routes.SearchTruckModal]: undefined
 }
