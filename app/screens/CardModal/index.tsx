@@ -1,4 +1,4 @@
-import React, { FC, useCallback, memo, useState } from 'react'
+import React, { FC, useCallback, memo, useState, useMemo } from 'react'
 // libs
 import { View } from 'react-native'
 import { CardField, StripeProvider, useConfirmSetupIntent } from '@stripe/stripe-react-native'
@@ -49,6 +49,18 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
     }
   }, [user, dispatch, confirmSetupIntent, navigation])
 
+  const cardStyle = useMemo(
+    () => ({
+      textColor: Colors.midNightMoss,
+      backgroundColor: Colors.alabaster,
+      placeholderColor: Colors.gunsmoke,
+      borderWidth: 1,
+      borderColor: '#8686861A',
+      borderRadius: 8,
+    }),
+    [],
+  )
+
   return (
     <StripeProvider publishableKey='pk_test_Hed0FjAaOANNuc90lfjLFlm4'>
       <View style={[styles.screen, { paddingTop: insets.top + Spacing.large }]}>
@@ -61,7 +73,7 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
               placeholder={{
                 number: '4242 4242 4242 4242',
               }}
-              cardStyle={styles.cardStyle}
+              cardStyle={cardStyle}
               style={styles.cardFieldStyle}
             />
 
