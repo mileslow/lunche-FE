@@ -55,25 +55,22 @@ const SearchTruckModal: FC<StackScreenProps<RootNavigationStackParamsList, Route
 
   const fetchTrucks = useCallback(
     async (search: string) => {
-      if (search.length > 2) {
-        setLoading(true)
-        const result = await dispatch(
-          getTrucks({ search, latitude: currentPosition?.lat, longitude: currentPosition?.lng }),
-        )
-        if (getTrucks.fulfilled.match(result)) {
-          setSearchResult(result.payload.data)
-        }
-        setLoading(false)
-      } else {
-        setSearchResult([])
+      setLoading(true)
+      const result = await dispatch(
+        getTrucks({ search, latitude: currentPosition?.lat, longitude: currentPosition?.lng }),
+      )
+      if (getTrucks.fulfilled.match(result)) {
+        setSearchResult(result.payload.data)
       }
+      setLoading(false)
     },
     [setSearchResult, dispatch, currentPosition],
   )
 
-  const debouncedFetchTrucks = useRef(debounce(fetchTrucks, 700)).current
+  const debouncedFetchTrucks = useRef<ReturnType<typeof debounce>>(debounce(fetchTrucks, 700)).current
 
   useEffect(() => {
+    setLoading(true)
     debouncedFetchTrucks(searchText)
   }, [debouncedFetchTrucks, searchText])
 
@@ -123,8 +120,7 @@ const SearchTruckModal: FC<StackScreenProps<RootNavigationStackParamsList, Route
         value={searchText}
         onChangeText={setSearchText}
       />
-      {renderContent[typeContent]}
-      {isLoading && <Spinner />}
+      {isLoading ? <Spinner /> : renderContent[typeContent]}
     </View>
   )
 }
