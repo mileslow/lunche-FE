@@ -1,36 +1,32 @@
-import React, { FC, memo, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FlatList, ImageBackground, Keyboard, View } from 'react-native'
+import React, { FC, memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import LottieView from 'lottie-react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import debounce from 'lodash.debounce'
 // components
 import Input from 'components/Form/Input'
-import Typography, { TypographyVariants } from 'components/Typography'
 import Header from 'components/Header'
 import Spinner from 'components/Spinner'
-import TruckCard from 'screens/MainScreen/components/TruckCard'
 import Button, { ButtonTypes } from 'components/Button'
+import CategoriesList from 'screens/SearchTruckModal/components/CategoriesList'
+import SearchResults from 'screens/SearchTruckModal/components/SearchResults'
+import EmptyView from 'screens/SearchTruckModal/components/EmptyView'
 // store
 import { getTrucks } from 'store/trucks/thunks'
 import { currentPositionSelector } from 'store/general/selectors'
 import { foodCategoriesSelector } from 'store/foodCategories/selectors'
-import { FoodCategory } from 'store/foodCategories/types'
 import { Truck } from 'store/trucks/types'
 import { AppDispatch } from 'store'
 // services
-import { getImageBySize } from 'services/utils'
 // types
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // assets
-import burgerAnimation from 'assets/lottie/burger.json'
 import SearchIcon from 'assets/svg/search.svg'
 import CloseIcon from 'assets/svg/close.svg'
 // styles
-import { Colors } from 'styles'
-import styles, { CATEGORY_HEIGHT, CATEGORY_WIDTH } from './styles'
+import styles from './styles'
 
 enum TypeContent {
   Categories = 'categories',
@@ -81,31 +77,6 @@ const SearchTruckModal: FC<StackScreenProps<RootNavigationStackParamsList, Route
     debouncedFetchTrucks(searchText)
   }, [debouncedFetchTrucks, searchText])
 
-  const keyExtractor = useCallback((item: Truck | FoodCategory) => `${item.id}`, [])
-
-  const renderItem = useCallback(
-    ({ item }) => (
-      <Button style={styles.category} type={ButtonTypes.link} onPress={() => setSearchText(item.name)}>
-        <ImageBackground
-          key={item.id}
-          source={{ uri: getImageBySize(item.photo, CATEGORY_WIDTH, CATEGORY_HEIGHT), cache: 'force-cache' }}
-          style={styles.categoryImage}
-        >
-          <View style={styles.overlay} />
-          <Typography variant={TypographyVariants.subhead} color={Colors.basic}>
-            {item.name}
-          </Typography>
-        </ImageBackground>
-      </Button>
-    ),
-    [],
-  )
-
-  const renderSearchItem = useCallback(
-    ({ item }) => <TruckCard item={item} onPress={() => navigation.navigate(Routes.TruckScreen, { id: item.id })} />,
-    [navigation],
-  )
-
   const closeIcon = useCallback(
     (callback, size?: number) => () => (
       <Button type={ButtonTypes.icon} onPress={callback}>
@@ -127,47 +98,18 @@ const SearchTruckModal: FC<StackScreenProps<RootNavigationStackParamsList, Route
     [searchText, searchResult],
   )
 
-  const renderContent = useMemo<{ [x in typeof TypeContent[keyof typeof TypeContent]]: () => ReactElement }>(
+  const renderContent = useMemo<{ [x in typeof TypeContent[keyof typeof TypeContent]]: ReactNode }>(
     () => ({
-      categories: () => (
-        <FlatList
-          keyboardShouldPersistTaps='always'
-          horizontal={false}
-          numColumns={2}
-          contentContainerStyle={styles.scrollContent}
-          data={foodCategories}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          onScrollBeginDrag={Keyboard.dismiss}
+      categories: <CategoriesList foodCategories={foodCategories} setCategory={setSearchText} />,
+      results: (
+        <SearchResults
+          searchResult={searchResult}
+          onPress={(id: number) => navigation.navigate(Routes.TruckScreen, { id })}
         />
       ),
-      results: () => (
-        <FlatList
-          keyboardShouldPersistTaps='always'
-          contentContainerStyle={styles.searchContent}
-          data={searchResult}
-          renderItem={renderSearchItem}
-          keyExtractor={keyExtractor}
-          showsVerticalScrollIndicator={false}
-          onScrollBeginDrag={Keyboard.dismiss}
-        />
-      ),
-      empty: () => (
-        <View style={styles.placeholderView}>
-          <LottieView source={burgerAnimation} style={styles.burgerStyle} autoPlay loop />
-          <Typography
-            variant={TypographyVariants.subhead}
-            weight='bold'
-            color={Colors.gunsmoke}
-            style={styles.notFoundText}
-          >
-            {t('searchTruckModal:notFound')}
-          </Typography>
-          <Typography variant={TypographyVariants.body}>{t('searchTruckModal:placeholder')}</Typography>
-        </View>
-      ),
+      empty: <EmptyView />,
     }),
-    [searchResult, foodCategories, renderSearchItem],
+    [searchResult, foodCategories, navigation],
   )
 
   return (
@@ -181,7 +123,7 @@ const SearchTruckModal: FC<StackScreenProps<RootNavigationStackParamsList, Route
         value={searchText}
         onChangeText={setSearchText}
       />
-      {renderContent[typeContent]()}
+      {renderContent[typeContent]}
       {isLoading && <Spinner />}
     </View>
   )
