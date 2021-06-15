@@ -57,5 +57,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+    <string>To scan cards</string>
 </dict>
 </plist>
