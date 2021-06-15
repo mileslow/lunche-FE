@@ -24,6 +24,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   subhead: {
+    flex: 1,
     marginBottom: Spacing.base,
     paddingHorizontal: Spacing.double,
   },
