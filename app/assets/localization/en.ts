@@ -94,7 +94,7 @@ export default {
   },
   paymentScreen: {
     headerTitle: 'Order Summary',
-    cache: 'Cache',
+    cash: 'Cash',
     addNewCard: 'Add a new card',
     chooseMethod: 'Choose method',
     saveMethod: 'Save method',

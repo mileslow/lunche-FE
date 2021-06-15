@@ -16,7 +16,6 @@ export default StyleSheet.create({
   },
   currentLocation: {
     color: Colors.midNightMoss,
-    flex: 1,
     fontFamily: Fonts.regular,
     fontSize: FontSize.subhead,
     marginRight: Spacing.medium,

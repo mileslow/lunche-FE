@@ -79,7 +79,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
             />
           )}
           onPress={() => setPayment({ paymentMethod: PaymentMethodType.cash, cardId: undefined })}
-          item={{ text: t('paymentScreen:cache') }}
+          item={{ text: t('paymentScreen:cash') }}
         />
       ) : null,
     [payment.paymentMethod, t, route.params.typeDelivery],

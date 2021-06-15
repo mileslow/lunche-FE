@@ -170,16 +170,12 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   )
 
   const handlePaymentPress = useCallback(() => {
-    if (isAuthorized) {
-      navigation.navigate(Routes.PaymentScreen, {
-        cardId: payment.card?.id,
-        paymentMethod: payment.paymentMethod,
-        typeDelivery,
-      })
-    } else {
-      navigation.navigate(Routes.SignInScreen)
-    }
-  }, [navigation, payment, typeDelivery, isAuthorized])
+    navigation.navigate(Routes.PaymentScreen, {
+      cardId: payment.card?.id,
+      paymentMethod: payment.paymentMethod,
+      typeDelivery,
+    })
+  }, [navigation, payment, typeDelivery])
 
   const timeFieldLabel = useMemo(
     () => ({
