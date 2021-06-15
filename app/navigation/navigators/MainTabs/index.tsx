@@ -7,8 +7,8 @@ import { SvgProps } from 'react-native-svg'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 import HomeStackNavigator from 'navigation/navigators/HomeStack'
 import AccountStackNavigator from 'navigation/navigators/AccountStack'
+import PlaceStackNavigator from 'navigation/navigators/PlaceStack'
 // screen
-import FavoritePlacesScreen from 'screens/FavoritePlacesScreen'
 import OrdersScreen from 'screens/OrdersScreen'
 // localization
 import { useTranslation } from 'react-i18next'
@@ -58,7 +58,7 @@ const MainTabsNavigator: FC = () => {
       />
       <Tab.Screen
         name={Routes.PlacesTab}
-        component={FavoritePlacesScreen}
+        component={PlaceStackNavigator}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, FavoriteIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:places')),

@@ -9,12 +9,15 @@ import Animated, {
   useDerivedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useSelector } from 'react-redux'
 // components
 import BackButton from 'components/Button/BackButton'
 import Button, { ButtonTypes } from 'components/Button'
 import HeartIcon from 'components/AnimatedSvgComponents/HeartIcon'
 import EmptyHeartIcon from 'components/AnimatedSvgComponents/EmptyHeartIcon'
 import ShareIcon from 'components/AnimatedSvgComponents/ShareIcon'
+// selectors
+import { isAuthorizedSelector } from 'store/auth/selectors'
 // hooks
 import useStatusBarStyle from 'hooks/useStatusBarStyle'
 import useAnimatedHeader from 'hooks/useAnimatedHeader'
@@ -36,6 +39,8 @@ const Header: FC<IProps> = ({ translationY, onFavoritePress, isFavorite }) => {
   const statusBarStyle = useStatusBarStyle('light-content')
 
   const { headerHeight, endAnimPosition } = useAnimatedHeader()
+
+  const isAuthorized = useSelector(isAuthorizedSelector)
 
   useDerivedValue(() => {
     if (statusBarStyle.value !== 'dark-content' && translationY.value >= endAnimPosition) {
@@ -75,18 +80,20 @@ const Header: FC<IProps> = ({ translationY, onFavoritePress, isFavorite }) => {
     <Animated.View style={[styles.header, { paddingTop: insets.top, height: headerHeight }, headerStyle]}>
       <BackButton style={{ marginHorizontal: Spacing.base }} iconAnimatedProps={backIconAnimatedProps} />
       <View style={styles.rightNav}>
-        <Button type={ButtonTypes.icon} onPress={onFavoritePress} style={{ marginHorizontal: Spacing.base }}>
-          <HeartIcon
-            style={styles.headerIcon}
-            iconAnimatedProps={heartIconAnimatedProps}
-            opacity={isFavorite ? 1 : 0}
-          />
-          <EmptyHeartIcon
-            style={styles.headerIcon}
-            iconAnimatedProps={heartEmptyIconAnimatedProps}
-            opacity={isFavorite ? 0 : 1}
-          />
-        </Button>
+        {isAuthorized ? (
+          <Button type={ButtonTypes.icon} onPress={onFavoritePress} style={{ marginHorizontal: Spacing.base }}>
+            <HeartIcon
+              style={styles.headerIcon}
+              iconAnimatedProps={heartIconAnimatedProps}
+              opacity={isFavorite ? 1 : 0}
+            />
+            <EmptyHeartIcon
+              style={styles.headerIcon}
+              iconAnimatedProps={heartEmptyIconAnimatedProps}
+              opacity={isFavorite ? 0 : 1}
+            />
+          </Button>
+        ) : null}
         <Button type={ButtonTypes.icon} onPress={() => null} style={{ marginHorizontal: Spacing.base }}>
           <ShareIcon iconAnimatedProps={shareIconAnimatedProps} />
         </Button>

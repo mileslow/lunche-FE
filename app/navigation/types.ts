@@ -2,6 +2,7 @@ import { TabsNavigationParamsList } from 'navigation/navigators/MainTabs/types'
 import { HomeNavigationStackParamsList } from 'navigation/navigators/HomeStack/types'
 import { MainNavigationStackParamsList } from 'navigation/navigators/MainStack/types'
 import { AccountNavigationStackParamsList } from 'navigation/navigators/AccountStack/types'
+import { PlaceNavigationStackParamsList } from 'navigation/navigators/PlaceStack/types'
 import { Routes } from 'navigation/index'
 
 export type RootNavigationStackParamsList = {
@@ -12,4 +13,5 @@ export type RootNavigationStackParamsList = {
 } & TabsNavigationParamsList &
   MainNavigationStackParamsList &
   HomeNavigationStackParamsList &
-  AccountNavigationStackParamsList
+  AccountNavigationStackParamsList &
+  PlaceNavigationStackParamsList

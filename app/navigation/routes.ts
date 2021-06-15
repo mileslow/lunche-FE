@@ -4,6 +4,7 @@ enum Routes {
   WelcomeScreen = 'WelcomeScreen',
   SignInScreen = 'SignInScreen',
   VerifyCodeScreen = 'VerifyCodeScreen',
+  FavoritePlacesScreen = 'FavoritePlacesScreen',
 
   // tabs
   HomeTab = 'HomeTab',
