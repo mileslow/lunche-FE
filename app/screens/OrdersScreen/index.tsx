@@ -59,6 +59,7 @@ const OrdersScreen = () => {
     ({ item }: { item: Order }) => (
       <CommonCard
         imageSize={110}
+        downloadImgSize={200}
         descTextVariant={TypographyVariants.body}
         priceTextVariant={TypographyVariants.body}
         nameTextVariant={TypographyVariants.cardTitle}

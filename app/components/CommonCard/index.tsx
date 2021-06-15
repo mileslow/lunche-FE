@@ -25,6 +25,7 @@ interface IProps {
   onPress: () => void
   active?: boolean
   imageSize?: number
+  downloadImgSize?: number
   nameTextVariant?: string
   priceTextVariant?: string
   descTextVariant?: string
@@ -43,8 +44,11 @@ const CommonCard: FC<IProps> = ({
   priceTextVariant,
   descStyle,
   renderBottomRightBlock,
+  downloadImgSize,
 }) => {
   const size = useMemo(() => imageSize ?? Metrics.menuItemSize, [imageSize])
+
+  const downloadSize = useMemo(() => downloadImgSize ?? size, [downloadImgSize, size])
 
   const typographyVariants = useMemo(
     () => ({
@@ -67,7 +71,7 @@ const CommonCard: FC<IProps> = ({
       {active ? <View style={styles.greenLine} /> : null}
       <Image
         style={[styles.itemImg, { width: size, height: size }]}
-        source={{ uri: getImageBySize(item.photo, size, size), cache: 'force-cache' }}
+        source={{ uri: getImageBySize(item.photo, downloadSize, downloadSize), cache: 'force-cache' }}
       />
 
       <View style={styles.itemInfo}>
