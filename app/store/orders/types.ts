@@ -37,17 +37,18 @@ export type CreateOrderData = {
 }
 
 export type CreateOrderResponse = {
-  id: number
-  client: {
-    phone: string
-  }
-  metadata: {
-    tokens: {
-      accessToken: string
-      refreshToken: string
+  data: {
+    id: number
+    client: {
+      phone: string
+    }
+    metadata: {
+      tokens: {
+        accessToken: string
+        refreshToken: string
+      }
     }
   }
-  [x: string]: unknown
 }
 
 export enum OrderStatus {

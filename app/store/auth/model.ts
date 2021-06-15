@@ -1,7 +1,10 @@
 // redux
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+// libs
+import omitBy from 'lodash.omitby'
+import isNull from 'lodash.isnull'
 // entities
-import { AuthSliceState } from 'store/auth/types'
+import { AuthSliceState, User } from 'store/auth/types'
 // thunks
 import { signInConfirm, getCurrentProfile } from 'store/auth/thunks'
 
@@ -24,8 +27,8 @@ const authSlice = createSlice({
     builder.addCase(signInConfirm.fulfilled, (state) => {
       state.isAuthorized = true
     })
-    builder.addCase(getCurrentProfile.fulfilled, (state, { payload }) => {
-      state.user = payload
+    builder.addCase(getCurrentProfile.fulfilled, (state, { payload }: PayloadAction<User>) => {
+      state.user = omitBy(payload, isNull) as User
     })
   },
 })

@@ -89,7 +89,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         name: currentProfile?.name,
       },
     },
-    context: { isAuthorized },
+    context: { isAuthorized: false },
     resolver: yupResolver(schemaValidation),
   })
 
@@ -133,7 +133,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
       if (createOrder.fulfilled.match(result)) {
         // User has already authorized because he chose card
         if (data.paymentMethod === PaymentMethodType.card) {
-          await dispatch(createPayment({ id: result.payload.id, params: { cardId: route.params?.cardId } }))
+          await dispatch(createPayment({ id: result.payload.data.id, params: { cardId: route.params?.cardId } }))
           setLoading(false)
           navigation.reset({
             index: 0,
@@ -154,7 +154,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         await dispatch(signIn({ phone: data.client.phone }))
         setLoading(false)
         navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone })
+        return
       }
+      setLoading(false)
     },
     [navigation, dispatch, isAuthorized, route.params?.cardId],
   )
@@ -230,7 +232,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
         <PaymentMethodField onPress={handlePaymentPress} payment={payment} errors={errors} />
 
-        <PersonalInfoFields editable={!isAuthorized} control={control} errors={errors} />
+        <PersonalInfoFields editable control={control} errors={errors} />
 
         <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
           <Typography color={Colors.cadmiumOrange}>*</Typography>
