@@ -14,7 +14,7 @@ export type LocationType = {
 export default {
   geocode: (coords: { longitude: number; latitude: number }): Promise<{ data: { features: LocationType[] } }> =>
     apiMapbox.get(`/mapbox.places/${coords.longitude},${coords.latitude}.json?`, {
-      params: { ...apiMapbox.defaults.params, types: ['address'] },
+      params: { ...apiMapbox.defaults.params, types: ['address', 'poi', 'place'] },
     }),
   search: (searchText: string): Promise<{ data: { features: LocationType[] } }> =>
     apiMapbox.get(`/mapbox.places/${searchText}.json`, {

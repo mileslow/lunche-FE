@@ -10,10 +10,13 @@ export default StyleSheet.create({
   },
   currentLocationWrap: {
     alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
+    paddingHorizontal: Spacing.double,
   },
   currentLocation: {
     color: Colors.midNightMoss,
+    flex: 1,
     fontFamily: Fonts.regular,
     fontSize: FontSize.subhead,
     marginRight: Spacing.medium,

@@ -35,7 +35,9 @@ const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address, onLocationPre
     >
       <Text style={styles.headerText}>{t('mainScreen:headerText')}</Text>
       <Pressable style={styles.currentLocationWrap} onPress={onLocationPress} pointerEvents='box-only'>
-        <Text style={styles.currentLocation}>{address || 'Los Angeles'}</Text>
+        <Text style={styles.currentLocation} numberOfLines={1}>
+          {address || 'Los Angeles'}
+        </Text>
         <PersonIcon />
       </Pressable>
     </Animated.View>

@@ -34,8 +34,9 @@ export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocat
               const response = result.data?.features[0]
               const country = find(response?.context, (i) => i.id.includes('country'))?.short_code
               const district = find(response?.context, (i) => i.id.includes('district'))?.text
-              const combinedAddress = `${response?.address ? `${response?.address} ` : ''}${response?.text}`
               const place = find(response?.context, (i) => i.id.includes('place'))?.text
+              const combinedAddress = [response?.address, response?.text, place].filter((i) => i).join(', ')
+
               resolve({
                 ...location,
                 id: response?.id,
