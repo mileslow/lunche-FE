@@ -97,7 +97,7 @@ export default {
     cash: 'Cash',
     addNewCard: 'Add a new card',
     chooseMethod: 'Choose method',
-    saveMethod: 'Save method',
+    saveMethod: 'Save',
   },
   cardModal: {
     headerTitle: 'Add a new card',
