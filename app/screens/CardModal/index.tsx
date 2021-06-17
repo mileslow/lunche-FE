@@ -18,6 +18,8 @@ import { addCard } from 'store/payments/model'
 // types
 import { AppDispatch } from 'store'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
+// services
+import { showErrorAlert } from 'services/api/axios'
 // styles
 import { Colors, Spacing } from 'styles'
 import styles from './styles'
@@ -41,15 +43,20 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
       setLoading(true)
       const result = await dispatch(addCreditCard())
       if (addCreditCard.fulfilled.match(result)) {
-        await confirmSetupIntent(result.payload.clientSecret, { type: 'Card' })
+        const { error } = await confirmSetupIntent(result.payload.clientSecret, { type: 'Card' })
+        if (error) {
+          setLoading(false)
+          showErrorAlert(t('errors:stripeError'), error.message)
+          return
+        }
         dispatch(addCard({ id: result.payload.cardId, brand: card.brand.toLowerCase(), lastFourNumbers: card.last4 }))
-        setLoading(true)
+        setLoading(false)
         navigation.goBack()
         return
       }
-      setLoading(true)
+      setLoading(false)
     }
-  }, [dispatch, confirmSetupIntent, navigation, card])
+  }, [dispatch, confirmSetupIntent, navigation, card, t])
 
   const cardStyle = useMemo(
     () => ({

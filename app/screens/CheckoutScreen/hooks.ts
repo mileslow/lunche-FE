@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { useApplePay } from '@stripe/stripe-react-native'
+import { useApplePay, useConfirmPayment } from '@stripe/stripe-react-native'
 import { ApplePayError, StripeError } from '@stripe/stripe-react-native/src/types/Errors'
 import { createPayment } from 'store/payments/thunks'
 import { PaymentBrand } from 'store/payments/types'
@@ -12,6 +12,8 @@ export const useMakeCardPayment = () => {
   const dispatch = useDispatch<AppDispatch>()
 
   const { isApplePaySupported, presentApplePay, confirmApplePayPayment } = useApplePay()
+
+  const { confirmPayment } = useConfirmPayment()
 
   const makeApplePayPayment = useCallback(
     async (
@@ -39,16 +41,18 @@ export const useMakeCardPayment = () => {
     async (order: NotPayedOrder) => {
       const paymentResult = await dispatch(createPayment({ id: order.id, params: { cardId: order.cardId } }))
       if (createPayment.fulfilled.match(paymentResult)) {
-        if (order.cardBrand === PaymentBrand.applePay) {
-          const { error } = await makeApplePayPayment({ ...order, clientSecret: paymentResult.payload.clientSecret })
-          if (error) {
-            return { error }
-          }
+        const { clientSecret, paymentMethodId } = paymentResult.payload
+        const { error } =
+          order.cardBrand === PaymentBrand.applePay
+            ? await makeApplePayPayment({ ...order, clientSecret })
+            : await confirmPayment(clientSecret, { type: 'Card', paymentMethodId })
+        if (error) {
+          return { error }
         }
       }
       return { error: createPayment.rejected.match(paymentResult) ? paymentResult.error.message : undefined }
     },
-    [makeApplePayPayment, dispatch],
+    [makeApplePayPayment, dispatch, confirmPayment],
   )
 
   return { makeCardPayment, isApplePaySupported }

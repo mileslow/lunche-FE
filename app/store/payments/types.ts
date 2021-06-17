@@ -44,4 +44,5 @@ export type AddCreditCardResponse = {
 
 export type CreatePaymentResponse = {
   clientSecret: string
+  paymentMethodId: string
 }

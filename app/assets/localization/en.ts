@@ -131,6 +131,7 @@ export default {
     serverError: 'Server Error',
     statusCode: 'Status code: {{code}}',
     enterCorrectCode: 'Please enter the correct code',
+    stripeError: 'Stripe Error',
   },
   validation: {
     required: 'Field is required',

@@ -8,7 +8,6 @@ export default StyleSheet.create({
   },
   content: {
     alignItems: 'flex-start',
-    flex: 1,
     paddingHorizontal: Spacing.double,
   },
   methodItem: {
