@@ -1,8 +1,8 @@
 import React, { FC, useCallback, memo, useState, useMemo } from 'react'
 // libs
-import { View } from 'react-native'
-import { CardField, StripeProvider, useConfirmSetupIntent } from '@stripe/stripe-react-native'
-import { useDispatch, useSelector } from 'react-redux'
+import { View, KeyboardAvoidingView, Platform } from 'react-native'
+import { CardField, useConfirmSetupIntent } from '@stripe/stripe-react-native'
+import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -12,16 +12,16 @@ import Typography, { TypographyVariants } from 'components/Typography'
 import Button from 'components/Button'
 import Divider from 'components/Divider'
 import Spinner from 'components/Spinner'
-// thunks
-import { addCreditCard, getCreditCards } from 'store/payments/thunks'
-// selectors
-import { currentProfileSelector } from 'store/auth/selectors'
+// thunks + actions
+import { addCreditCard } from 'store/payments/thunks'
+import { addCard } from 'store/payments/model'
 // types
 import { AppDispatch } from 'store'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // styles
 import { Colors, Spacing } from 'styles'
 import styles from './styles'
+import { CardFieldInput } from '@stripe/stripe-react-native/src/types/index'
 
 const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.VerifyCodeScreen>> = ({ navigation }) => {
   const { t } = useTranslation()
@@ -32,22 +32,24 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const user = useSelector(currentProfileSelector)
-
   const [isLoading, setLoading] = useState<boolean>(false)
 
+  const [card, setCard] = useState<CardFieldInput.Details>()
+
   const handleSaveCard = useCallback(async () => {
-    if (user) {
+    if (card) {
       setLoading(true)
-      const result = await dispatch(addCreditCard({ id: user.id }))
+      const result = await dispatch(addCreditCard())
       if (addCreditCard.fulfilled.match(result)) {
         await confirmSetupIntent(result.payload.clientSecret, { type: 'Card' })
-        await dispatch(getCreditCards({ id: user.id }))
+        dispatch(addCard({ id: result.payload.cardId, brand: card.brand.toLowerCase(), lastFourNumbers: card.last4 }))
+        setLoading(true)
         navigation.goBack()
+        return
       }
-      setLoading(false)
+      setLoading(true)
     }
-  }, [user, dispatch, confirmSetupIntent, navigation])
+  }, [dispatch, confirmSetupIntent, navigation, card])
 
   const cardStyle = useMemo(
     () => ({
@@ -62,34 +64,38 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
   )
 
   return (
-    <StripeProvider publishableKey='pk_test_Hed0FjAaOANNuc90lfjLFlm4'>
-      <View style={[styles.screen, { paddingTop: insets.top + Spacing.large }]}>
-        <View style={styles.modal}>
-          <Header withBack title={t('cardModal:headerTitle')} />
-          <View style={styles.content}>
-            <Typography variant={TypographyVariants.body}>{t('cardModal:cardDetails')}</Typography>
-            <CardField
-              postalCodeEnabled={false}
-              placeholder={{
-                number: '4242 4242 4242 4242',
-              }}
-              cardStyle={cardStyle}
-              style={styles.cardFieldStyle}
-            />
+    <View style={[styles.screen, { paddingTop: insets.top + Spacing.large }]}>
+      <KeyboardAvoidingView style={styles.modal} behavior='padding' enabled={Platform.OS === 'ios'}>
+        <Header withBack title={t('cardModal:headerTitle')} />
+        <View style={styles.content}>
+          <Typography variant={TypographyVariants.body}>{t('cardModal:cardDetails')}</Typography>
+          <CardField
+            postalCodeEnabled={false}
+            placeholder={{
+              number: '4242 4242 4242 4242',
+            }}
+            cardStyle={cardStyle}
+            style={styles.cardFieldStyle}
+            onCardChange={setCard}
+          />
 
-            <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
-              <Typography color={Colors.cadmiumOrange}>*</Typography>
-              {t('cardModal:note')}
-            </Typography>
-          </View>
-          <View>
-            <Divider />
-            <Button style={{ margin: Spacing.double }} title={t('cardModal:saveCard')} onPress={handleSaveCard} />
-          </View>
+          <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
+            <Typography color={Colors.cadmiumOrange}>*</Typography>
+            {t('cardModal:note')}
+          </Typography>
         </View>
-        {isLoading && <Spinner />}
-      </View>
-    </StripeProvider>
+        <View>
+          <Divider />
+          <Button
+            disabled={!card?.complete}
+            style={{ margin: Spacing.double }}
+            title={t('cardModal:saveCard')}
+            onPress={handleSaveCard}
+          />
+        </View>
+      </KeyboardAvoidingView>
+      {isLoading && <Spinner />}
+    </View>
   )
 }
 

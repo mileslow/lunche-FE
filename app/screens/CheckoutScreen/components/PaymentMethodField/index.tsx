@@ -2,6 +2,7 @@ import React, { FC, memo, useMemo } from 'react'
 // libs
 import { View } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { FieldErrors } from 'react-hook-form'
 import upperFirst from 'lodash.upperfirst'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
@@ -9,20 +10,18 @@ import Button, { ButtonTypes } from 'components/Button'
 import Error from 'components/Form/Error'
 // assets
 import BackIcon from 'assets/svg/back.svg'
-// types
-import { CreditCard } from 'store/payments/types'
 // hooks
 import useCreditCardIcon from 'hooks/useCreditCardIcon'
 // styles
 import styles from 'screens/CheckoutScreen/styles'
 import { Colors } from 'styles'
-import { PaymentMethodType } from 'store/orders/types'
-import { FieldErrors } from 'react-hook-form'
+// types
+import { PaymentMethodType, PaymentType, PaymentBrand } from 'store/payments/types'
 import { ICreateOrderFormData } from 'screens/CheckoutScreen'
 
 interface IProps {
   onPress: () => void
-  payment: { paymentMethod?: PaymentMethodType; card?: CreditCard }
+  payment: PaymentType
   errors: FieldErrors<ICreateOrderFormData>
 }
 
@@ -45,10 +44,12 @@ const PaymentMethodField: FC<IProps> = ({ onPress, payment, errors }) => {
       >
         {payment.paymentMethod ? (
           <View style={styles.changeCardBlock}>
-            {payment.card?.brand ? cardIcons[payment.card?.brand] : null}
+            {cardIcons[payment?.brand ?? 'default']}
             <Typography style={styles.cardNumber} variant={TypographyVariants.body}>
               {payment.paymentMethod === PaymentMethodType.card
-                ? `**** ${payment.card?.lastFourNumbers}`
+                ? payment?.brand === PaymentBrand.applePay
+                  ? t('common:applePay')
+                  : `**** ${payment?.lastFourNumbers}`
                 : upperFirst(payment.paymentMethod)}
             </Typography>
           </View>

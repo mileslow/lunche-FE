@@ -1,3 +1,18 @@
+import { PaymentMethodType } from 'store/payments/types'
+
+export enum DeliveryType {
+  delivery = 'delivery',
+  pickup = 'pickup',
+}
+
+export enum OrderStatus {
+  Draft = 'draft',
+  Approving = 'approving',
+  Cooking = 'cooking',
+  Ready = 'ready',
+  Rejected = 'rejected',
+}
+
 export type OrdersSliceState = {
   comment: string
   orderItems: OrderItems
@@ -11,16 +26,6 @@ export type OrderItem = {
 }
 
 export type PreSaveOrderItem = OrderItem & { price: number; name: string }
-
-export enum DeliveryType {
-  delivery = 'delivery',
-  pickup = 'pickup',
-}
-
-export enum PaymentMethodType {
-  cash = 'cash',
-  card = 'card',
-}
 
 export type CreateOrderData = {
   type: keyof typeof DeliveryType
@@ -42,21 +47,9 @@ export type CreateOrderResponse = {
     client: {
       phone: string
     }
-    metadata: {
-      tokens: {
-        accessToken: string
-        refreshToken: string
-      }
-    }
+    orderSum: number
+    paymentMethod: PaymentMethodType
   }
-}
-
-export enum OrderStatus {
-  Draft = 'draft',
-  Approving = 'approving',
-  Cooking = 'cooking',
-  Ready = 'ready',
-  Rejected = 'rejected',
 }
 
 export type Order = {

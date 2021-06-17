@@ -124,6 +124,8 @@ export default {
     forgotPasswordSuccessMessage: 'Check you email for reset password',
     cancel: 'Cancel',
     select: 'Select',
+
+    applePay: 'Apple Pay',
   },
   errors: {
     serverError: 'Server Error',

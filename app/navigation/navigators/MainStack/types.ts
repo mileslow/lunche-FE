@@ -1,5 +1,6 @@
 import Routes from 'navigation/routes'
-import { DeliveryType, PaymentMethodType } from 'store/orders/types'
+import { DeliveryType } from 'store/orders/types'
+import { PaymentType } from 'store/payments/types'
 
 export type MainNavigationStackParamsList = {
   [Routes.WelcomeScreen]: undefined
@@ -7,9 +8,9 @@ export type MainNavigationStackParamsList = {
   [Routes.CartScreen]: undefined
   [Routes.TruckScreen]: { id: number }
   [Routes.AboutTruckScreen]: undefined
-  [Routes.CheckoutScreen]: { paymentMethod: PaymentMethodType; cardId?: number } | undefined
+  [Routes.CheckoutScreen]: PaymentType | undefined
   [Routes.SignInScreen]: undefined
   [Routes.VerifyCodeScreen]: { phoneNumber: string; popRouteCount?: number }
-  [Routes.PaymentScreen]: { cardId?: number; paymentMethod?: PaymentMethodType; typeDelivery?: DeliveryType }
+  [Routes.PaymentScreen]: PaymentType & { typeDelivery?: DeliveryType }
   [Routes.SearchTruckModal]: undefined
 }
