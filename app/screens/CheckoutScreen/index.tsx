@@ -2,7 +2,6 @@ import React, { FC, memo, useCallback, useEffect, useMemo, useState, useRef } fr
 // libs
 import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -13,6 +12,7 @@ import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
 import Divider from 'components/Divider'
 import Spinner from 'components/Spinner'
+import ScreenContainer from 'components/ScreenContainer'
 import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
@@ -61,8 +61,6 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   navigation,
   route,
 }) => {
-  const insets = useSafeAreaInsets()
-
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -112,10 +110,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           if (!error) {
             notPayedOrder.current = null
             dispatch(clearOrderItems())
-            navigation.reset({
-              index: 0,
-              routes: [{ name: Routes.MainTabsStack }],
-            })
+            navigation.navigate(Routes.SuccessOrderModal)
           }
         })
       }
@@ -190,10 +185,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           }
           setLoading(false)
           dispatch(clearOrderItems())
-          navigation.reset({
-            index: 0,
-            routes: [{ name: Routes.MainTabsStack }],
-          })
+          navigation.navigate(Routes.SuccessOrderModal)
           return
         }
 
@@ -230,7 +222,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   )
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <ScreenContainer>
       <Header withBack title={t('checkoutScreen:headerTitle')} />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.contentScroll}>
         <Controller
@@ -292,7 +284,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
       />
 
       {isLoading && <Spinner />}
-    </View>
+    </ScreenContainer>
   )
 }
 
