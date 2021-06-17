@@ -48,11 +48,9 @@ const SignInScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Si
     // const phone = `${PHONE_CODE}${onlyNumbers(phoneNumber)}`
     const phone = phoneNumber
     setLoading(true)
-    const result = await dispatch(signIn({ phone }))
+    await dispatch(signIn({ phone }))
     setLoading(false)
-    if (signIn.fulfilled.match(result)) {
-      navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: phone, popRouteCount: 2 })
-    }
+    navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: phone, popRouteCount: 2 })
   }, [navigation, phoneNumber, dispatch])
 
   const renderCode = useCallback(() => <Typography variant={TypographyVariants.body}>{PHONE_CODE}</Typography>, [])

@@ -14,6 +14,7 @@ import Spinner from 'components/Spinner'
 import { signIn, signInConfirm, getCurrentProfile } from 'store/auth/thunks'
 // services
 import { setAuthData } from 'services/storage'
+import { showErrorAlert } from 'services/api/axios'
 // types
 import { AppDispatch } from 'store'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
@@ -52,8 +53,10 @@ const VerifyCodeScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
           routes: [{ name: Routes.MainTabsStack }],
         })
       }
+    } else {
+      showErrorAlert(t('errors:serverError'), t('errors:enterCorrectCode'))
     }
-  }, [code, dispatch, route.params.phoneNumber, navigation, route.params.popRouteCount])
+  }, [code, dispatch, route.params.phoneNumber, navigation, route.params.popRouteCount, t])
 
   const handleResendCode = useCallback(async () => {
     setLoading(true)

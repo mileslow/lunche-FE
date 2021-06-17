@@ -75,7 +75,7 @@ export default {
   },
   signInScreen: {
     title: 'Welcome',
-    subhead: 'Enter your Phone number or Email for sign in',
+    subhead: 'Enter your Phone number for sign in',
     signInButton: 'Sign in',
     phoneNumberLabel: 'Phone Number',
   },
@@ -130,6 +130,7 @@ export default {
   errors: {
     serverError: 'Server Error',
     statusCode: 'Status code: {{code}}',
+    enterCorrectCode: 'Please enter the correct code',
   },
   validation: {
     required: 'Field is required',
