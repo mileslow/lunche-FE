@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useState, useRef } from 'react'
 // libs
 import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
-import find from 'lodash.find'
+import { useFocusEffect } from '@react-navigation/core'
 // components
 import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
@@ -18,10 +18,11 @@ import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
 import TimeField from 'screens/CheckoutScreen/components/TimeField'
 import PaymentMethodField from 'screens/CheckoutScreen/components/PaymentMethodField'
-// thunks
+// thunks + actions
 import { createOrder } from 'store/orders/thunks'
+import { clearOrderItems } from 'store/orders/model'
 import { signIn } from 'store/auth/thunks'
-import { createPayment, getCreditCards } from 'store/payments/thunks'
+import { getCreditCards } from 'store/payments/thunks'
 // selectors
 import { currentAddressSelector } from 'store/general/selectors'
 import { truckSelector } from 'store/trucks/selectors'
@@ -29,7 +30,8 @@ import { currentProfileSelector, isAuthorizedSelector } from 'store/auth/selecto
 import { cardsSelector } from 'store/payments/selectors'
 // types
 import { AppDispatch } from 'store'
-import { DeliveryType, PaymentMethodType } from 'store/orders/types'
+import { DeliveryType } from 'store/orders/types'
+import { PaymentBrand, PaymentMethodType } from 'store/payments/types'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -40,6 +42,8 @@ import TruckIcon from 'assets/svg/truck.svg'
 // styles
 import { Colors } from 'styles'
 import styles from './styles'
+// hooks
+import { useMakeCardPayment, NotPayedOrder } from './hooks'
 
 export interface ICreateOrderFormData {
   type: DeliveryType
@@ -52,6 +56,7 @@ export interface ICreateOrderFormData {
     phone: string
   }
 }
+
 const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CheckoutScreen>> = ({
   navigation,
   route,
@@ -61,6 +66,8 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
+
+  const { isApplePaySupported, makeCardPayment } = useMakeCardPayment()
 
   const currentAddress = useSelector(currentAddressSelector)
 
@@ -73,6 +80,8 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   const cards = useSelector(cardsSelector)
 
   const [isLoading, setLoading] = useState(false)
+
+  const notPayedOrder = useRef<NotPayedOrder | null>(null)
 
   const {
     control,
@@ -93,17 +102,31 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     resolver: yupResolver(schemaValidation),
   })
 
+  useFocusEffect(
+    useCallback(() => {
+      // create payment after user has been verified
+      if (isAuthorized && notPayedOrder.current && notPayedOrder.current?.paymentMethod === PaymentMethodType.card) {
+        setLoading(true)
+        makeCardPayment(notPayedOrder.current).then(({ error }) => {
+          setLoading(false)
+          if (!error) {
+            notPayedOrder.current = null
+            dispatch(clearOrderItems())
+            navigation.reset({
+              index: 0,
+              routes: [{ name: Routes.MainTabsStack }],
+            })
+          }
+        })
+      }
+    }, [navigation, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
+  )
+
   useEffect(() => {
     const fetchProfile = async () => {
-      if (isAuthorized && currentProfile && !cards.length) {
+      if (currentProfile && !cards.length) {
         setLoading(true)
-        const cardResult = await dispatch(getCreditCards({ id: currentProfile.id }))
-        if (getCreditCards.fulfilled.match(cardResult)) {
-          navigation.setParams({
-            cardId: cardResult.payload[0].id,
-            paymentMethod: cardResult.payload[0] && PaymentMethodType.card,
-          })
-        }
+        await dispatch(getCreditCards())
         setLoading(false)
       }
     }
@@ -119,22 +142,54 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         name: currentProfile.name,
       })
     }
+  }, [currentProfile, setValue])
+
+  useEffect(() => {
     if (route.params?.paymentMethod) {
       setValue('paymentMethod', route.params.paymentMethod)
     }
-  }, [currentProfile, setValue, route.params?.paymentMethod])
+  }, [route.params?.paymentMethod, setValue])
+
+  useEffect(() => {
+    if (isApplePaySupported) {
+      navigation.setParams({ brand: PaymentBrand.applePay, paymentMethod: PaymentMethodType.card })
+    }
+  }, [isApplePaySupported, navigation])
 
   const typeDelivery = watch('type')
+
+  const payment = useMemo(() => {
+    return {
+      paymentMethod: route.params?.paymentMethod,
+      cardId: route.params?.cardId,
+      brand: route.params?.brand,
+      lastFourNumbers: route.params?.lastFourNumbers,
+    }
+  }, [route.params])
 
   const onSubmit = useCallback(
     async (data: ICreateOrderFormData) => {
       setLoading(true)
       const result = await dispatch(createOrder(data))
+
       if (createOrder.fulfilled.match(result)) {
-        // User has already authorized because he chose card
-        if (data.paymentMethod === PaymentMethodType.card) {
-          await dispatch(createPayment({ id: result.payload.data.id, params: { cardId: route.params?.cardId } }))
+        const createdOrder = {
+          id: result.payload.data.id,
+          amount: result.payload.data.orderSum,
+          paymentMethod: result.payload.data.paymentMethod,
+          cardId: payment.cardId,
+          cardBrand: payment.brand,
+        }
+        if (currentProfile) {
+          if (result.payload.data.paymentMethod === PaymentMethodType.card) {
+            const { error } = await makeCardPayment(createdOrder)
+            if (error) {
+              setLoading(false)
+              return
+            }
+          }
           setLoading(false)
+          dispatch(clearOrderItems())
           navigation.reset({
             index: 0,
             routes: [{ name: Routes.MainTabsStack }],
@@ -142,23 +197,15 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           return
         }
 
-        if (isAuthorized) {
-          setLoading(false)
-          navigation.reset({
-            index: 0,
-            routes: [{ name: Routes.MainTabsStack }],
-          })
-          return
-        }
-
+        // Sign in user and redirect it to Verify Screen
         await dispatch(signIn({ phone: data.client.phone }))
-        setLoading(false)
-        navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone })
+        notPayedOrder.current = result.payload.data.paymentMethod === PaymentMethodType.card ? createdOrder : null
+        navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
         return
       }
       setLoading(false)
     },
-    [navigation, dispatch, isAuthorized, route.params?.cardId],
+    [navigation, dispatch, currentProfile, payment, makeCardPayment],
   )
 
   const activeTypeColor = useCallback(
@@ -166,14 +213,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     [typeDelivery],
   )
 
-  const payment = useMemo(
-    () => ({ paymentMethod: route.params?.paymentMethod, card: find(cards, ['id', route.params?.cardId]) }),
-    [route.params, cards],
-  )
-
   const handlePaymentPress = useCallback(() => {
     navigation.navigate(Routes.PaymentScreen, {
-      cardId: payment.card?.id,
+      cardId: payment.cardId,
       paymentMethod: payment.paymentMethod,
       typeDelivery,
     })

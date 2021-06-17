@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { getCreditCards } from './thunks'
-import { PaymentsSliceState } from './types'
+import { PaymentsSliceState, CreditCard } from './types'
 
 const initialState: PaymentsSliceState = {
   cards: [],
@@ -10,14 +10,20 @@ const initialState: PaymentsSliceState = {
 const paymentsSlice = createSlice({
   name: 'payments',
   initialState,
-  reducers: {},
+  reducers: {
+    addCard: (state, { payload }: PayloadAction<CreditCard>) => {
+      state.cards = [...state.cards, payload]
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(getCreditCards.fulfilled, (state, { payload }) => {
+    builder.addCase(getCreditCards.fulfilled, (state, { payload }: PayloadAction<CreditCard[]>) => {
       state.cards = payload
     })
   },
 })
 
 export const sliceName = paymentsSlice.name
+
+export const { addCard } = paymentsSlice.actions
 
 export default paymentsSlice.reducer

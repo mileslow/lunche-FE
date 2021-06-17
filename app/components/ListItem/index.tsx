@@ -1,4 +1,4 @@
-import React, { memo, ReactElement } from 'react'
+import React, { memo, ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Typography, { TypographyVariants } from 'components/Typography'
 import Button, { ButtonTypes } from 'components/Button'
@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: 'absolute',
   },
+  textBlock: {
+    justifyContent: 'center',
+  },
 })
 
 interface IProps {
@@ -30,8 +33,8 @@ interface IProps {
     text?: string
     subtext?: string
   }
-  leftElement?: () => ReactElement
-  rightElement?: () => ReactElement
+  leftElement?: () => ReactNode
+  rightElement?: () => ReactNode
   onPress: () => void
 }
 
@@ -39,7 +42,7 @@ const LocationSearchItem = ({ item, leftElement, onPress, rightElement }: IProps
   <Button pointerEvents='box-only' type={ButtonTypes.link} style={styles.searchItem} onPress={onPress}>
     {leftElement ? leftElement() : null}
     <View style={styles.locationInfo}>
-      <View>
+      <View style={styles.textBlock}>
         <Typography style={styles.title} variant={TypographyVariants.body}>
           {item.text}
         </Typography>
