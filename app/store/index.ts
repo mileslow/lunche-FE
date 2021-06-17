@@ -1,17 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import rootReducer from 'store/rootReducer'
-// import { Middleware } from 'redux'
+import { Middleware } from 'redux'
 
-// const middlewares = []
-// if (__DEV__) {
-//   // eslint-disable-next-line @typescript-eslint/no-var-requires
-//   const createDebugger = require('redux-flipper').default
-//   middlewares.push(createDebugger() as Middleware)
-// }
+const middlewares = []
+if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const createDebugger = require('redux-flipper').default
+  middlewares.push(createDebugger() as Middleware)
+}
 
 const store = configureStore({
   reducer: rootReducer,
-  // middleware: getDefaultMiddleware().concat(middlewares),
+  middleware: getDefaultMiddleware().concat(middlewares),
 })
 
 export type RootState = ReturnType<typeof store.getState>
