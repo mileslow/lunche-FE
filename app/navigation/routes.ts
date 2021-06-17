@@ -29,6 +29,7 @@ enum Routes {
   ChangeAddressModal = 'ChangeAddressModal',
   SearchTruckModal = 'SearchTruckModal',
   CardModal = 'CardModal',
+  SuccessOrderModal = 'SuccessOrderModal',
 }
 
 export default Routes

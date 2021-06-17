@@ -105,7 +105,10 @@ export default {
     note: 'This card will only be charged when you place an order.',
     saveCard: 'Save card',
   },
-
+  successOrderScreen: {
+    mainText: 'Thanks for your order',
+    mainButton: 'Go to the order tracker',
+  },
   common: {
     welcome: 'Welcome!',
     home: 'Home',
