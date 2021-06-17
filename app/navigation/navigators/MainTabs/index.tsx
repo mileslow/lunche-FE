@@ -8,8 +8,7 @@ import { RootNavigationStackParamsList, Routes } from 'navigation'
 import HomeStackNavigator from 'navigation/navigators/HomeStack'
 import AccountStackNavigator from 'navigation/navigators/AccountStack'
 import PlaceStackNavigator from 'navigation/navigators/PlaceStack'
-// screen
-import OrdersScreen from 'screens/OrdersScreen'
+import OrdersStackNavigator from 'navigation/navigators/OrdersStack'
 // localization
 import { useTranslation } from 'react-i18next'
 // assets
@@ -50,7 +49,7 @@ const MainTabsNavigator: FC = () => {
       />
       <Tab.Screen
         name={Routes.OrdersTab}
-        component={OrdersScreen}
+        component={OrdersStackNavigator}
         options={{
           tabBarIcon: (props) => tabBarIconRender(props, OrdersIcon),
           tabBarLabel: (props) => tabBarLabelRender(props, t('tabs:orders')),
