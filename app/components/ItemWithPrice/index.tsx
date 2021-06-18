@@ -33,7 +33,7 @@ interface IProps {
   renderBottomRightBlock?: () => ReactElement | ReactElement[] | null
 }
 
-const CommonCard: FC<IProps> = ({
+const ItemWithPrice: FC<IProps> = ({
   withDiscount,
   item,
   onPress,
@@ -108,4 +108,4 @@ const CommonCard: FC<IProps> = ({
   )
 }
 
-export default memo(CommonCard)
+export default memo(ItemWithPrice)

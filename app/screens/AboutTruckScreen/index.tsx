@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo, useState, memo, FC } from 'react'
+import React, { useCallback, useMemo, useState, memo, FC } from 'react'
 // libs
 import { View, Image, ScrollView } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
@@ -11,10 +11,10 @@ import dayjs from 'dayjs'
 // components
 import Typography, { TypographyVariants } from 'components/Typography'
 import StringList from 'components/StringList'
+import InfoSections from 'components/InfoSections'
 import TrackGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
 import FoodItem from 'screens/AboutTruckScreen/components/FoodItem'
-import ContactItem from 'screens/AboutTruckScreen/components/ContactItem'
 // selectors
 import { truckSelector, truckCategoriesSelector, menuItemsSelector } from 'store/trucks/selectors'
 // assets
@@ -53,6 +53,26 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
     translationY.value = event.contentOffset.y
   })
 
+  const contacts = useMemo(
+    () => [
+      { title: t('aboutTrackScreen:address'), items: [{ icon: AddressIcon, texts: [currentTruck.address] }] },
+      { title: t('common:contacts'), items: [{ icon: PhoneIcon, texts: [currentTruck.phone] }] },
+      {
+        title: t('aboutTrackScreen:schedule'),
+        items: [
+          {
+            icon: TimeIcon,
+            texts: map(
+              currentTruck.scheduleItems,
+              (item) => `${item.from} to ${item.to} ${dayjs().day(item.dayOfWeek).format('ddd')}`,
+            ),
+          },
+        ],
+      },
+    ],
+    [t, currentTruck],
+  )
+
   const renderItem = useCallback(
     ({ item }) => (
       <View>
@@ -81,36 +101,7 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
         ))}
       </ScrollView>
     ),
-    [menuItems, navigation],
-  )
-
-  const contacts = useMemo(
-    () =>
-      map(
-        [
-          { title: t('aboutTrackScreen:address'), item: { icon: AddressIcon, texts: [currentTruck.address] } },
-          { title: t('aboutTrackScreen:contacts'), item: { icon: PhoneIcon, texts: [currentTruck.phone] } },
-          {
-            title: t('aboutTrackScreen:schedule'),
-            item: {
-              icon: TimeIcon,
-              texts: map(
-                currentTruck.scheduleItems,
-                (item) => `${item.from} to ${item.to} ${dayjs().day(item.dayOfWeek).format('ddd')}`,
-              ),
-            },
-          },
-        ],
-        (contact, index) => (
-          <Fragment key={index}>
-            <Typography style={styles.subhead} variant={TypographyVariants.subhead}>
-              {contact.title}
-            </Typography>
-            <ContactItem item={contact.item} />
-          </Fragment>
-        ),
-      ),
-    [t, currentTruck],
+    [currentTruck.id, menuItems, navigation],
   )
 
   return (
@@ -157,7 +148,7 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
 
         {foods}
 
-        {contacts}
+        <InfoSections info={contacts} titleStyle={styles.subhead} infoItemStyle={styles.infoItem} />
       </Animated.ScrollView>
     </View>
   )

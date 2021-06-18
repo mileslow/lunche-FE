@@ -49,4 +49,7 @@ export default StyleSheet.create({
   content: {
     paddingBottom: Spacing.large,
   },
+  infoItem: {
+    paddingHorizontal: Spacing.double,
+  },
 })

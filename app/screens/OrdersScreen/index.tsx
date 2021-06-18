@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useReducer, memo } from 'react'
+import React, { useCallback, useMemo, useReducer, memo, FC } from 'react'
 // libs
 import { View, SectionList } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -10,7 +10,7 @@ import map from 'lodash.map'
 // components
 import Header from 'components/Header'
 import Spinner from 'components/Spinner'
-import CommonCard from 'components/CommonCard'
+import ItemWithPrice from 'components/ItemWithPrice'
 import Typography, { TypographyVariants } from 'components/Typography'
 // thunks
 import { getOrders } from 'store/orders/thunks'
@@ -19,12 +19,14 @@ import { AppDispatch } from 'store'
 // styles
 import styles from './styles'
 import { Colors } from 'styles'
+import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { StackScreenProps } from '@react-navigation/stack'
 
 type State = {
   isLoading: boolean
   orders: Order[]
 }
-const OrdersScreen = () => {
+const OrdersScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.OrdersScreen>> = ({ navigation }) => {
   const insets = useSafeAreaInsets()
 
   const { t } = useTranslation()
@@ -51,13 +53,16 @@ const OrdersScreen = () => {
     }, []),
   )
 
-  const redirectToOrder = useCallback(() => {
-    console.log('redirect t order')
-  }, [])
+  const redirectToOrder = useCallback(
+    (orderId: number) => {
+      navigation.navigate(Routes.OrderTrackerScreen, { orderId })
+    },
+    [navigation],
+  )
 
   const renderItem = useCallback(
     ({ item }: { item: Order }) => (
-      <CommonCard
+      <ItemWithPrice
         imageSize={110}
         downloadImgSize={200}
         descTextVariant={TypographyVariants.body}
@@ -71,10 +76,10 @@ const OrdersScreen = () => {
           price: item.totalSum,
           description: map(item.orderItems, (order) => `${order.itemCount}x ${order.menuItem.name}`).join(', '),
         }}
-        onPress={redirectToOrder}
+        onPress={() => redirectToOrder(item.id)}
         renderBottomRightBlock={() => (
           <Typography variant={TypographyVariants.smallBody} color={Colors.primary}>
-            {item.status === OrderStatus.Ready ? t('ordersScreen:reorder') : t('ordersScreen:orderTracker')}
+            {item.status === OrderStatus.READY ? t('ordersScreen:reorder') : t('ordersScreen:orderTracker')}
           </Typography>
         )}
       />

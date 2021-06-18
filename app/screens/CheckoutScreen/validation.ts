@@ -3,9 +3,9 @@ import * as yup from 'yup'
 import i18n from 'services/localization'
 import { DeliveryType } from 'store/orders/types'
 
-const requiredDependType = (compareType: keyof typeof DeliveryType) =>
+const requiredDependType = (compareType: DeliveryType) =>
   yup.string().when('type', {
-    is: (type: keyof typeof DeliveryType) => type === compareType,
+    is: (type: DeliveryType) => type === compareType,
     then: yup.string().required(i18n.t('validation:required')),
   })
 
@@ -23,7 +23,7 @@ export const schemaValidation = yup
       name: requiredForUnAuthorized(yup.string()),
       phone: requiredForUnAuthorized(yup.string()),
     }),
-    deliveryAddress: requiredDependType(DeliveryType.delivery),
+    deliveryAddress: requiredDependType(DeliveryType.DELIVERY),
     paymentMethod: yup.string().required(i18n.t('validation:required')),
   })
   .defined()

@@ -17,7 +17,6 @@ export default {
   aboutTrackScreen: {
     subhead: 'What to eat here',
     address: 'Where we are',
-    contacts: 'Contacts',
     schedule: 'Schedule',
   },
   welcomeScreen: {
@@ -109,6 +108,14 @@ export default {
     mainText: 'Thanks for your order',
     mainButton: 'Go to the order tracker',
   },
+  orderTrackerScreen: {
+    headerTitle: 'Order tracker',
+    estimatedTime: 'Estimated {{type}} time',
+    getDirectionBtn: 'get direction',
+    orderNumber: 'Order',
+    paymentMethod: 'Payment method',
+    order: 'Order',
+  },
   common: {
     welcome: 'Welcome!',
     home: 'Home',
@@ -129,6 +136,7 @@ export default {
     select: 'Select',
 
     applePay: 'Apple Pay',
+    contacts: 'Contacts',
   },
   errors: {
     serverError: 'Server Error',

@@ -80,7 +80,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
 
   const renderCashItem = useMemo(
     () =>
-      route.params.typeDelivery === DeliveryType.pickup ? (
+      route.params.typeDelivery === DeliveryType.PICKUP ? (
         <ListItem
           leftElement={() => (
             <Checkbox

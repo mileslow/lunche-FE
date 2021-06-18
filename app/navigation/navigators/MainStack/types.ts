@@ -13,4 +13,5 @@ export type MainNavigationStackParamsList = {
   [Routes.VerifyCodeScreen]: { phoneNumber: string; popRouteCount?: number }
   [Routes.PaymentScreen]: PaymentType & { typeDelivery?: DeliveryType }
   [Routes.SearchTruckModal]: undefined
+  [Routes.OrderTrackerScreen]: { orderId: number }
 }

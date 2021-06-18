@@ -5,7 +5,6 @@ enum Routes {
   SignInScreen = 'SignInScreen',
   VerifyCodeScreen = 'VerifyCodeScreen',
   FavoritePlacesScreen = 'FavoritePlacesScreen',
-  OrdersScreen = 'OrdersScreen',
 
   // tabs
   HomeTab = 'HomeTab',
@@ -20,6 +19,10 @@ enum Routes {
   CartScreen = 'CartScreen',
   CheckoutScreen = 'CheckoutScreen',
   PaymentScreen = 'PaymentScreen',
+
+  // OrderStack
+  OrdersScreen = 'OrdersScreen',
+  OrderTrackerScreen = 'OrderTrackerScreen',
 
   // Profile
   AccountScreen = 'AccountScreen',
