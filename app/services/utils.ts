@@ -1,4 +1,5 @@
 import round from 'lodash.round'
+import { Linking } from 'react-native'
 
 export const getImageBySize = (url: string, w: number, h: number) => {
   const lastIndex = url.lastIndexOf('/')
@@ -22,4 +23,11 @@ export const formatPhoneNumber = (phoneNumberString: string) => {
     return `(${onlyNums.slice(0, 3)}) ${onlyNums.slice(3, 6)} - ${onlyNums.slice(6, 8)}`
   }
   return `(${onlyNums.slice(0, 3)}) ${onlyNums.slice(3, 6)} - ${onlyNums.slice(6, 10)}`
+}
+
+export const openLink = async (url: string) => {
+  const isCanOpen = await Linking.canOpenURL(url)
+  if (isCanOpen) {
+    Linking.openURL(url)
+  }
 }

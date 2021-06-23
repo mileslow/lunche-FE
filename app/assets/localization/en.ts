@@ -110,7 +110,8 @@ export default {
   },
   orderTrackerScreen: {
     headerTitle: 'Order tracker',
-    estimatedTime: 'Estimated {{type}} time',
+    estimatedTimeCooking: 'Estimated cooking time',
+    estimatedTimeDelivery: 'Estimated delivery time',
     getDirectionBtn: 'get direction',
     orderNumber: 'Order',
     paymentMethod: 'Payment method',

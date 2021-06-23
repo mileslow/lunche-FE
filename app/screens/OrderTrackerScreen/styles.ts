@@ -1,32 +1,18 @@
 import { StyleSheet } from 'react-native'
-import { Colors, Spacing } from 'styles'
+import { Spacing } from 'styles'
 
 export const MENU_ITEM_SIZE = 42
 
+export const MIN_POSITION = 80
+
 export default StyleSheet.create({
+  header: {
+    zIndex: 1,
+  },
   swipeBar: {
     alignSelf: 'center',
-    backgroundColor: Colors.gunsmoke,
-    borderRadius: 2,
-    height: 4,
     marginBottom: Spacing.base,
     marginTop: Spacing.medium,
-    width: 34,
-  },
-  foodIcon: {
-    alignItems: 'center',
-    backgroundColor: Colors.cadmiumOrange,
-    borderRadius: 16,
-    height: 32,
-    justifyContent: 'center',
-    marginRight: Spacing.double,
-    width: 32,
-  },
-  orderNumberRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginBottom: Spacing.double,
-    paddingHorizontal: Spacing.double,
   },
   fullFlex: {
     flex: 1,
@@ -34,16 +20,13 @@ export default StyleSheet.create({
   subhead: {
     marginBottom: Spacing.double,
     marginTop: Spacing.base,
-    paddingHorizontal: Spacing.double,
   },
   infoItem: {
     marginBottom: Spacing.double,
-    paddingHorizontal: Spacing.double,
   },
   menuItem: {
     flexDirection: 'row',
     marginBottom: Spacing.double,
-    paddingHorizontal: Spacing.double,
   },
   orderItemImg: {
     borderRadius: MENU_ITEM_SIZE / 2,
@@ -54,13 +37,22 @@ export default StyleSheet.create({
   divider: {
     marginBottom: Spacing.double,
   },
-  totalRow: {
+  commonPadding: {
     paddingHorizontal: Spacing.double,
   },
-  action: {
+  commonMargin: {
     marginHorizontal: Spacing.double,
   },
-  statusCard: {
-    marginHorizontal: Spacing.double,
+  courierBlock: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: Spacing.large,
+  },
+  callButton: {
+    alignItems: 'center',
+    height: 32,
+    justifyContent: 'center',
+    width: 32,
   },
 })
