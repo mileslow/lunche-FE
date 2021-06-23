@@ -4,4 +4,5 @@ import { CreateOrderData, CreateOrderResponse, Order } from 'store/orders/types'
 export default {
   createOrder: (data: CreateOrderData): Promise<CreateOrderResponse> => axios.post('/orders', data),
   getOrders: (): Promise<Order[]> => axios.get('/orders'),
+  getOrder: (id: number): Promise<Order> => axios.get(`/orders/${id}`),
 }

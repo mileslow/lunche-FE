@@ -5,11 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import map from 'lodash.map'
 // components
-import Typography, { TypographyVariants } from 'components/Typography'
+import { TypographyVariants } from 'components/Typography'
 import Button, { ButtonTypes } from 'components/Button'
 import Header from 'components/Header'
 import Input from 'components/Form/Input'
 import Divider from 'components/Divider'
+import Totals from 'components/Totals'
 import CartItem from 'screens/CartScreen/components/CartItem'
 // store
 import { commentOrderSelector, orderAmountSelector, orderItemsSelector } from 'store/orders/selectors'
@@ -64,7 +65,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
     [],
   )
 
-  const totals = useMemo<{ label: string; value: string; textVariant?: keyof typeof TypographyVariants }[]>(
+  const totals = useMemo(
     () => [
       { label: t('cartScreen:order'), value: `$ ${orderAmount}` },
       { label: t('cartScreen:fee'), value: '$ 0' },
@@ -92,17 +93,6 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
     [orderItems, handleCountPress, handleDeleteDish],
   )
 
-  const renderTotals = useMemo(
-    () =>
-      map(totals, ({ label, value, textVariant = TypographyVariants.smallBody }, index) => (
-        <View key={index} style={styles.totalRow}>
-          <Typography variant={textVariant}>{label}</Typography>
-          <Typography variant={textVariant}>{value}</Typography>
-        </View>
-      )),
-    [totals],
-  )
-
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Header withBack title={t('cartScreen:headerTitle')} />
@@ -120,7 +110,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
       <Divider />
 
       <View style={styles.totals}>
-        {renderTotals}
+        <Totals totals={totals} style={styles.totalRow} />
         <Button
           type={ButtonTypes.primary}
           style={styles.button}

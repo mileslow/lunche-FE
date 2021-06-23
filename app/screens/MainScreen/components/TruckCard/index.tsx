@@ -5,6 +5,7 @@ import map from 'lodash.map'
 // components
 import StringList from 'components/StringList'
 import InfoWithIconList from 'components/InfoWithIconList'
+import Card from 'components/Card'
 // store
 import { Truck } from 'store/trucks/types'
 // hooks
@@ -30,7 +31,7 @@ const TrackCard: FC<IProps> = ({ onPress, item, onFavoritePress }) => {
   const categories = useMemo(() => map(item.foodCategories, (i) => i.name), [item.foodCategories])
 
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
+    <Card style={styles.card} onPress={onPress}>
       <Image
         style={styles.mainImage}
         source={{
@@ -50,7 +51,7 @@ const TrackCard: FC<IProps> = ({ onPress, item, onFavoritePress }) => {
       </View>
       <StringList data={categories} style={styles.categories} />
       <InfoWithIconList data={info} style={styles.info} />
-    </TouchableOpacity>
+    </Card>
   )
 }
 

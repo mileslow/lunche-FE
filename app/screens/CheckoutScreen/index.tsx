@@ -89,7 +89,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     setValue,
   } = useForm<ICreateOrderFormData>({
     defaultValues: {
-      type: DeliveryType.pickup,
+      type: DeliveryType.PICKUP,
       client: {
         email: currentProfile?.email,
         phone: currentProfile?.phone,
@@ -215,8 +215,8 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const timeFieldLabel = useMemo(
     () => ({
-      [DeliveryType.pickup]: t('checkoutScreen:pickupAt'),
-      [DeliveryType.delivery]: t('checkoutScreen:deliveryDate'),
+      [DeliveryType.PICKUP]: t('checkoutScreen:pickupAt'),
+      [DeliveryType.DELIVERY]: t('checkoutScreen:deliveryDate'),
     }),
     [t],
   )
@@ -230,18 +230,18 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           control={control}
           render={({ field: { onChange } }) => (
             <View style={styles.deliveryTypes}>
-              <Button type={ButtonTypes.basic} style={styles.deliveryBtn} onPress={() => onChange(DeliveryType.pickup)}>
-                <PersonIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.pickup)} />
-                <Typography color={activeTypeColor(DeliveryType.pickup)}>{t('checkoutScreen:pickUpBtn')}</Typography>
+              <Button type={ButtonTypes.basic} style={styles.deliveryBtn} onPress={() => onChange(DeliveryType.PICKUP)}>
+                <PersonIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.PICKUP)} />
+                <Typography color={activeTypeColor(DeliveryType.PICKUP)}>{t('checkoutScreen:pickUpBtn')}</Typography>
               </Button>
               {currentTruck.supportDelivery && (
                 <Button
                   type={ButtonTypes.basic}
                   style={styles.deliveryBtn}
-                  onPress={() => onChange(DeliveryType.delivery)}
+                  onPress={() => onChange(DeliveryType.DELIVERY)}
                 >
-                  <TruckIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.delivery)} />
-                  <Typography color={activeTypeColor(DeliveryType.delivery)}>
+                  <TruckIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.DELIVERY)} />
+                  <Typography color={activeTypeColor(DeliveryType.DELIVERY)}>
                     {t('checkoutScreen:deliveryBtn')}
                   </Typography>
                 </Button>
@@ -250,11 +250,11 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           )}
         />
 
-        {typeDelivery === DeliveryType.pickup && (
+        {typeDelivery === DeliveryType.PICKUP && (
           <PickUpFields distance={currentTruck.distance} address={currentTruck.address} />
         )}
 
-        {typeDelivery === DeliveryType.delivery && (
+        {typeDelivery === DeliveryType.DELIVERY && (
           <DeliveryFields control={control} errors={errors} address={currentAddress} />
         )}
 

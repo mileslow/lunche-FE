@@ -8,7 +8,7 @@ import filter from 'lodash.filter'
 import intersection from 'lodash.intersection'
 // components
 import Divider from 'components/Divider'
-import CommonCard from 'components/CommonCard'
+import ItemWithPrice from 'components/ItemWithPrice'
 // store
 import { menuItemsSelector } from 'store/trucks/selectors'
 import { OrderItems } from 'store/orders/types'
@@ -64,7 +64,7 @@ const MenuItems: FC<IProps> = ({ selectedTypes, truckId, orderItems }) => {
       {map(menu, (item) => (
         <Fragment key={item.id}>
           <Divider />
-          <CommonCard
+          <ItemWithPrice
             item={item}
             active={!!orderItems[item.id]}
             onPress={handleMenuItemPress(item.id)}

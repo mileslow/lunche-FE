@@ -22,3 +22,5 @@ export const createOrder = createAsyncThunk<CreateOrderResponse, ICreateOrderFor
 )
 
 export const getOrders = createAsyncThunk<Order[]>('orders/GET_ORDERS', () => api.getOrders())
+
+export const getOrder = createAsyncThunk<Order, number>('orders/GET_ORDER', (payload) => api.getOrder(payload))

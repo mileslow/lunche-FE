@@ -1,16 +1,22 @@
 import { PaymentMethodType } from 'store/payments/types'
 
 export enum DeliveryType {
-  delivery = 'delivery',
-  pickup = 'pickup',
+  DELIVERY = 'delivery',
+  PICKUP = 'pickup',
 }
 
 export enum OrderStatus {
-  Draft = 'draft',
-  Approving = 'approving',
-  Cooking = 'cooking',
-  Ready = 'ready',
-  Rejected = 'rejected',
+  DRAFT = 'draft',
+  APPROVING = 'approving',
+  COOKING = 'cooking',
+  READY = 'ready',
+  REJECTED = 'rejected',
+}
+
+export enum StatusesState {
+  DONE = 'done',
+  CURRENT = 'current',
+  WAITING = 'waiting',
 }
 
 export type OrdersSliceState = {
@@ -28,7 +34,7 @@ export type OrderItem = {
 export type PreSaveOrderItem = OrderItem & { price: number; name: string }
 
 export type CreateOrderData = {
-  type: keyof typeof DeliveryType
+  type: DeliveryType
   paymentMethod: keyof typeof PaymentMethodType
   orderTime: string
   deliveryAddress: string
@@ -52,13 +58,24 @@ export type CreateOrderResponse = {
   }
 }
 
+export type StatusesStateMap = {
+  [x in typeof OrderStatus[keyof typeof OrderStatus]]: StatusesState
+}
+
 export type Order = {
   id: number
   totalSum: number
+  totalFee: number
   foodTruck: {
     name: string
     mainPhoto: string
+    address: string
+    phone: string
+    latitude: number
+    longitude: number
   }
+  statusesStateMap: StatusesStateMap
   status: OrderStatus
-  orderItems: Array<OrderItem & { menuItem: { name: string } }>
+  orderItems: Array<OrderItem & { id: number; menuItem: { name: string; photo: string } }>
+  paymentMethod: PaymentMethodType
 }
