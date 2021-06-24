@@ -1,5 +1,4 @@
 export type AuthSliceState = {
-  token: Token | null
   user: User | null
   isAuthorized: boolean
 }

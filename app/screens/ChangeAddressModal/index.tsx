@@ -1,8 +1,7 @@
 import React, { FC, useCallback, useState, memo, useMemo, useEffect, useRef } from 'react'
-import { View, SectionList, Keyboard, Pressable } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SectionList, Keyboard, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import debounce from 'lodash.debounce'
 import find from 'lodash.find'
@@ -13,9 +12,9 @@ import Input from 'components/Form/Input'
 import Typography, { TypographyVariants } from 'components/Typography'
 import Button from 'components/Button'
 import Header from 'components/Header'
-import LocationSearchItem from 'screens/ChangeAddressModal/components/LocationSearchItem'
+import ListItem from 'components/ListItem'
+import ScreenContainer from 'components/ScreenContainer'
 // selector
-import { currentCountrySelector } from 'store/general/selectors'
 // api
 import api from 'services/api'
 import { LocationType } from 'services/api/endpoints/mapBox'
@@ -51,13 +50,9 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   navigation,
   route,
 }) => {
-  const insets = useSafeAreaInsets()
-
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
-
-  const country = useSelector(currentCountrySelector)
 
   const [searchResult, setSearchResult] = useState<CurrentLocation[]>([])
 
@@ -82,7 +77,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
         setSearchResult([])
       }
     },
-    [setSearchResult, country],
+    [setSearchResult],
   )
 
   const debouncedFetchTrucks = useRef(debounce(fetchTrucks, 700)).current
@@ -114,7 +109,15 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   const keyExtractor = useCallback((item) => item.id, [])
 
   const renderItem = useCallback(
-    ({ item }) => <LocationSearchItem item={item} Icon={NavigationIcon} onPress={() => handleLocationPress(item)} />,
+    ({ item }) => (
+      <ListItem
+        style={styles.searchItem}
+        text={item.combinedAddress}
+        subtext={item.place}
+        leftElement={() => <NavigationIcon style={styles.icon} />}
+        onPress={() => handleLocationPress(item)}
+      />
+    ),
     [handleLocationPress],
   )
 
@@ -158,7 +161,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   const addressIcon = useCallback(() => <AddressIcon fill={Colors.gunsmoke} />, [])
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <ScreenContainer>
       <Header left={closeModalIcon} />
       <Typography variant={TypographyVariants.h3} style={[styles.commonText, styles.title]}>
         {t('changeAddressModal:title')}
@@ -187,7 +190,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
         renderSectionHeader={renderTitleSection}
         onScrollBeginDrag={Keyboard.dismiss}
       />
-    </View>
+    </ScreenContainer>
   )
 }
 

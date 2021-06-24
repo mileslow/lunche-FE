@@ -71,7 +71,8 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
               lastFourNumbers: item.lastFourNumbers,
             })
           }
-          item={{ text: upperFirst(item.brand), subtext: `****${item.lastFourNumbers}` }}
+          text={upperFirst(item.brand)}
+          subtext={`****${item.lastFourNumbers}`}
           rightElement={() => cardIcons[item.brand]}
         />
       )),
@@ -90,7 +91,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
             />
           )}
           onPress={() => setPayment({ paymentMethod: PaymentMethodType.cash, cardId: undefined, brand: undefined })}
-          item={{ text: t('paymentScreen:cash') }}
+          text={t('paymentScreen:cash')}
         />
       ) : null,
     [payment.paymentMethod, t, route.params.typeDelivery],
@@ -107,7 +108,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
           onPress={() =>
             setPayment({ paymentMethod: PaymentMethodType.card, cardId: undefined, brand: PaymentBrand.applePay })
           }
-          item={{ text: t('common:applePay') }}
+          text={t('common:applePay')}
         />
       ) : null,
     [isApplePaySupported, cardIcons, payment, t],

@@ -9,7 +9,6 @@ import { AuthSliceState, User } from 'store/auth/types'
 import { signInConfirm, getCurrentProfile } from 'store/auth/thunks'
 
 const initialState: AuthSliceState = {
-  token: null,
   user: null,
   isAuthorized: false,
 }
@@ -21,6 +20,10 @@ const authSlice = createSlice({
   reducers: {
     setAuthorized: (state, { payload }: PayloadAction<boolean>) => {
       state.isAuthorized = payload
+    },
+    clearAuth: (state) => {
+      state.isAuthorized = false
+      state.user = null
     },
   },
   extraReducers: (builder) => {
@@ -35,6 +38,6 @@ const authSlice = createSlice({
 
 export const sliceName = authSlice.name
 
-export const { setAuthorized } = authSlice.actions
+export const { setAuthorized, clearAuth } = authSlice.actions
 
 export default authSlice.reducer
