@@ -12,15 +12,16 @@ interface IProps {
   right?: () => ReactElement
   style?: ViewStyle
   withBack?: boolean
+  bgColor?: string
 }
-const Header: FC<IProps> = ({ title, style, left, right, withBack }) => {
+const Header: FC<IProps> = ({ title, style, left, right, withBack, bgColor }) => {
   const accessoryLeft = useMemo(() => (withBack ? <BackButton style={styles.backIcon} /> : left && left()), [
     withBack,
     left,
   ])
 
   return (
-    <View style={[styles.header, style]}>
+    <View style={[styles.header, bgColor ? { backgroundColor: bgColor } : undefined, style]}>
       <View style={styles.accessory}>{accessoryLeft}</View>
       {title ? (
         <View style={styles.headerTitle} pointerEvents='none'>

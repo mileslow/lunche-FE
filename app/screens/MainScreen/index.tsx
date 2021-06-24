@@ -141,7 +141,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   return (
     <>
-      <Map style={styles.map} zoomLevel={14} location={currentLocation || undefined} />
+      <Map style={styles.map} zoomLevel={14} location={currentLocation || undefined} isShowUserLocation />
 
       <HeaderWithLocation
         swipePositionY={swipePositionY}

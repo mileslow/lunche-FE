@@ -55,13 +55,13 @@ const AboutTruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
 
   const contacts = useMemo(
     () => [
-      { title: t('aboutTrackScreen:address'), items: [{ icon: AddressIcon, texts: [currentTruck.address] }] },
-      { title: t('common:contacts'), items: [{ icon: PhoneIcon, texts: [currentTruck.phone] }] },
+      { title: t('aboutTrackScreen:address'), items: [{ Icon: AddressIcon, texts: [currentTruck.address] }] },
+      { title: t('common:contacts'), items: [{ Icon: PhoneIcon, texts: [currentTruck.phone] }] },
       {
         title: t('aboutTrackScreen:schedule'),
         items: [
           {
-            icon: TimeIcon,
+            Icon: TimeIcon,
             texts: map(
               currentTruck.scheduleItems,
               (item) => `${item.from} to ${item.to} ${dayjs().day(item.dayOfWeek).format('ddd')}`,

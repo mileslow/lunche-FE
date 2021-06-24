@@ -11,7 +11,7 @@ import Divider from 'components/Divider'
 import ItemWithPrice from 'components/ItemWithPrice'
 // store
 import { menuItemsSelector } from 'store/trucks/selectors'
-import { OrderItems } from 'store/orders/types'
+import { OrderItemsMap } from 'store/orders/types'
 // hooks
 import useCountOrderPress from 'hooks/useCountOrderPress'
 // types
@@ -21,7 +21,7 @@ import ItemCount from 'components/ItemCount'
 interface IProps {
   selectedTypes: number[]
   truckId: number
-  orderItems: OrderItems
+  orderItems: OrderItemsMap
 }
 const MenuItems: FC<IProps> = ({ selectedTypes, truckId, orderItems }) => {
   const navigation = useNavigation<StackNavigationProp<RootNavigationStackParamsList>>()

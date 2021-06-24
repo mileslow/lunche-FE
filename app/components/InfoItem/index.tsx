@@ -7,14 +7,12 @@ import { Colors, Spacing } from 'styles'
 
 export interface IProps {
   texts: string[]
-  icon: FC<SvgProps>
+  Icon: FC<SvgProps>
   fill?: string
   style?: StyleProp<ViewStyle>
 }
 
-const ContactItem: FC<IProps> = ({ texts, icon, style, fill = Colors.cadmiumOrange }) => {
-  const Icon = useMemo(() => icon, [icon])
-
+const ContactItem: FC<IProps> = ({ texts, Icon, style, fill = Colors.cadmiumOrange }) => {
   const alignItems = useMemo(() => (texts.length > 1 ? 'flex-start' : 'center'), [texts])
 
   return (

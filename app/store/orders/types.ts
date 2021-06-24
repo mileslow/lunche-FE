@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { PaymentMethodType } from 'store/payments/types'
 
 export enum DeliveryType {
@@ -9,6 +10,7 @@ export enum OrderStatus {
   DRAFT = 'draft',
   APPROVING = 'approving',
   COOKING = 'cooking',
+  DELIVERING = 'delivering',
   READY = 'ready',
   REJECTED = 'rejected',
 }
@@ -21,10 +23,10 @@ export enum StatusesState {
 
 export type OrdersSliceState = {
   comment: string
-  orderItems: OrderItems
+  orderItems: OrderItemsMap
 }
 
-export type OrderItems = { [x: number]: PreSaveOrderItem }
+export type OrderItemsMap = { [x: number]: PreSaveOrderItem }
 
 export type OrderItem = {
   menuItemId: number
@@ -62,10 +64,14 @@ export type StatusesStateMap = {
   [x in typeof OrderStatus[keyof typeof OrderStatus]]: StatusesState
 }
 
+export type OrderItems = Array<OrderItem & { id: number; menuItem: { name: string; photo: string } }>
+
 export type Order = {
   id: number
   totalSum: number
+  orderSum: number
   totalFee: number
+  type: DeliveryType
   foodTruck: {
     name: string
     mainPhoto: string
@@ -73,9 +79,34 @@ export type Order = {
     phone: string
     latitude: number
     longitude: number
+    cookingTime: number
   }
   statusesStateMap: StatusesStateMap
   status: OrderStatus
-  orderItems: Array<OrderItem & { id: number; menuItem: { name: string; photo: string } }>
+  orderItems: OrderItems
   paymentMethod: PaymentMethodType
+}
+
+export type CreateDeliveryQuotesData = {
+  foodTruckId: number
+  deliveryAddress: string
+  deliveryLongitude: number
+  deliveryLatitude: number
+  orderTime: string
+}
+
+export type Courier = {
+  name: string
+  phone_number: string
+  location: {
+    lat: number
+    lng: number
+  }
+  img_href: string
+}
+
+export type DeliveryQuote = {
+  created: string
+  dropoff_eta: string | null
+  courier: Courier
 }
