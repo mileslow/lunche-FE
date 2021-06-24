@@ -5,6 +5,7 @@ import {
   Order,
   CreateDeliveryQuotesData,
   DeliveryQuote,
+  CreateDeliveryQuoteResponse,
 } from 'store/orders/types'
 
 export default {
@@ -12,6 +13,6 @@ export default {
   getOrders: (): Promise<Order[]> => axios.get('/orders'),
   getOrder: (id: number): Promise<Order> => axios.get(`/orders/${id}`),
   getOrderDelivery: (id: number): Promise<DeliveryQuote> => axios.get(`/orders/${id}/delivery`),
-  createDeliveryQuotes: (data: CreateDeliveryQuotesData): Promise<DeliveryQuote> =>
+  createDeliveryQuotes: (data: CreateDeliveryQuotesData): Promise<CreateDeliveryQuoteResponse> =>
     axios.post(`/delivery-quotes`, data),
 }

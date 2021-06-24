@@ -68,6 +68,7 @@ export type CurrentLocation = {
   combinedAddress?: string
   country?: string
   district?: string
+  placeName?: string
   place?: string
 }
 export const useGetCurrentPosition = (withAddress?: boolean) => {

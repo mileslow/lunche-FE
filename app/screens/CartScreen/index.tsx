@@ -14,6 +14,7 @@ import Totals from 'components/Totals'
 import CartItem from 'screens/CartScreen/components/CartItem'
 // store
 import { commentOrderSelector, orderAmountSelector, orderItemsSelector } from 'store/orders/selectors'
+import { truckTaxSelector } from 'store/trucks/selectors'
 import { removeItemFromOrder, changeComment } from 'store/orders/model'
 import { AppDispatch } from 'store'
 // hooks
@@ -38,6 +39,8 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
   const orderAmount = useSelector(orderAmountSelector)
 
   const comment = useSelector(commentOrderSelector)
+
+  const truckTax = useSelector(truckTaxSelector)
 
   const handleCountPress = useCountOrderPress()
 
@@ -67,12 +70,11 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
 
   const totals = useMemo(
     () => [
-      { label: t('cartScreen:order'), value: `$ ${orderAmount}` },
-      { label: t('cartScreen:fee'), value: '$ 0' },
-      { label: t('cartScreen:totalDiscounts'), value: '$ 0' },
-      { label: t('cartScreen:total'), value: `$ ${orderAmount}`, textVariant: TypographyVariants.body },
+      { label: t('totals:order'), value: `$ ${orderAmount}` },
+      { label: t('totals:fee'), value: `$ ${truckTax}` },
+      { label: t('totals:total'), value: `$ ${orderAmount + truckTax}`, textVariant: TypographyVariants.body },
     ],
-    [t, orderAmount],
+    [t, orderAmount, truckTax],
   )
 
   const renderItems = useMemo(

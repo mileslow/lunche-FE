@@ -33,6 +33,7 @@ export type Truck = {
     to: string
     from: string
   }>
+  tax: number
 }
 
 export type MenuItem = {

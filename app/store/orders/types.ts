@@ -40,6 +40,8 @@ export type CreateOrderData = {
   paymentMethod: keyof typeof PaymentMethodType
   orderTime: string
   deliveryAddress: string
+  deliveryLatitude: number
+  deliveryLongitude: number
   client: {
     name: string
     phone: string
@@ -47,6 +49,7 @@ export type CreateOrderData = {
   }
   orderItems: OrderItem[]
   comment?: string
+  deliveryQuoteId?: string
 }
 
 export type CreateOrderResponse = {
@@ -109,4 +112,9 @@ export type DeliveryQuote = {
   created: string
   dropoff_eta: string | null
   courier: Courier
+}
+
+export type CreateDeliveryQuoteResponse = {
+  id: string
+  fee: number
 }

@@ -3,8 +3,7 @@ import { Colors, Spacing } from 'styles'
 
 export default StyleSheet.create({
   screen: {
-    backgroundColor: Colors.basic,
-    flex: 1,
+    paddingBottom: 0,
   },
   deliveryTypes: {
     alignItems: 'center',
@@ -53,7 +52,7 @@ export default StyleSheet.create({
   greenChevron: {
     transform: [{ rotate: '180deg' }],
   },
-  paymentField: {
+  field: {
     backgroundColor: Colors.alabaster,
     borderColor: Colors.borderColor,
     borderRadius: 8,
@@ -75,5 +74,13 @@ export default StyleSheet.create({
   },
   wrap: {
     marginBottom: Spacing.small,
+  },
+  addressField: {
+    justifyContent: 'flex-start',
+  },
+  totals: {
+    backgroundColor: Colors.concrete,
+    paddingHorizontal: Spacing.double,
+    paddingTop: Spacing.base,
   },
 })

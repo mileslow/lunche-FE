@@ -1,36 +1,65 @@
-import React, { FC, memo } from 'react'
-import Typography, { TypographyVariants } from 'components/Typography'
-import styles from 'screens/CheckoutScreen/styles'
-import Input from 'components/HookForm/Input'
-import AddressIcon from 'assets/svg/address.svg'
-import { Colors } from 'styles'
+import React, { FC, memo, ReactElement, useMemo } from 'react'
+// libs
+import { Control, Controller, FieldErrors } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { Control, FieldErrors } from 'react-hook-form'
+// components
+import Typography, { TypographyVariants } from 'components/Typography'
+import Error from 'components/Form/Error'
+import Button, { ButtonTypes } from 'components/Button'
+// types
 import { ICreateOrderFormData } from 'screens/CheckoutScreen'
+import { CurrentLocation } from 'services/geoLocation'
+// assets
+import AddressIcon from 'assets/svg/address.svg'
+// styles
+import styles from 'screens/CheckoutScreen/styles'
+import { Colors } from 'styles'
 
 interface IProps {
   control: Control<ICreateOrderFormData>
   errors: FieldErrors<ICreateOrderFormData>
-  address?: string
+  location?: CurrentLocation | null
+  onPressAddress: () => void
 }
-const DeliveryFields: FC<IProps> = ({ control, errors, address }) => {
+const DeliveryFields: FC<IProps> = ({ control, errors, location, onPressAddress }) => {
   const { t } = useTranslation()
+
+  const error = errors.deliveryAddress?.address?.message
+
+  const defaultValue = useMemo(
+    () =>
+      location
+        ? {
+            address: location.placeName || location.combinedAddress || '',
+            lat: location.lat,
+            lng: location.lng,
+          }
+        : undefined,
+    [location],
+  )
 
   return (
     <>
       <Typography variant={TypographyVariants.subhead} style={styles.label}>
         {t('checkoutScreen:deliverAddress')}
       </Typography>
-      <Input
-        shouldUnregister
+      <Controller
         control={control}
-        defaultValue={address}
+        render={({ field: { value } }): ReactElement => (
+          <Button
+            type={ButtonTypes.link}
+            style={[styles.field, styles.addressField, { borderColor: error ? Colors.pigmentRed : Colors.borderColor }]}
+            onPress={onPressAddress}
+          >
+            <AddressIcon style={styles.addressIcon} fill={Colors.midNightMoss} />
+            <Typography variant={TypographyVariants.body}>{value?.address}</Typography>
+          </Button>
+        )}
         name='deliveryAddress'
-        autoCapitalize='none'
-        autoCorrect={false}
-        error={errors?.deliveryAddress?.message}
-        leftIcon={() => <AddressIcon fill={Colors.midNightMoss} />}
+        defaultValue={defaultValue}
+        shouldUnregister
       />
+      <Error error={error} />
     </>
   )
 }

@@ -23,7 +23,11 @@ export const schemaValidation = yup
       name: requiredForUnAuthorized(yup.string()),
       phone: requiredForUnAuthorized(yup.string()),
     }),
-    deliveryAddress: requiredDependType(DeliveryType.DELIVERY),
+    deliveryAddress: yup.object({
+      address: requiredDependType(DeliveryType.DELIVERY),
+      lng: requiredDependType(DeliveryType.DELIVERY),
+      lat: requiredDependType(DeliveryType.DELIVERY),
+    }),
     paymentMethod: yup.string().required(i18n.t('validation:required')),
   })
   .defined()

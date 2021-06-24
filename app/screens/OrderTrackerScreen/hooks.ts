@@ -15,9 +15,9 @@ export const useOrderInfo = (order: Order | null) => {
 
   const totals = useMemo<{ label: string; value: string; textVariant?: TypographyVariants }[]>(
     () => [
-      { label: t('cartScreen:order'), value: `$ ${order?.orderSum ?? 0}` },
-      { label: t('cartScreen:fee'), value: `$ ${order?.totalFee ?? 0}` },
-      { label: t('cartScreen:total'), value: `$ ${order?.totalSum ?? 0}`, textVariant: TypographyVariants.body },
+      { label: t('totals:order'), value: `$ ${order?.orderSum ?? 0}` },
+      { label: t('totals:fee'), value: `$ ${order?.totalFee ?? 0}` },
+      { label: t('totals:total'), value: `$ ${order?.totalSum ?? 0}`, textVariant: TypographyVariants.body },
     ],
     [t, order],
   )
