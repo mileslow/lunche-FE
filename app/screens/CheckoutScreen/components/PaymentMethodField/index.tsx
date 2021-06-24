@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from 'react'
+import React, { FC, memo } from 'react'
 // libs
 import { View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -30,7 +30,7 @@ const PaymentMethodField: FC<IProps> = ({ onPress, payment, errors }) => {
 
   const cardIcons = useCreditCardIcon({ width: 28, height: 24 })
 
-  const error = useMemo(() => errors.paymentMethod?.message, [errors.paymentMethod])
+  const error = errors.paymentMethod?.message
 
   return (
     <View style={styles.wrap}>
@@ -39,7 +39,7 @@ const PaymentMethodField: FC<IProps> = ({ onPress, payment, errors }) => {
       </Typography>
       <Button
         type={ButtonTypes.link}
-        style={[styles.paymentField, { borderColor: error ? Colors.pigmentRed : Colors.borderColor }]}
+        style={[styles.field, { borderColor: error ? Colors.pigmentRed : Colors.borderColor }]}
         onPress={onPress}
       >
         {payment.paymentMethod ? (

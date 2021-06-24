@@ -12,8 +12,10 @@ const styles = StyleSheet.create({
   },
 })
 
+export type Total = { label: string; value: string; textVariant?: TypographyVariants }
+
 interface IProps {
-  totals: { label: string; value: string; textVariant?: TypographyVariants }[]
+  totals: Total[]
   style?: StyleProp<ViewStyle>
 }
 

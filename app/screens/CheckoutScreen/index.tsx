@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useReducer } from 'react'
 // libs
 import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,6 @@ import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
 import Divider from 'components/Divider'
-import Spinner from 'components/Spinner'
 import ScreenContainer from 'components/ScreenContainer'
 import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
@@ -19,18 +18,19 @@ import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFi
 import TimeField from 'screens/CheckoutScreen/components/TimeField'
 import PaymentMethodField from 'screens/CheckoutScreen/components/PaymentMethodField'
 // thunks + actions
-import { createOrder } from 'store/orders/thunks'
+import { createOrder, createDeliveryQuotes } from 'store/orders/thunks'
 import { clearOrderItems } from 'store/orders/model'
 import { signIn } from 'store/auth/thunks'
 import { getCreditCards } from 'store/payments/thunks'
 // selectors
-import { currentAddressSelector } from 'store/general/selectors'
+import { currentPositionSelector } from 'store/general/selectors'
 import { truckSelector } from 'store/trucks/selectors'
 import { currentProfileSelector, isAuthorizedSelector } from 'store/auth/selectors'
 import { cardsSelector } from 'store/payments/selectors'
+import { orderAmountSelector } from 'store/orders/selectors'
 // types
 import { AppDispatch } from 'store'
-import { DeliveryType } from 'store/orders/types'
+import { CreateDeliveryQuoteResponse, DeliveryType } from 'store/orders/types'
 import { PaymentBrand, PaymentMethodType } from 'store/payments/types'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
@@ -40,21 +40,33 @@ import { schemaValidation } from './validation'
 import PersonIcon from 'assets/svg/person-walking.svg'
 import TruckIcon from 'assets/svg/truck.svg'
 // styles
-import { Colors } from 'styles'
+import { Colors, Spacing } from 'styles'
 import styles from './styles'
 // hooks
-import { useMakeCardPayment, NotPayedOrder } from './hooks'
+import { useMakeCardPayment, NotPayedOrder, useTotals } from './hooks'
+import Totals from 'components/Totals'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export interface ICreateOrderFormData {
   type: DeliveryType
   paymentMethod: PaymentMethodType
-  deliveryAddress: string
+  deliveryAddress: { address: string; lat: number; lng: number }
   orderTime: string
   client: {
     name: string
     email: string
     phone: string
   }
+}
+
+type State = {
+  isLoading: boolean
+  quote: CreateDeliveryQuoteResponse | null
+}
+
+const initialState = {
+  isLoading: false,
+  quote: null,
 }
 
 const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CheckoutScreen>> = ({
@@ -65,9 +77,11 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const dispatch = useDispatch<AppDispatch>()
 
+  const insets = useSafeAreaInsets()
+
   const { isApplePaySupported, makeCardPayment } = useMakeCardPayment()
 
-  const currentAddress = useSelector(currentAddressSelector)
+  const currentPosition = useSelector(currentPositionSelector)
 
   const currentTruck = useSelector(truckSelector)
 
@@ -75,9 +89,14 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const currentProfile = useSelector(currentProfileSelector)
 
+  const orderAmount = useSelector(orderAmountSelector)
+
   const cards = useSelector(cardsSelector)
 
-  const [isLoading, setLoading] = useState(false)
+  const [{ isLoading, quote }, setState] = useReducer(
+    (store: State, newStore: Partial<State>) => ({ ...store, ...newStore }),
+    initialState,
+  )
 
   const notPayedOrder = useRef<NotPayedOrder | null>(null)
 
@@ -87,6 +106,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     watch,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm<ICreateOrderFormData>({
     defaultValues: {
       type: DeliveryType.PICKUP,
@@ -100,13 +120,17 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     resolver: yupResolver(schemaValidation),
   })
 
+  const typeDelivery = watch('type')
+
+  const totals = useTotals({ currentTruckTax: currentTruck.tax, quoteFee: quote?.fee, orderAmount, typeDelivery })
+
   useFocusEffect(
     useCallback(() => {
       // create payment after user has been verified
       if (isAuthorized && notPayedOrder.current && notPayedOrder.current?.paymentMethod === PaymentMethodType.card) {
-        setLoading(true)
+        setState({ isLoading: true })
         makeCardPayment(notPayedOrder.current).then(({ error }) => {
-          setLoading(false)
+          setState({ isLoading: false })
           if (!error) {
             notPayedOrder.current = null
             dispatch(clearOrderItems())
@@ -120,9 +144,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   useEffect(() => {
     const fetchProfile = async () => {
       if (currentProfile && !cards.length) {
-        setLoading(true)
+        setState({ isLoading: true })
         await dispatch(getCreditCards())
-        setLoading(false)
+        setState({ isLoading: false })
       }
     }
 
@@ -143,7 +167,10 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     if (route.params?.paymentMethod) {
       setValue('paymentMethod', route.params.paymentMethod)
     }
-  }, [route.params?.paymentMethod, setValue])
+    if (route.params?.address && route.params.lat && route.params.lng) {
+      setValue('deliveryAddress', { address: route.params.address, lat: route.params.lat, lng: route.params.lng })
+    }
+  }, [route.params, setValue])
 
   useEffect(() => {
     if (isApplePaySupported) {
@@ -151,7 +178,31 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     }
   }, [isApplePaySupported, navigation])
 
-  const typeDelivery = watch('type')
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      if (typeDelivery === DeliveryType.DELIVERY) {
+        const { orderTime, deliveryAddress } = getValues()
+        if (deliveryAddress?.address) {
+          setState({ isLoading: true })
+          const resultQuote = await dispatch(
+            createDeliveryQuotes({
+              deliveryAddress: deliveryAddress.address,
+              foodTruckId: currentTruck.id,
+              deliveryLongitude: deliveryAddress.lng,
+              deliveryLatitude: deliveryAddress.lat,
+              orderTime,
+            }),
+          )
+          if (createDeliveryQuotes.fulfilled.match(resultQuote)) {
+            setState({ isLoading: false, quote: resultQuote.payload })
+            return
+          }
+          setState({ isLoading: false })
+        }
+      }
+    }
+    fetchQuotes()
+  }, [getValues, typeDelivery, currentTruck.id, dispatch, route.params?.address])
 
   const payment = useMemo(() => {
     return {
@@ -164,8 +215,8 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const onSubmit = useCallback(
     async (data: ICreateOrderFormData) => {
-      setLoading(true)
-      const result = await dispatch(createOrder(data))
+      setState({ isLoading: true })
+      const result = await dispatch(createOrder({ ...data, deliveryQuoteId: quote?.id }))
 
       if (createOrder.fulfilled.match(result)) {
         const createdOrder = {
@@ -179,11 +230,11 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           if (result.payload.data.paymentMethod === PaymentMethodType.card) {
             const { error } = await makeCardPayment(createdOrder)
             if (error) {
-              setLoading(false)
+              setState({ isLoading: false })
               return
             }
           }
-          setLoading(false)
+          setState({ isLoading: false, quote: null })
           dispatch(clearOrderItems())
           navigation.navigate(Routes.SuccessOrderModal)
           return
@@ -195,9 +246,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
         return
       }
-      setLoading(false)
+      setState({ isLoading: false })
     },
-    [navigation, dispatch, currentProfile, payment, makeCardPayment],
+    [navigation, dispatch, currentProfile, payment, makeCardPayment, quote],
   )
 
   const activeTypeColor = useCallback(
@@ -213,6 +264,10 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
     })
   }, [navigation, payment, typeDelivery])
 
+  const handlePressAddress = useCallback(() => {
+    navigation.navigate(Routes.ChangeAddressModal, { prevScreen: Routes.CheckoutScreen })
+  }, [navigation])
+
   const timeFieldLabel = useMemo(
     () => ({
       [DeliveryType.PICKUP]: t('checkoutScreen:pickupAt'),
@@ -222,7 +277,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   )
 
   return (
-    <ScreenContainer>
+    <ScreenContainer isLoading={isLoading} style={styles.screen}>
       <Header withBack title={t('checkoutScreen:headerTitle')} />
       <ScrollView style={styles.scroll} contentContainerStyle={styles.contentScroll}>
         <Controller
@@ -255,7 +310,12 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         )}
 
         {typeDelivery === DeliveryType.DELIVERY && (
-          <DeliveryFields control={control} errors={errors} address={currentAddress} />
+          <DeliveryFields
+            control={control}
+            errors={errors}
+            location={currentPosition}
+            onPressAddress={handlePressAddress}
+          />
         )}
 
         <Typography variant={TypographyVariants.subhead} style={styles.label}>
@@ -276,14 +336,15 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
       <Divider />
 
-      <Button
-        type={ButtonTypes.primary}
-        title={`${t('checkoutScreen:submitBtn')}`}
-        style={styles.button}
-        onPress={handleSubmit(onSubmit)}
-      />
-
-      {isLoading && <Spinner />}
+      <View style={[styles.totals, { paddingBottom: insets.bottom + Spacing.base }]}>
+        <Totals totals={totals} />
+        <Button
+          type={ButtonTypes.primary}
+          title={`${t('checkoutScreen:submitBtn')}`}
+          style={styles.button}
+          onPress={handleSubmit(onSubmit)}
+        />
+      </View>
     </ScreenContainer>
   )
 }

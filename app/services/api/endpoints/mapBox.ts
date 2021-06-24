@@ -5,6 +5,8 @@ export type LocationType = {
   address: string
   text: string
   // eslint-disable-next-line @typescript-eslint/naming-convention
+  place_name: string
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   context: Array<{ id: string; short_code: string; text: string }>
   geometry: {
     coordinates: number[]

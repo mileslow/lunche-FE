@@ -40,6 +40,7 @@ const createLocationObject = (location: LocationType): CurrentLocation => ({
   id: location.id,
   combinedAddress: `${location.address ? `${location.address} ` : ''}${location.text}`,
   address: location.text,
+  placeName: location.place_name,
   lng: location.geometry.coordinates[0],
   lat: location.geometry.coordinates[1],
   country: find(location.context, (i) => i.id.includes('country'))?.short_code,
@@ -48,6 +49,7 @@ const createLocationObject = (location: LocationType): CurrentLocation => ({
 
 const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.ChangeAddressModal>> = ({
   navigation,
+  route,
 }) => {
   const insets = useSafeAreaInsets()
 
@@ -92,16 +94,21 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   const handleLocationPress = useCallback(
     (item: CurrentLocation) => {
       Keyboard.dismiss()
-      dispatch(setCurrentPosition(item))
       const filteredLocations = reject(recent, { id: item.id })
       setRecentSearch(
         filteredLocations.length > 4
           ? [item, ...filteredLocations.slice(0, filteredLocations.length - 1)]
           : [item, ...filteredLocations],
       )
-      navigation.goBack()
+
+      if (route.params?.prevScreen) {
+        navigation.navigate(route.params?.prevScreen, { address: item.placeName, lat: item.lat, lng: item.lng })
+      } else {
+        dispatch(setCurrentPosition(item))
+        navigation.goBack()
+      }
     },
-    [navigation, dispatch, recent],
+    [navigation, dispatch, recent, route],
   )
 
   const keyExtractor = useCallback((item) => item.id, [])

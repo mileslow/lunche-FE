@@ -1,10 +1,17 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+// libs
 import { useDispatch } from 'react-redux'
 import { useApplePay, useConfirmPayment } from '@stripe/stripe-react-native'
-import { ApplePayError, StripeError } from '@stripe/stripe-react-native/src/types/Errors'
+import { useTranslation } from 'react-i18next'
+// store
 import { createPayment } from 'store/payments/thunks'
 import { PaymentBrand } from 'store/payments/types'
 import { AppDispatch } from 'store'
+// type
+import { ApplePayError, StripeError } from '@stripe/stripe-react-native/src/types/Errors'
+import { Total } from 'components/Totals'
+import { DeliveryType } from 'store/orders/types'
+import { TypographyVariants } from 'components/Typography'
 
 export type NotPayedOrder = { id: number; amount: number; paymentMethod: string; cardId?: number; cardBrand?: string }
 
@@ -56,4 +63,38 @@ export const useMakeCardPayment = () => {
   )
 
   return { makeCardPayment, isApplePaySupported }
+}
+
+export const useTotals = ({
+  currentTruckTax,
+  quoteFee,
+  orderAmount,
+  typeDelivery,
+}: {
+  currentTruckTax: number
+  quoteFee?: number
+  orderAmount: number
+  typeDelivery: DeliveryType
+}) => {
+  const { t } = useTranslation()
+
+  return useMemo(() => {
+    const deliveryFee = quoteFee ?? 0
+    let fields: Total[] = [
+      { label: t('totals:order'), value: `$ ${orderAmount}` },
+      { label: t('totals:fee'), value: `$ ${currentTruckTax}` },
+    ]
+    if (typeDelivery === DeliveryType.DELIVERY) {
+      fields = [...fields, { label: t('totals:deliveryFee'), value: `$ ${deliveryFee}` }]
+    }
+    fields = [
+      ...fields,
+      {
+        label: t('totals:total'),
+        value: `$ ${orderAmount + currentTruckTax + deliveryFee}`,
+        textVariant: TypographyVariants.body,
+      },
+    ]
+    return fields
+  }, [t, orderAmount, typeDelivery, quoteFee, currentTruckTax])
 }

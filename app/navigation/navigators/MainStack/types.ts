@@ -8,7 +8,7 @@ export type MainNavigationStackParamsList = {
   [Routes.CartScreen]: undefined
   [Routes.TruckScreen]: { id: number }
   [Routes.AboutTruckScreen]: undefined
-  [Routes.CheckoutScreen]: PaymentType | undefined
+  [Routes.CheckoutScreen]: (PaymentType & { address?: string; lat?: number; lng?: number }) | undefined
   [Routes.SignInScreen]: undefined
   [Routes.VerifyCodeScreen]: { phoneNumber: string; popRouteCount?: number }
   [Routes.PaymentScreen]: PaymentType & { typeDelivery?: DeliveryType }
