@@ -25,3 +25,14 @@ export type Tokens = {
   accessToken: string
   refreshToken: string
 }
+
+export type UpdateProfileData = {
+  name?: string
+  email?: string
+  phone?: string
+}
+
+export type UpdateProfileVerifyParams = {
+  id: number
+  code: string
+}

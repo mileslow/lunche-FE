@@ -26,6 +26,7 @@ enum Routes {
 
   // Profile
   AccountScreen = 'AccountScreen',
+  ProfileDetailsScreen = 'ProfileDetailsScreen',
 
   // modals
   DishModal = 'DishModal',

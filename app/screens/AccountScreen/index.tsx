@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react'
+import React, { FC, Fragment, memo } from 'react'
 // libs
 import { ScrollView } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -7,10 +7,12 @@ import map from 'lodash.map'
 // components
 import ScreenContainer from 'components/ScreenContainer'
 import Typography, { TypographyVariants } from 'components/Typography'
-import ListItem from 'components/ListItem'
+import ListItem, { IProps as ListItemType } from 'components/ListItem'
 // actions
 import { clearAuth } from 'store/auth/model'
 // types
+import { StackScreenProps } from '@react-navigation/stack'
+import { RootNavigationStackParamsList, Routes } from 'navigation'
 import { AppDispatch } from 'store'
 // services
 import { clearAllStorage } from 'services/storage'
@@ -26,7 +28,7 @@ import LogoutIcon from 'assets/svg/logout.svg'
 import { Colors } from 'styles'
 import styles from './styles'
 
-const AccountScreen = () => {
+const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CartScreen>> = ({ navigation }) => {
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -36,15 +38,14 @@ const AccountScreen = () => {
     dispatch(clearAuth())
   }
 
-  const navigationList = [
+  const navigationList: { title?: string; items: ListItemType[] }[] = [
     {
-      title: '',
       items: [
         {
           text: t('accountScreen:profileTitle'),
           subtext: t('accountScreen:profileSubtext'),
           leftElement: () => <ProfileIcon style={styles.iconList} fill={Colors.midNightMoss} />,
-          onPress: () => null,
+          onPress: () => navigation.navigate(Routes.ProfileDetailsScreen),
         },
         {
           text: t('accountScreen:paymentTitle'),

@@ -355,6 +355,9 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
         <PaymentMethodField onPress={handlePaymentPress} payment={payment} errors={errors} />
 
+        <Typography variant={TypographyVariants.subhead} style={styles.label}>
+          {t('checkoutScreen:personalInfo')}
+        </Typography>
         <PersonalInfoFields editable control={control} errors={errors} />
 
         <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>

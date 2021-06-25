@@ -135,6 +135,10 @@ export default {
     FAQSubtext: 'Frequently asked questions',
     LogoutTitle: 'Logout',
   },
+  profileDetailsScreen: {
+    headerTitle: 'Profile Details',
+    saveButton: 'Change Settings',
+  },
   totals: {
     order: 'Order',
     fee: 'Fee',
