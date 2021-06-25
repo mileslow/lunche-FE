@@ -5,11 +5,19 @@ export type AuthSliceState = {
 
 export type Token = string
 
+export type UserLocation = {
+  id: number
+  latitude: number
+  longitude: number
+  address: string
+}
+
 export type User = {
   id: number
   name: string
   email: string
   phone: string
+  locations: UserLocation[]
 }
 
 export type SignInParams = {
@@ -36,3 +44,5 @@ export type UpdateProfileVerifyParams = {
   id: number
   code: string
 }
+
+export type AddLocationData = Omit<UserLocation, 'id'>

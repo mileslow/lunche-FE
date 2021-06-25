@@ -6,6 +6,8 @@ import {
   User,
   UpdateProfileData,
   UpdateProfileVerifyParams,
+  AddLocationData,
+  UserLocation,
 } from 'store/auth/types'
 
 export default {
@@ -15,4 +17,8 @@ export default {
   updateCurrentProfile: (id: number, data: UpdateProfileData): Promise<User> => axios.put(`users/${id}`, data),
   updateProfileVerify: ({ id, code }: UpdateProfileVerifyParams): Promise<unknown> =>
     axios.post(`users/${id}/confirm-update`, { code }),
+  addLocation: (id: number, data: AddLocationData): Promise<UserLocation> =>
+    axios.post(`users/${id}/user-locations`, data),
+  deleteLocation: ({ id, userId }: { id: number; userId: number }): Promise<UserLocation> =>
+    axios.delete(`users/${userId}/user-locations/${id}`),
 }

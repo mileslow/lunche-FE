@@ -28,7 +28,7 @@ import LogoutIcon from 'assets/svg/logout.svg'
 import { Colors } from 'styles'
 import styles from './styles'
 
-const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CartScreen>> = ({ navigation }) => {
+const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.AccountScreen>> = ({ navigation }) => {
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -51,13 +51,13 @@ const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.C
           text: t('accountScreen:paymentTitle'),
           subtext: t('accountScreen:paymentSubtext'),
           leftElement: () => <PaymentIcon style={styles.iconList} fill={Colors.midNightMoss} />,
-          onPress: () => null,
+          onPress: () => {},
         },
         {
           text: t('accountScreen:locationTitle'),
           subtext: t('accountScreen:locationSubtext'),
           leftElement: () => <AddressIcon style={styles.iconList} fill={Colors.midNightMoss} />,
-          onPress: () => null,
+          onPress: () => navigation.navigate(Routes.LocationsScreen),
         },
       ],
     },
@@ -68,13 +68,13 @@ const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.C
           text: t('accountScreen:rateUsTitle'),
           subtext: t('accountScreen:rateUsSubtext'),
           leftElement: () => <StarIcon style={styles.iconList} />,
-          onPress: () => null,
+          onPress: () => {},
         },
         {
           text: t('accountScreen:FAQTitle'),
           subtext: t('accountScreen:FAQSubtext'),
           leftElement: () => <BookIcon style={styles.iconList} />,
-          onPress: () => null,
+          onPress: () => {},
         },
         {
           text: t('accountScreen:LogoutTitle'),

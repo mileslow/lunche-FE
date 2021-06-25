@@ -14,8 +14,6 @@ export default StyleSheet.create({
     marginRight: Spacing.base,
   },
   addCard: {
-    alignItems: 'center',
-    flexDirection: 'row',
     marginTop: Spacing.large,
   },
 })

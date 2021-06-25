@@ -9,7 +9,8 @@ import { useApplePay } from '@stripe/stripe-react-native'
 import map from 'lodash.map'
 import upperFirst from 'lodash.upperfirst'
 // components
-import Button, { ButtonTypes } from 'components/Button'
+import Button from 'components/Button'
+import AddButton from 'components/Button/AddButton'
 import Checkbox from 'components/Checkbox'
 import Header from 'components/Header'
 import ListItem from 'components/ListItem'
@@ -18,8 +19,6 @@ import Divider from 'components/Divider'
 // store
 import { DeliveryType } from 'store/orders/types'
 import { cardsSelector } from 'store/payments/selectors'
-// assets
-import PlusRectIcon from 'assets/svg/plus-rectangle.svg'
 // hooks
 import useCreditCardIcon from 'hooks/useCreditCardIcon'
 // types
@@ -27,7 +26,7 @@ import Routes from 'navigation/routes'
 import { RootNavigationStackParamsList } from 'navigation'
 import { PaymentType, PaymentBrand, PaymentMethodType } from 'store/payments/types'
 // styles
-import { Colors, Spacing } from 'styles'
+import { Spacing } from 'styles'
 import styles from './styles'
 
 const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.PaymentScreen>> = ({
@@ -126,12 +125,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
         {renderCards}
         {applePayButton}
 
-        <Button type={ButtonTypes.link} style={styles.addCard} onPress={handleAddCard}>
-          <PlusRectIcon style={{ marginRight: Spacing.medium }} />
-          <Typography variant={TypographyVariants.body} color={Colors.primary}>
-            {t('paymentScreen:addNewCard')}
-          </Typography>
-        </Button>
+        <AddButton text={t('paymentScreen:addNewCard')} onPress={handleAddCard} />
       </ScrollView>
       <View>
         <Divider />

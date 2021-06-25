@@ -3,10 +3,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 // libs
 import omitBy from 'lodash.omitby'
 import isNull from 'lodash.isnull'
+import reject from 'lodash.reject'
 // entities
-import { AuthSliceState, User } from 'store/auth/types'
+import { AuthSliceState, User, UserLocation } from 'store/auth/types'
 // thunks
-import { signInConfirm, getCurrentProfile, updateCurrentProfile } from 'store/auth/thunks'
+import { signInConfirm, getCurrentProfile, updateCurrentProfile, addLocation, deleteLocation } from 'store/auth/thunks'
 
 const initialState: AuthSliceState = {
   user: null,
@@ -35,6 +36,16 @@ const authSlice = createSlice({
     })
     builder.addCase(updateCurrentProfile.fulfilled, (state, { payload }: PayloadAction<User>) => {
       state.user = omitBy(payload, isNull) as User
+    })
+    builder.addCase(addLocation.fulfilled, (state, { payload }: PayloadAction<UserLocation>) => {
+      if (state.user) {
+        state.user.locations = [...state.user.locations, payload]
+      }
+    })
+    builder.addCase(deleteLocation.fulfilled, (state, { meta: { arg } }) => {
+      if (state.user) {
+        state.user.locations = reject(state.user.locations, { id: arg.id })
+      }
     })
   },
 })

@@ -13,9 +13,9 @@ import { useSelector } from 'react-redux'
 // components
 import BackButton from 'components/Button/BackButton'
 import Button, { ButtonTypes } from 'components/Button'
-import HeartIcon from 'components/AnimatedSvgComponents/HeartIcon'
-import EmptyHeartIcon from 'components/AnimatedSvgComponents/EmptyHeartIcon'
-import ShareIcon from 'components/AnimatedSvgComponents/ShareIcon'
+import HeartIcon from 'components/SvgComponents/HeartIcon'
+import EmptyHeartIcon from 'components/SvgComponents/EmptyHeartIcon'
+import ShareIcon from 'components/SvgComponents/ShareIcon'
 // selectors
 import { isAuthorizedSelector } from 'store/auth/selectors'
 // hooks
