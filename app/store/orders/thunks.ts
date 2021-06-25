@@ -13,6 +13,7 @@ import {
 } from './types'
 import { ICreateOrderFormData } from 'screens/CheckoutScreen'
 import { RootState } from 'store'
+import { AxiosError } from 'axios'
 
 export const createOrder = createAsyncThunk<
   CreateOrderResponse,
@@ -24,9 +25,9 @@ export const createOrder = createAsyncThunk<
 
   const data: CreateOrderData = {
     ...payload,
-    deliveryAddress: payload.deliveryAddress.address,
-    deliveryLatitude: payload.deliveryAddress.lat,
-    deliveryLongitude: payload.deliveryAddress.lng,
+    deliveryAddress: payload.deliveryAddress?.address,
+    deliveryLatitude: payload.deliveryAddress?.lat,
+    deliveryLongitude: payload.deliveryAddress?.lng,
     orderItems,
     comment,
   }
@@ -41,7 +42,14 @@ export const getOrderDelivery = createAsyncThunk<DeliveryQuote, number>('orders/
   api.getOrderDelivery(payload),
 )
 
-export const createDeliveryQuotes = createAsyncThunk<CreateDeliveryQuoteResponse, CreateDeliveryQuotesData>(
-  'orders/CREATE_ORDER_DELIVERY',
-  (payload) => api.createDeliveryQuotes(payload),
-)
+export const createDeliveryQuotes = createAsyncThunk<
+  CreateDeliveryQuoteResponse,
+  CreateDeliveryQuotesData,
+  { rejectValue: { data: AxiosError; message?: string } }
+>('orders/CREATE_ORDER_DELIVERY', async (payload, { rejectWithValue }) => {
+  try {
+    return await api.createDeliveryQuotes(payload)
+  } catch (err) {
+    return rejectWithValue(err)
+  }
+})

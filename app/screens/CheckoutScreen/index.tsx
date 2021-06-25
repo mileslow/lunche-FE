@@ -46,6 +46,7 @@ import styles from './styles'
 import { useMakeCardPayment, NotPayedOrder, useTotals } from './hooks'
 import Totals from 'components/Totals'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { showErrorAlert } from 'services/api/axios'
 
 export interface ICreateOrderFormData {
   type: DeliveryType
@@ -180,7 +181,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   useEffect(() => {
     const fetchQuotes = async () => {
-      if (typeDelivery === DeliveryType.DELIVERY) {
+      if (typeDelivery === DeliveryType.DELIVERY && navigation.isFocused()) {
         const { orderTime, deliveryAddress } = getValues()
         if (deliveryAddress?.address) {
           setState({ isLoading: true })
@@ -197,12 +198,16 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
             setState({ isLoading: false, quote: resultQuote.payload })
             return
           }
+          if (createDeliveryQuotes.rejected.match(resultQuote)) {
+            console.log(resultQuote.payload)
+            showErrorAlert('Error', resultQuote.payload?.data?.message || resultQuote.payload?.message)
+          }
           setState({ isLoading: false })
         }
       }
     }
     fetchQuotes()
-  }, [getValues, typeDelivery, currentTruck.id, dispatch, route.params?.address])
+  }, [navigation, getValues, typeDelivery, currentTruck.id, dispatch, route.params?.address])
 
   const payment = useMemo(() => {
     return {

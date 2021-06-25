@@ -3,12 +3,6 @@ import * as yup from 'yup'
 import i18n from 'services/localization'
 import { DeliveryType } from 'store/orders/types'
 
-const requiredDependType = (compareType: DeliveryType) =>
-  yup.string().when('type', {
-    is: (type: DeliveryType) => type === compareType,
-    then: yup.string().required(i18n.t('validation:required')),
-  })
-
 const requiredForUnAuthorized = (field: yup.StringSchema) =>
   yup.string().when('$isAuthorized', {
     is: false,
@@ -23,10 +17,13 @@ export const schemaValidation = yup
       name: requiredForUnAuthorized(yup.string()),
       phone: requiredForUnAuthorized(yup.string()),
     }),
-    deliveryAddress: yup.object({
-      address: requiredDependType(DeliveryType.DELIVERY),
-      lng: requiredDependType(DeliveryType.DELIVERY),
-      lat: requiredDependType(DeliveryType.DELIVERY),
+    deliveryAddress: yup.object().when('type', {
+      is: (type: DeliveryType) => type === DeliveryType.DELIVERY,
+      then: yup.object({
+        address: yup.string().required(i18n.t('validation:required')),
+        lng: yup.string().required(i18n.t('validation:required')),
+        lat: yup.string().required(i18n.t('validation:required')),
+      }),
     }),
     paymentMethod: yup.string().required(i18n.t('validation:required')),
   })
