@@ -18,6 +18,7 @@ export enum TypographyWeights {
 
 export enum TypographyVariants {
   h1 = 'h1',
+  h2 = 'h2',
   h3 = 'h3',
   body = 'body',
   smallBody = 'smallBody',
@@ -66,6 +67,12 @@ export const styles = StyleSheet.create({
     fontWeight: TypographyWeights.bold,
   },
   h3: {
+    color: Colors.midNightMoss,
+    fontFamily: Fonts.regular,
+    fontSize: FontSize.h3,
+    fontWeight: TypographyWeights.semiBold,
+  },
+  h2: {
     color: Colors.midNightMoss,
     fontFamily: Fonts.regular,
     fontSize: FontSize.h3,

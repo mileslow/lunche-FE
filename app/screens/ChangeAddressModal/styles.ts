@@ -6,6 +6,12 @@ export default StyleSheet.create({
     backgroundColor: Colors.basic,
     flex: 1,
   },
+  icon: {
+    marginRight: Spacing.double,
+  },
+  searchItem: {
+    paddingHorizontal: Spacing.double,
+  },
   input: {
     marginHorizontal: Spacing.double,
   },

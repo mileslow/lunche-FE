@@ -26,5 +26,7 @@ export const setRecentSearch = async (locations: CurrentLocation[]) => {
 
 export const getRecentSearch = async (): Promise<CurrentLocation[]> => {
   const locations = await AsyncStorage.getItem('recent_search')
-  return JSON.parse(locations || '')
+  return JSON.parse(locations || '[]')
 }
+
+export const clearAllStorage = async () => await AsyncStorage.clear()
