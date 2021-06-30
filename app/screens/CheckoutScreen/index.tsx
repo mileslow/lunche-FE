@@ -47,6 +47,7 @@ import { useMakeCardPayment, NotPayedOrder, useTotals } from './hooks'
 import Totals from 'components/Totals'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { showErrorAlert } from 'services/api/axios'
+import { CommonActions } from '@react-navigation/native'
 
 export interface ICreateOrderFormData {
   type: DeliveryType
@@ -125,20 +126,43 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const totals = useTotals({ currentTruckTax: currentTruck.tax, quoteFee: quote?.fee, orderAmount, typeDelivery })
 
+  const redirectToSuccessModal = useCallback((orderId: number) => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          { name: Routes.RootNavigator },
+          {
+            name: Routes.SuccessOrderModal,
+            params: { orderId: orderId },
+          },
+        ],
+      }),
+    )
+  }, [])
+
   useFocusEffect(
     useCallback(() => {
       // create payment after user has been verified
-      if (isAuthorized && notPayedOrder.current && notPayedOrder.current?.paymentMethod === PaymentMethodType.card) {
-        setState({ isLoading: true })
-        makeCardPayment(notPayedOrder.current).then(({ error }) => {
-          setState({ isLoading: false })
-          if (!error) {
-            notPayedOrder.current = null
-            dispatch(clearOrderItems())
-            navigation.navigate(Routes.SuccessOrderModal)
+      const payAfterVerify = async () => {
+        if (isAuthorized && notPayedOrder.current) {
+          let error = null
+          // create payment
+          if (notPayedOrder.current?.paymentMethod === PaymentMethodType.card) {
+            console.log('card')
+            setState({ isLoading: true })
+            error = (await makeCardPayment(notPayedOrder.current))?.error
+            setState({ isLoading: false })
           }
-        })
+          // redirect after success payment or if payment method is cash
+          if (!error) {
+            dispatch(clearOrderItems())
+            redirectToSuccessModal(notPayedOrder.current.id)
+            notPayedOrder.current = null
+          }
+        }
       }
+      payAfterVerify()
     }, [navigation, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
   )
 
@@ -241,13 +265,13 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           }
           setState({ isLoading: false, quote: null })
           dispatch(clearOrderItems())
-          navigation.navigate(Routes.SuccessOrderModal)
+          redirectToSuccessModal(createdOrder.id)
           return
         }
 
         // Sign in user and redirect it to Verify Screen
         await dispatch(signIn({ phone: data.client.phone }))
-        notPayedOrder.current = result.payload.data.paymentMethod === PaymentMethodType.card ? createdOrder : null
+        notPayedOrder.current = createdOrder
         navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
         return
       }
