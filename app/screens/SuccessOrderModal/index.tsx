@@ -19,12 +19,13 @@ import styles from './styles'
 
 const SuccessOrderModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.SuccessOrderModal>> = ({
   navigation,
+  route,
 }) => {
   const { t } = useTranslation()
 
   const handlePress = useCallback(() => {
-    navigation.navigate(Routes.OrdersTab)
-  }, [navigation])
+    navigation.navigate(Routes.OrderTrackerScreen, { orderId: route.params.orderId })
+  }, [navigation, route.params])
 
   return (
     <ScreenContainer>
