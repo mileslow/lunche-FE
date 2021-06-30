@@ -16,7 +16,6 @@ import { AppDispatch } from 'store'
 import { clearAllStorage } from 'services/storage'
 // assets
 import ProfileIcon from 'assets/svg/profile.svg'
-import HeartIcon from 'assets/svg/heart.svg'
 import PaymentIcon from 'assets/svg/payment.svg'
 import BackIcon from 'assets/svg/back.svg'
 import AddressIcon from 'assets/svg/address.svg'
@@ -45,12 +44,6 @@ const AccountScreen = () => {
           text: t('accountScreen:profileTitle'),
           subtext: t('accountScreen:profileSubtext'),
           leftElement: () => <ProfileIcon style={styles.iconList} fill={Colors.midNightMoss} />,
-          onPress: () => null,
-        },
-        {
-          text: t('accountScreen:profileTitle'),
-          subtext: t('accountScreen:profileSubtext'),
-          leftElement: () => <HeartIcon style={styles.iconList} fill={Colors.midNightMoss} />,
           onPress: () => null,
         },
         {
