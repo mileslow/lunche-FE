@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 })
 
-interface IProps {
+export interface IProps {
   text?: string
   subtext?: string
   leftElement?: () => ReactNode

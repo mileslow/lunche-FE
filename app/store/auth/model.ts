@@ -6,7 +6,7 @@ import isNull from 'lodash.isnull'
 // entities
 import { AuthSliceState, User } from 'store/auth/types'
 // thunks
-import { signInConfirm, getCurrentProfile } from 'store/auth/thunks'
+import { signInConfirm, getCurrentProfile, updateCurrentProfile } from 'store/auth/thunks'
 
 const initialState: AuthSliceState = {
   user: null,
@@ -31,6 +31,9 @@ const authSlice = createSlice({
       state.isAuthorized = true
     })
     builder.addCase(getCurrentProfile.fulfilled, (state, { payload }: PayloadAction<User>) => {
+      state.user = omitBy(payload, isNull) as User
+    })
+    builder.addCase(updateCurrentProfile.fulfilled, (state, { payload }: PayloadAction<User>) => {
       state.user = omitBy(payload, isNull) as User
     })
   },

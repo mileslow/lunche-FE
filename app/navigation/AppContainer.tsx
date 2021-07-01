@@ -19,7 +19,6 @@ const AppNavigationContainer: FC = () => {
   return (
     <>
       <StatusBar backgroundColor='transparent' networkActivityIndicatorVisible translucent />
-
       <NavigationContainer>
         <RootStack.Navigator
           screenOptions={{

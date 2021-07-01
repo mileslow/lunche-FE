@@ -14,6 +14,8 @@ import CheckoutScreen from 'screens/CheckoutScreen'
 import SignInScreen from 'screens/SignInScreen'
 import VerifyCodeScreen from 'screens/VerifyCodeScreen'
 import SearchTruckModal from 'screens/SearchTruckModal'
+import OrderTrackerScreen from 'screens/OrderTrackerScreen'
+import ProfileDetailsScreen from 'screens/ProfileDetailsScreen'
 // navigations
 import MainTabsNavigator from 'navigation/navigators/MainTabs'
 import Routes from 'navigation/routes'
@@ -30,7 +32,6 @@ import { MainNavigationStackParamsList } from './types'
 import { Colors } from 'styles'
 import PaymentScreen from 'screens/PaymentScreen'
 import { getCurrentProfile } from 'store/auth/thunks'
-import OrderTrackerScreen from 'screens/OrderTrackerScreen'
 
 const MainStack = createStackNavigator<MainNavigationStackParamsList>()
 
@@ -77,6 +78,7 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.PaymentScreen} component={PaymentScreen} />
           <MainStack.Screen name={Routes.SearchTruckModal} component={SearchTruckModal} />
           <MainStack.Screen name={Routes.OrderTrackerScreen} component={OrderTrackerScreen} />
+          <MainStack.Screen name={Routes.ProfileDetailsScreen} component={ProfileDetailsScreen} />
         </>
       )}
     </MainStack.Navigator>

@@ -1,4 +1,4 @@
-import React, { FC, useState, memo, useCallback } from 'react'
+import React, { FC, useState, memo, useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { CodeField } from 'react-native-confirmation-code-field'
@@ -11,7 +11,7 @@ import Typography, { TypographyVariants } from 'components/Typography'
 import Button from 'components/Button'
 import Spinner from 'components/Spinner'
 // thunks
-import { signIn, signInConfirm, getCurrentProfile } from 'store/auth/thunks'
+import { signIn, signInConfirm, getCurrentProfile, updateProfileVerify } from 'store/auth/thunks'
 // services
 import { setAuthData } from 'services/storage'
 import { showErrorAlert } from 'services/api/axios'
@@ -23,6 +23,8 @@ import { Colors } from 'styles'
 import styles from './styles'
 
 const CELL_COUNT = 4
+
+export type VerifyThunks = 'updateProfileVerify' | 'signInConfirm'
 
 const VerifyCodeScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.VerifyCodeScreen>> = ({
   route,
@@ -38,25 +40,57 @@ const VerifyCodeScreen: FC<StackScreenProps<RootNavigationStackParamsList, Route
 
   const [isLoading, setLoading] = useState<boolean>(false)
 
-  const handleConfirm = useCallback(async () => {
+  const handleSignInConfirm = useCallback(async () => {
     setLoading(true)
     const result = await dispatch(signInConfirm({ code, phone: route.params.phoneNumber }))
     setLoading(false)
     if (signInConfirm.fulfilled.match(result)) {
       await setAuthData(result.payload)
       await dispatch(getCurrentProfile())
-      if (route.params?.popRouteCount) {
-        navigation.pop(route.params.popRouteCount)
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: Routes.MainTabsStack }],
-        })
-      }
-    } else {
-      showErrorAlert(t('errors:serverError'), t('errors:enterCorrectCode'))
+      return { error: '' }
     }
-  }, [code, dispatch, route.params.phoneNumber, navigation, route.params.popRouteCount, t])
+    return { error: t('errors:enterCorrectCode') }
+  }, [route.params, code, dispatch, t])
+
+  const handleUpdateProfileVerify = useCallback(async () => {
+    if (route.params.userId) {
+      setLoading(true)
+      const result = await dispatch(updateProfileVerify({ id: route.params.userId, code }))
+      setLoading(false)
+      if (updateProfileVerify.rejected.match(result)) {
+        return { error: t('errors:enterCorrectCode') }
+      }
+    }
+    return { error: '' }
+  }, [route.params, code, dispatch, t])
+
+  const thunks = useMemo<{ [x in VerifyThunks]: () => Promise<{ error: string }> }>(
+    () => ({
+      signInConfirm: handleSignInConfirm,
+      updateProfileVerify: handleUpdateProfileVerify,
+    }),
+    [handleSignInConfirm, handleUpdateProfileVerify],
+  )
+
+  const handleConfirm = useCallback(async () => {
+    const { error } = await thunks[route.params.verifyThunk || 'signInConfirm']()
+
+    if (error) {
+      return showErrorAlert(t('errors:serverError'), error)
+    }
+    if (route.params?.prevScreen) {
+      navigation.navigate(route.params.prevScreen, { successVerify: true })
+      return
+    }
+    if (route.params?.popRouteCount) {
+      navigation.pop(route.params.popRouteCount)
+      return
+    }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: Routes.MainTabsStack }],
+    })
+  }, [thunks, navigation, route.params, t])
 
   const handleResendCode = useCallback(async () => {
     setLoading(true)
