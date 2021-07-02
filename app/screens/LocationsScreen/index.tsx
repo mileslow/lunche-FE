@@ -13,8 +13,9 @@ import Button, { ButtonTypes } from 'components/Button'
 // store
 import { addLocation, deleteLocation } from 'store/auth/thunks'
 import { savedLocationsSelector, currentUserIdSelector } from 'store/auth/selectors'
-// typesAccountScreen
+// types
 import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { LocationSectionsKeys } from 'screens/ChangeAddressModal'
 import { AppDispatch } from 'store'
 // assets
 import AddressIcon from 'assets/svg/address.svg'
@@ -53,7 +54,10 @@ const LocationsScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes
   )
 
   const openLocationModal = useCallback(() => {
-    navigation.navigate(Routes.ChangeAddressModal, { prevScreen: Routes.LocationsScreen })
+    navigation.navigate(Routes.ChangeAddressModal, {
+      prevScreen: Routes.LocationsScreen,
+      hideSections: [LocationSectionsKeys.SavedLocations],
+    })
   }, [navigation])
 
   const handleDeleteLocation = useCallback(

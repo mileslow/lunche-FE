@@ -5,11 +5,14 @@ import { AccountNavigationStackParamsList } from 'navigation/navigators/AccountS
 import { PlaceNavigationStackParamsList } from 'navigation/navigators/PlaceStack/types'
 import { OrderNavigationStackParamsList } from 'navigation/navigators/OrdersStack/types'
 import { Routes } from 'navigation/index'
+import { LocationSectionsKeys } from 'screens/ChangeAddressModal'
 
 export type RootNavigationStackParamsList = {
   [Routes.RootNavigator]: undefined
   [Routes.DishModal]: { id: number; truckId: number }
-  [Routes.ChangeAddressModal]: { prevScreen?: Routes } | undefined
+  [Routes.ChangeAddressModal]:
+    | { prevScreen?: Routes; hideSections?: Array<typeof LocationSectionsKeys[keyof typeof LocationSectionsKeys]> }
+    | undefined
   [Routes.CardModal]: undefined
   [Routes.SuccessOrderModal]: { orderId: number }
 } & TabsNavigationParamsList &

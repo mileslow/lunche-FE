@@ -7,6 +7,7 @@ import debounce from 'lodash.debounce'
 import find from 'lodash.find'
 import map from 'lodash.map'
 import reject from 'lodash.reject'
+import includes from 'lodash.includes'
 // components
 import Input from 'components/Form/Input'
 import Typography, { TypographyVariants } from 'components/Typography'
@@ -46,6 +47,12 @@ const createLocationObject = (location: LocationType): CurrentLocation => ({
   country: find(location.context, (i) => i.id.includes('country'))?.short_code,
   place: find(location.context, (i) => i.id.includes('place'))?.text,
 })
+
+export enum LocationSectionsKeys {
+  SearchLocations = '0',
+  SavedLocations = '1',
+  ResentLocations = '2',
+}
 
 const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.ChangeAddressModal>> = ({
   navigation,
@@ -147,17 +154,22 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
     [],
   )
 
-  const sections = useMemo(
-    () => [
-      { title: '', data: searchResult },
+  const sections = useMemo(() => {
+    const data = [
+      { key: LocationSectionsKeys.SearchLocations, title: '', data: searchResult },
       {
+        key: LocationSectionsKeys.SavedLocations,
         title: t('changeAddressModal:savedLocations'),
         data: map(savedLocations, (i) => ({ combinedAddress: i.address, lat: i.latitude, lng: i.longitude })),
       },
-      { title: t('changeAddressModal:recentLocations'), data: recent },
-    ],
-    [searchResult, t, recent, savedLocations],
-  )
+      { key: LocationSectionsKeys.ResentLocations, title: t('changeAddressModal:recentLocations'), data: recent },
+    ]
+
+    if (route.params?.hideSections?.length) {
+      return reject(data, (i) => includes(route.params?.hideSections, i.key))
+    }
+    return data
+  }, [route.params, searchResult, t, recent, savedLocations])
 
   const closeModalIcon = useCallback(
     () => (
