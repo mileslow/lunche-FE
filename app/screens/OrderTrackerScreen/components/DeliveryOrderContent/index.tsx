@@ -1,14 +1,12 @@
 import React, { FC, useCallback, useMemo, memo } from 'react'
 // libs
 import { StyleSheet, View } from 'react-native'
-import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import dayjs from 'dayjs'
 // components
 import Map, { PointAnnotation } from 'components/Map'
 import User from 'components/User'
 import SwipeBar from 'components/SwipeBar'
-import Typography, { TypographyVariants } from 'components/Typography'
 import AnimatedSheet from 'components/AnimatedSheet'
 import Button, { ButtonTypes } from 'components/Button'
 import Divider from 'components/Divider'
@@ -38,8 +36,6 @@ interface IProps {
 }
 
 const DeliveryOrderContent: FC<IProps> = ({ order, courier, dropoffEta, quotaCreated }) => {
-  const { t } = useTranslation()
-
   const insets = useSafeAreaInsets()
 
   const { totals, steps } = useOrderInfo(order)
@@ -96,10 +92,6 @@ const DeliveryOrderContent: FC<IProps> = ({ order, courier, dropoffEta, quotaCre
               </View>
 
               <OrderNumber orderId={order.id} withIcon={false} />
-
-              <Typography variant={TypographyVariants.subhead} style={[styles.subhead, styles.commonPadding]}>
-                {t('orderTrackerScreen:order')}
-              </Typography>
 
               <Divider style={styles.divider} />
 
