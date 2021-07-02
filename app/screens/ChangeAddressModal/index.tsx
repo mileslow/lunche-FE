@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useState, memo, useMemo, useEffect, useRef } from 'react'
 import { SectionList, Keyboard, Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import debounce from 'lodash.debounce'
 import find from 'lodash.find'
@@ -14,7 +14,9 @@ import Button from 'components/Button'
 import Header from 'components/Header'
 import ListItem from 'components/ListItem'
 import ScreenContainer from 'components/ScreenContainer'
+import { ButtonTypes } from 'components/Button'
 // selector
+import { savedLocationsSelector } from 'store/auth/selectors'
 // api
 import api from 'services/api'
 import { LocationType } from 'services/api/endpoints/mapBox'
@@ -33,7 +35,6 @@ import NavigationIcon from 'assets/svg/navigation.svg'
 // styles
 import { Colors } from 'styles'
 import styles from './styles'
-import { ButtonTypes } from 'components/Button'
 
 const createLocationObject = (location: LocationType): CurrentLocation => ({
   id: location.id,
@@ -53,6 +54,8 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
+
+  const savedLocations = useSelector(savedLocationsSelector)
 
   const [searchResult, setSearchResult] = useState<CurrentLocation[]>([])
 
@@ -97,7 +100,11 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
       )
 
       if (route.params?.prevScreen) {
-        navigation.navigate(route.params?.prevScreen, { address: item.placeName, lat: item.lat, lng: item.lng })
+        navigation.navigate(route.params?.prevScreen, {
+          address: item.placeName || item.address,
+          lat: item.lat,
+          lng: item.lng,
+        })
       } else {
         dispatch(setCurrentPosition(item))
         navigation.goBack()
@@ -112,7 +119,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
     ({ item }) => (
       <ListItem
         style={styles.searchItem}
-        text={item.combinedAddress}
+        text={item.combinedAddress || item.address}
         subtext={item.place}
         leftElement={() => <NavigationIcon style={styles.icon} />}
         onPress={() => handleLocationPress(item)}
@@ -143,10 +150,13 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
   const sections = useMemo(
     () => [
       { title: '', data: searchResult },
-      { title: t('changeAddressModal:savedLocations'), data: [] },
+      {
+        title: t('changeAddressModal:savedLocations'),
+        data: map(savedLocations, (i) => ({ combinedAddress: i.address, lat: i.latitude, lng: i.longitude })),
+      },
       { title: t('changeAddressModal:recentLocations'), data: recent },
     ],
-    [searchResult, t, recent],
+    [searchResult, t, recent, savedLocations],
   )
 
   const closeModalIcon = useCallback(
@@ -182,6 +192,7 @@ const ChangeAddressModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
         withError={false}
       />
       <SectionList
+        stickySectionHeadersEnabled={false}
         keyboardShouldPersistTaps='always'
         showsVerticalScrollIndicator={false}
         keyExtractor={keyExtractor}

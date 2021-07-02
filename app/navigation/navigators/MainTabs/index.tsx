@@ -23,7 +23,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 const Tab = createBottomTabNavigator<RootNavigationStackParamsList>()
 
 const tabBarIconRender = ({ focused }: { focused: boolean }, Icon: FC<SvgProps>): ReactNode => (
-  <Icon opacity={focused ? 1 : 0.5} />
+  <Icon opacity={focused ? 1 : 0.5} fill={Colors.primary} />
 )
 
 const tabBarLabelRender = ({ focused }: { focused: boolean }, label: string): ReactNode => (

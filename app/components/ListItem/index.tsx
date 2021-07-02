@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   title: {
+    flex: 1,
     marginBottom: 4,
   },
   locationInfo: {
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   textBlock: {
+    flex: 1,
     justifyContent: 'center',
   },
 })
@@ -37,10 +39,20 @@ export interface IProps {
   onPress: () => void
   withDivider?: boolean
   style?: StyleProp<ViewStyle>
+  pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto'
 }
 
-const ListItem = ({ text, subtext, leftElement, onPress, rightElement, style, withDivider = true }: IProps) => (
-  <Button pointerEvents='box-only' type={ButtonTypes.link} style={[styles.searchItem, style]} onPress={onPress}>
+const ListItem = ({
+  text,
+  subtext,
+  leftElement,
+  onPress,
+  rightElement,
+  style,
+  withDivider = true,
+  pointerEvents = 'box-only',
+}: IProps) => (
+  <Button pointerEvents={pointerEvents} type={ButtonTypes.link} style={[styles.searchItem, style]} onPress={onPress}>
     {leftElement ? leftElement() : null}
     <View style={styles.locationInfo}>
       <View style={styles.textBlock}>

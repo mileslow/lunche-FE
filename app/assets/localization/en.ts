@@ -139,6 +139,12 @@ export default {
     headerTitle: 'Profile Details',
     saveButton: 'Change Settings',
   },
+  locationsScreen: {
+    headerTitle: 'Your address',
+    addLocation: 'Add a new address',
+    recentTitle: 'Recent',
+    saveLocationTitle: 'Your locations',
+  },
   totals: {
     order: 'Order',
     fee: 'Fee',

@@ -4,7 +4,7 @@ import { PressableProps } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 // components
 import Button, { ButtonTypes } from 'components/Button'
-import { IAnimatedSvgIcon } from 'components/AnimatedSvgComponents/types'
+import { IAnimatedSvgIcon } from 'components/SvgComponents/types'
 
 const BackButton: FC<{ fill?: string } & IAnimatedSvgIcon & PressableProps> = ({
   fill = '#010F07',
@@ -15,9 +15,7 @@ const BackButton: FC<{ fill?: string } & IAnimatedSvgIcon & PressableProps> = ({
 
   const Icon = useMemo(
     () =>
-      iconAnimatedProps
-        ? require('components/AnimatedSvgComponents/BackIcon').default
-        : require('assets/svg/back.svg').default,
+      iconAnimatedProps ? require('components/SvgComponents/BackIcon').default : require('assets/svg/back.svg').default,
     [iconAnimatedProps],
   )
 

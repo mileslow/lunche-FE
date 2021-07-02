@@ -22,4 +22,11 @@ export type MainNavigationStackParamsList = {
   [Routes.SearchTruckModal]: undefined
   [Routes.OrderTrackerScreen]: { orderId: number }
   [Routes.ProfileDetailsScreen]: { successVerify?: boolean } | undefined
+  [Routes.LocationsScreen]:
+    | {
+        lng: number
+        lat: number
+        address: string
+      }
+    | undefined
 }
