@@ -44,7 +44,7 @@ const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.A
         {
           text: t('accountScreen:profileTitle'),
           subtext: t('accountScreen:profileSubtext'),
-          leftElement: () => <ProfileIcon style={styles.iconList} fill={Colors.midNightMoss} />,
+          leftElement: () => <ProfileIcon width={18} style={styles.iconList} fill={Colors.midNightMoss} />,
           onPress: () => navigation.navigate(Routes.ProfileDetailsScreen),
         },
         {
@@ -56,7 +56,7 @@ const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.A
         {
           text: t('accountScreen:locationTitle'),
           subtext: t('accountScreen:locationSubtext'),
-          leftElement: () => <AddressIcon style={styles.iconList} fill={Colors.midNightMoss} />,
+          leftElement: () => <AddressIcon width={18} style={styles.iconList} fill={Colors.midNightMoss} />,
           onPress: () => navigation.navigate(Routes.LocationsScreen),
         },
       ],
