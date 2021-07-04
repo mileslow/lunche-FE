@@ -4,7 +4,7 @@ import { Colors, Spacing } from 'styles'
 export default StyleSheet.create({
   screen: {
     backgroundColor: Colors.transparent,
-    flex: 1,
+    paddingBottom: 0,
   },
   modal: {
     backgroundColor: Colors.basic,

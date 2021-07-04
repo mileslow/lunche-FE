@@ -11,7 +11,6 @@ import Header from 'components/Header'
 import Typography, { TypographyVariants } from 'components/Typography'
 import Button from 'components/Button'
 import Divider from 'components/Divider'
-import Spinner from 'components/Spinner'
 import ScreenContainer from 'components/ScreenContainer'
 // thunks + actions
 import { addCreditCard } from 'store/payments/thunks'
@@ -72,7 +71,7 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
   )
 
   return (
-    <ScreenContainer style={{ paddingTop: insets.top + Spacing.large }}>
+    <ScreenContainer style={[styles.screen, { paddingTop: insets.top + Spacing.large }]} isLoading={isLoading}>
       <KeyboardAvoidingView style={styles.modal} behavior='padding' enabled={Platform.OS === 'ios'}>
         <Header withBack title={t('cardModal:headerTitle')} />
         <View style={styles.content}>
@@ -96,13 +95,16 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
           <Divider />
           <Button
             disabled={!card?.complete}
-            style={{ margin: Spacing.double }}
+            style={{
+              marginTop: Spacing.double,
+              marginHorizontal: Spacing.double,
+              marginBottom: Spacing.double + insets.bottom,
+            }}
             title={t('cardModal:saveCard')}
             onPress={handleSaveCard}
           />
         </View>
       </KeyboardAvoidingView>
-      {isLoading && <Spinner />}
     </ScreenContainer>
   )
 }
