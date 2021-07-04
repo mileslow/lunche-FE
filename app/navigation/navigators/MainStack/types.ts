@@ -29,4 +29,5 @@ export type MainNavigationStackParamsList = {
         address: string
       }
     | undefined
+  [Routes.CreditCardsScreen]: undefined
 }

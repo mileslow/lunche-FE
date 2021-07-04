@@ -145,6 +145,10 @@ export default {
     recentTitle: 'Recent',
     saveLocationTitle: 'Your locations',
   },
+  creditCardsScreen: {
+    headerTitle: 'Your Credit Cards',
+    addCard: 'Add a new card',
+  },
   totals: {
     order: 'Order',
     fee: 'Fee',

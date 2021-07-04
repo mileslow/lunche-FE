@@ -36,7 +36,7 @@ export interface IProps {
   subtext?: string
   leftElement?: () => ReactNode
   rightElement?: () => ReactNode
-  onPress: () => void
+  onPress?: () => void
   withDivider?: boolean
   style?: StyleProp<ViewStyle>
   pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto'
