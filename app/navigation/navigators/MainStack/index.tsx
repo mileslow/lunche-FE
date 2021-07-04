@@ -17,6 +17,7 @@ import SearchTruckModal from 'screens/SearchTruckModal'
 import OrderTrackerScreen from 'screens/OrderTrackerScreen'
 import ProfileDetailsScreen from 'screens/ProfileDetailsScreen'
 import LocationsScreen from 'screens/LocationsScreen'
+import CreditCardsScreen from 'screens/CreditCardsScreen'
 // navigations
 import MainTabsNavigator from 'navigation/navigators/MainTabs'
 import Routes from 'navigation/routes'
@@ -81,6 +82,7 @@ const MainStackNavigator = () => {
           <MainStack.Screen name={Routes.OrderTrackerScreen} component={OrderTrackerScreen} />
           <MainStack.Screen name={Routes.ProfileDetailsScreen} component={ProfileDetailsScreen} />
           <MainStack.Screen name={Routes.LocationsScreen} component={LocationsScreen} />
+          <MainStack.Screen name={Routes.CreditCardsScreen} component={CreditCardsScreen} />
         </>
       )}
     </MainStack.Navigator>

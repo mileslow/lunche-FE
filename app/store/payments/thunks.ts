@@ -18,3 +18,7 @@ export const addCreditCard = createAsyncThunk<AddCreditCardResponse, undefined, 
   'payments/ADD_CREDIT_CARD',
   () => api.addCreditCard(),
 )
+
+export const deleteCreditCard = createAsyncThunk<unknown, number>('payments/DELETE_CREDIT_CARD', (id) =>
+  api.deleteCreditCard(id),
+)

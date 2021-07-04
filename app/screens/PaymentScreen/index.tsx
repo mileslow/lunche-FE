@@ -125,7 +125,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
         {renderCards}
         {applePayButton}
 
-        <AddButton text={t('paymentScreen:addNewCard')} onPress={handleAddCard} />
+        <AddButton style={styles.addCard} text={t('paymentScreen:addNewCard')} onPress={handleAddCard} />
       </ScrollView>
       <View>
         <Divider />

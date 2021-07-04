@@ -11,4 +11,5 @@ export default {
     axios.post(`/orders/${id}/pay`, null, { params }),
   getCreditCards: (): Promise<GetCreditCardResponse> => axios.get(`/payment-cards`),
   addCreditCard: (): Promise<AddCreditCardResponse> => axios.post(`/payment-cards`),
+  deleteCreditCard: (id: number): Promise<unknown> => axios.delete(`/payment-cards/${id}`),
 }

@@ -126,20 +126,23 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const totals = useTotals({ currentTruckTax: currentTruck.tax, quoteFee: quote?.fee, orderAmount, typeDelivery })
 
-  const redirectToSuccessModal = useCallback((orderId: number) => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [
-          { name: Routes.RootNavigator },
-          {
-            name: Routes.SuccessOrderModal,
-            params: { orderId: orderId },
-          },
-        ],
-      }),
-    )
-  }, [])
+  const redirectToSuccessModal = useCallback(
+    (orderId: number) => {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: Routes.RootNavigator },
+            {
+              name: Routes.SuccessOrderModal,
+              params: { orderId: orderId },
+            },
+          ],
+        }),
+      )
+    },
+    [navigation],
+  )
 
   useFocusEffect(
     useCallback(() => {
@@ -149,7 +152,6 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           let error = null
           // create payment
           if (notPayedOrder.current?.paymentMethod === PaymentMethodType.card) {
-            console.log('card')
             setState({ isLoading: true })
             error = (await makeCardPayment(notPayedOrder.current))?.error
             setState({ isLoading: false })
@@ -163,7 +165,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         }
       }
       payAfterVerify()
-    }, [navigation, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
+    }, [redirectToSuccessModal, navigation, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
   )
 
   useEffect(() => {
@@ -277,7 +279,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
       }
       setState({ isLoading: false })
     },
-    [navigation, dispatch, currentProfile, payment, makeCardPayment, quote],
+    [redirectToSuccessModal, navigation, dispatch, currentProfile, payment, makeCardPayment, quote],
   )
 
   const activeTypeColor = useCallback(

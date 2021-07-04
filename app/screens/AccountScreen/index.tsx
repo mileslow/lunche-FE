@@ -51,7 +51,7 @@ const AccountScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.A
           text: t('accountScreen:paymentTitle'),
           subtext: t('accountScreen:paymentSubtext'),
           leftElement: () => <PaymentIcon style={styles.iconList} fill={Colors.midNightMoss} />,
-          onPress: () => {},
+          onPress: () => navigation.navigate(Routes.CreditCardsScreen),
         },
         {
           text: t('accountScreen:locationTitle'),

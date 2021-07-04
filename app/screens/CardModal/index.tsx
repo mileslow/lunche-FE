@@ -12,6 +12,7 @@ import Typography, { TypographyVariants } from 'components/Typography'
 import Button from 'components/Button'
 import Divider from 'components/Divider'
 import Spinner from 'components/Spinner'
+import ScreenContainer from 'components/ScreenContainer'
 // thunks + actions
 import { addCreditCard } from 'store/payments/thunks'
 import { addCard } from 'store/payments/model'
@@ -71,7 +72,7 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
   )
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top + Spacing.large }]}>
+    <ScreenContainer style={{ paddingTop: insets.top + Spacing.large }}>
       <KeyboardAvoidingView style={styles.modal} behavior='padding' enabled={Platform.OS === 'ios'}>
         <Header withBack title={t('cardModal:headerTitle')} />
         <View style={styles.content}>
@@ -102,7 +103,7 @@ const CardModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Verif
         </View>
       </KeyboardAvoidingView>
       {isLoading && <Spinner />}
-    </View>
+    </ScreenContainer>
   )
 }
 
