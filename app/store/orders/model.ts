@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import omit from 'lodash.omit'
-import { OrdersSliceState, PreSaveOrderItem } from './types'
+import { NotPayedOrder, OrdersSliceState, PreSaveOrderItem } from './types'
 
 const initialState: OrdersSliceState = {
   comment: '',
   orderItems: {},
+  notPayedOrder: null,
 }
 
 // slice
@@ -24,11 +25,20 @@ const ordersSlice = createSlice({
     clearOrderItems: (state) => {
       state.orderItems = {}
     },
+    setNotPayedOrder: (state, { payload }: PayloadAction<NotPayedOrder | null>) => {
+      state.notPayedOrder = payload
+    },
   },
 })
 
 export const sliceName = ordersSlice.name
 
-export const { addItemToOrder, removeItemFromOrder, changeComment, clearOrderItems } = ordersSlice.actions
+export const {
+  addItemToOrder,
+  removeItemFromOrder,
+  changeComment,
+  clearOrderItems,
+  setNotPayedOrder,
+} = ordersSlice.actions
 
 export default ordersSlice.reducer

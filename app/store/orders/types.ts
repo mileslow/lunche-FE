@@ -24,6 +24,7 @@ export enum StatusesState {
 export type OrdersSliceState = {
   comment: string
   orderItems: OrderItemsMap
+  notPayedOrder: NotPayedOrder | null
 }
 
 export type OrderItemsMap = { [x: number]: PreSaveOrderItem }
@@ -117,4 +118,12 @@ export type DeliveryQuote = {
 export type CreateDeliveryQuoteResponse = {
   id: string
   fee: number
+}
+
+export type NotPayedOrder = {
+  id: number
+  amount: number
+  paymentMethod: string
+  cardId?: number
+  cardBrand?: string
 }

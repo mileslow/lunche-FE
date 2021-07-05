@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useEffect, useMemo, useRef, useReducer } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useReducer } from 'react'
 // libs
 import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -6,22 +6,20 @@ import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/core'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 // components
 import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
-import Divider from 'components/Divider'
 import ScreenContainer from 'components/ScreenContainer'
-import Totals from 'components/Totals'
 import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
 import TimeField from 'screens/CheckoutScreen/components/TimeField'
 import PaymentMethodField from 'screens/CheckoutScreen/components/PaymentMethodField'
+import TotalBlock from 'screens/CheckoutScreen/components/TotalBlock'
 // thunks + actions
 import { createOrder, createDeliveryQuotes } from 'store/orders/thunks'
-import { clearOrderItems } from 'store/orders/model'
+import { clearOrderItems, setNotPayedOrder } from 'store/orders/model'
 import { signIn } from 'store/auth/thunks'
 import { getCreditCards } from 'store/payments/thunks'
 // selectors
@@ -29,10 +27,10 @@ import { currentPositionSelector } from 'store/general/selectors'
 import { truckSelector } from 'store/trucks/selectors'
 import { currentProfileSelector, isAuthorizedSelector } from 'store/auth/selectors'
 import { cardsSelector } from 'store/payments/selectors'
-import { orderAmountSelector } from 'store/orders/selectors'
+import { notPayedOrderSelector } from 'store/orders/selectors'
 // types
 import { AppDispatch } from 'store'
-import { CreateDeliveryQuoteResponse, DeliveryType } from 'store/orders/types'
+import { CreateDeliveryQuoteResponse, DeliveryType, NotPayedOrder } from 'store/orders/types'
 import { PaymentBrand, PaymentMethodType } from 'store/payments/types'
 import { RootNavigationStackParamsList, Routes } from 'navigation'
 // validation
@@ -42,10 +40,10 @@ import { schemaValidation } from './validation'
 import PersonIcon from 'assets/svg/person-walking.svg'
 import TruckIcon from 'assets/svg/truck.svg'
 // styles
-import { Colors, Spacing } from 'styles'
+import { Colors } from 'styles'
 import styles from './styles'
 // hooks
-import { useMakeCardPayment, NotPayedOrder, useTotals } from './hooks'
+import { useMakeCardPayment, useTotals, useRedirectToSuccessModal } from './hooks'
 // services
 import { showErrorAlert } from 'services/api/axios'
 
@@ -79,8 +77,6 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const dispatch = useDispatch<AppDispatch>()
 
-  const insets = useSafeAreaInsets()
-
   const { isApplePaySupported, makeCardPayment } = useMakeCardPayment()
 
   const currentPosition = useSelector(currentPositionSelector)
@@ -91,16 +87,14 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const currentProfile = useSelector(currentProfileSelector)
 
-  const orderAmount = useSelector(orderAmountSelector)
-
   const cards = useSelector(cardsSelector)
+
+  const notPayedOrder = useSelector(notPayedOrderSelector)
 
   const [{ isLoading, quote }, setState] = useReducer(
     (store: State, newStore: Partial<State>) => ({ ...store, ...newStore }),
     initialState,
   )
-
-  const notPayedOrder = useRef<NotPayedOrder | null>(null)
 
   const {
     control,
@@ -124,46 +118,38 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const typeDelivery = watch('type')
 
-  const totals = useTotals({ currentTruckTax: currentTruck.tax, quoteFee: quote?.fee, orderAmount, typeDelivery })
+  const totals = useTotals({ quoteFee: quote?.fee, typeDelivery })
 
-  const redirectToSuccessModal = useCallback(
-    (orderId: number) => {
-      navigation.reset({
-        index: 1,
-        routes: [
-          { name: Routes.RootNavigator },
-          {
-            name: Routes.SuccessOrderModal,
-            params: { orderId: orderId },
-          },
-        ],
-      })
+  const redirectToSuccessModal = useRedirectToSuccessModal()
+
+  const payForOrder = useCallback(
+    async (createdOrder: NotPayedOrder) => {
+      if (createdOrder.paymentMethod === PaymentMethodType.card) {
+        const { error } = await makeCardPayment(createdOrder)
+        if (error) {
+          setState({ isLoading: false })
+          dispatch(setNotPayedOrder(createdOrder))
+          navigation.navigate(Routes.PaymentFailedModal, {
+            quoteFee: quote?.fee,
+            typeDelivery,
+          })
+          return
+        }
+      }
+      setState({ isLoading: false, quote: null })
+      dispatch(clearOrderItems())
+      redirectToSuccessModal(createdOrder.id)
     },
-    [navigation],
+    [dispatch, makeCardPayment, navigation, redirectToSuccessModal, quote, typeDelivery],
   )
 
   useFocusEffect(
     useCallback(() => {
       // create payment after user has been verified
-      const payAfterVerify = async () => {
-        if (isAuthorized && notPayedOrder.current) {
-          let error = null
-          // create payment
-          if (notPayedOrder.current?.paymentMethod === PaymentMethodType.card) {
-            setState({ isLoading: true })
-            error = (await makeCardPayment(notPayedOrder.current))?.error
-            setState({ isLoading: false })
-          }
-          // redirect after success payment or if payment method is cash
-          if (!error) {
-            dispatch(clearOrderItems())
-            redirectToSuccessModal(notPayedOrder.current.id)
-            notPayedOrder.current = null
-          }
-        }
+      if (isAuthorized && notPayedOrder) {
+        payForOrder(notPayedOrder)
       }
-      payAfterVerify()
-    }, [redirectToSuccessModal, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
+    }, [isAuthorized, notPayedOrder, payForOrder]),
   )
 
   useEffect(() => {
@@ -204,7 +190,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   }, [isApplePaySupported, navigation])
 
   useEffect(() => {
-    const fetchQuotes = async () => {
+    const createQuote = async () => {
       if (typeDelivery === DeliveryType.DELIVERY && navigation.isFocused()) {
         const { orderTime, deliveryAddress } = getValues()
         if (deliveryAddress?.address) {
@@ -229,7 +215,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         }
       }
     }
-    fetchQuotes()
+    createQuote()
   }, [navigation, getValues, typeDelivery, currentTruck.id, dispatch, route.params?.address])
 
   const payment = useMemo(() => {
@@ -255,29 +241,20 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           cardBrand: payment.brand,
         }
         if (currentProfile) {
-          if (result.payload.data.paymentMethod === PaymentMethodType.card) {
-            const { error } = await makeCardPayment(createdOrder)
-            if (error) {
-              setState({ isLoading: false })
-              return
-            }
-          }
-          setState({ isLoading: false, quote: null })
-          dispatch(clearOrderItems())
-          redirectToSuccessModal(createdOrder.id)
+          payForOrder(createdOrder)
           return
         }
 
         // Sign in user and redirect it to Verify Screen
         await dispatch(signIn({ phone: data.client.phone }))
-        notPayedOrder.current = createdOrder
         setState({ isLoading: false })
         navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
+        dispatch(setNotPayedOrder(createdOrder))
         return
       }
       setState({ isLoading: false })
     },
-    [redirectToSuccessModal, navigation, dispatch, currentProfile, payment, makeCardPayment, quote],
+    [payForOrder, navigation, dispatch, currentProfile, payment, quote],
   )
 
   const activeTypeColor = useCallback(
@@ -365,18 +342,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           {t('checkoutScreen:note')}
         </Typography>
       </ScrollView>
-
-      <Divider />
-
-      <View style={[styles.totals, { paddingBottom: insets.bottom + Spacing.base }]}>
-        <Totals totals={totals} />
-        <Button
-          type={ButtonTypes.primary}
-          title={`${t('checkoutScreen:submitBtn')}`}
-          style={styles.button}
-          onPress={handleSubmit(onSubmit)}
-        />
-      </View>
+      <TotalBlock totals={totals} textButton={t('checkoutScreen:submitBtn')} onSubmit={handleSubmit(onSubmit)} />
     </ScreenContainer>
   )
 }

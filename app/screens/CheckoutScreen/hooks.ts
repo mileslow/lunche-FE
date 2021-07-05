@@ -1,19 +1,23 @@
 import { useCallback, useMemo } from 'react'
 // libs
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useApplePay, useConfirmPayment } from '@stripe/stripe-react-native'
 import { useTranslation } from 'react-i18next'
+import { useNavigation } from '@react-navigation/native'
 // store
 import { createPayment } from 'store/payments/thunks'
-import { PaymentBrand } from 'store/payments/types'
-import { AppDispatch } from 'store'
+import { truckTaxSelector } from 'store/trucks/selectors'
+import { orderAmountSelector } from 'store/orders/selectors'
 // type
+import { PaymentBrand } from 'store/payments/types'
+import { NotPayedOrder } from 'store/orders/types'
+import { AppDispatch } from 'store'
 import { ApplePayError, StripeError } from '@stripe/stripe-react-native/src/types/Errors'
 import { Total } from 'components/Totals'
 import { DeliveryType } from 'store/orders/types'
 import { TypographyVariants } from 'components/Typography'
 
-export type NotPayedOrder = { id: number; amount: number; paymentMethod: string; cardId?: number; cardBrand?: string }
+import { Routes } from 'navigation'
 
 export const useMakeCardPayment = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -65,18 +69,12 @@ export const useMakeCardPayment = () => {
   return { makeCardPayment, isApplePaySupported }
 }
 
-export const useTotals = ({
-  currentTruckTax,
-  quoteFee,
-  orderAmount,
-  typeDelivery,
-}: {
-  currentTruckTax: number
-  quoteFee?: number
-  orderAmount: number
-  typeDelivery: DeliveryType
-}) => {
+export const useTotals = ({ quoteFee, typeDelivery }: { quoteFee?: number; typeDelivery: DeliveryType }) => {
   const { t } = useTranslation()
+
+  const currentTruckTax = useSelector(truckTaxSelector)
+
+  const orderAmount = useSelector(orderAmountSelector)
 
   return useMemo(() => {
     const deliveryFee = quoteFee ?? 0
@@ -97,4 +95,24 @@ export const useTotals = ({
     ]
     return fields
   }, [t, orderAmount, typeDelivery, quoteFee, currentTruckTax])
+}
+
+export const useRedirectToSuccessModal = () => {
+  const navigation = useNavigation()
+
+  return useCallback(
+    (orderId: number) => {
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: Routes.RootNavigator },
+          {
+            name: Routes.SuccessOrderModal,
+            params: { orderId: orderId },
+          },
+        ],
+      })
+    },
+    [navigation],
+  )
 }

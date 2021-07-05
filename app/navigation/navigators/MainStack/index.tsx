@@ -48,8 +48,9 @@ const MainStackNavigator = () => {
     const bootstrap = async () => {
       setLoading(true)
       const [isSkipWelcome, token] = await allsettled([getSkipWelcome(), getAuthToken(), dispatch(getCurrentProfile())])
-      dispatch(setAuthorized(token.status === 'fulfilled' && !!token.value))
-      dispatch(setShowWelcome(isSkipWelcome.status === 'fulfilled' && !isSkipWelcome.value))
+      const isAuthorized = token.status === 'fulfilled' && !!token.value
+      dispatch(setAuthorized(isAuthorized))
+      dispatch(setShowWelcome(!isAuthorized && isSkipWelcome.status === 'fulfilled' && !isSkipWelcome.value))
       setLoading(false)
     }
     bootstrap()
