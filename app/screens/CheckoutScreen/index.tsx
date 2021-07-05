@@ -243,7 +243,6 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const onSubmit = useCallback(
     async (data: ICreateOrderFormData) => {
-      navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
       setState({ isLoading: true })
       const result = await dispatch(createOrder({ ...data, deliveryQuoteId: quote?.id }))
 
