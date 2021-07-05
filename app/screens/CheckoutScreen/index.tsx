@@ -6,12 +6,14 @@ import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/core'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 // components
 import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
 import Divider from 'components/Divider'
 import ScreenContainer from 'components/ScreenContainer'
+import Totals from 'components/Totals'
 import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
@@ -44,10 +46,8 @@ import { Colors, Spacing } from 'styles'
 import styles from './styles'
 // hooks
 import { useMakeCardPayment, NotPayedOrder, useTotals } from './hooks'
-import Totals from 'components/Totals'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+// services
 import { showErrorAlert } from 'services/api/axios'
-import { CommonActions } from '@react-navigation/native'
 
 export interface ICreateOrderFormData {
   type: DeliveryType
@@ -128,18 +128,16 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const redirectToSuccessModal = useCallback(
     (orderId: number) => {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 1,
-          routes: [
-            { name: Routes.RootNavigator },
-            {
-              name: Routes.SuccessOrderModal,
-              params: { orderId: orderId },
-            },
-          ],
-        }),
-      )
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: Routes.RootNavigator },
+          {
+            name: Routes.SuccessOrderModal,
+            params: { orderId: orderId },
+          },
+        ],
+      })
     },
     [navigation],
   )
@@ -165,7 +163,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         }
       }
       payAfterVerify()
-    }, [redirectToSuccessModal, navigation, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
+    }, [redirectToSuccessModal, makeCardPayment, notPayedOrder, isAuthorized, dispatch]),
   )
 
   useEffect(() => {
@@ -225,7 +223,6 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
             return
           }
           if (createDeliveryQuotes.rejected.match(resultQuote)) {
-            console.log(resultQuote.payload)
             showErrorAlert('Error', resultQuote.payload?.data?.message || resultQuote.payload?.message)
           }
           setState({ isLoading: false })
@@ -246,6 +243,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
 
   const onSubmit = useCallback(
     async (data: ICreateOrderFormData) => {
+      navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
       setState({ isLoading: true })
       const result = await dispatch(createOrder({ ...data, deliveryQuoteId: quote?.id }))
 
@@ -274,6 +272,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
         // Sign in user and redirect it to Verify Screen
         await dispatch(signIn({ phone: data.client.phone }))
         notPayedOrder.current = createdOrder
+        setState({ isLoading: false })
         navigation.navigate(Routes.VerifyCodeScreen, { phoneNumber: data.client.phone, popRouteCount: 1 })
         return
       }
