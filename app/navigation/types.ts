@@ -6,16 +6,22 @@ import { PlaceNavigationStackParamsList } from 'navigation/navigators/PlaceStack
 import { OrderNavigationStackParamsList } from 'navigation/navigators/OrdersStack/types'
 import { Routes } from 'navigation/index'
 import { LocationSectionsKeys } from 'screens/ChangeAddressModal'
+import { DeliveryType } from 'store/orders/types'
 
-export type RootNavigationStackParamsList = {
-  [Routes.RootNavigator]: undefined
+type ModalParamsList = {
   [Routes.DishModal]: { id: number; truckId: number }
   [Routes.ChangeAddressModal]:
     | { prevScreen?: Routes; hideSections?: Array<typeof LocationSectionsKeys[keyof typeof LocationSectionsKeys]> }
     | undefined
   [Routes.CardModal]: undefined
   [Routes.SuccessOrderModal]: { orderId: number }
-} & TabsNavigationParamsList &
+  [Routes.PaymentFailedModal]: { typeDelivery: DeliveryType; quoteFee?: number }
+}
+
+export type RootNavigationStackParamsList = {
+  [Routes.RootNavigator]: undefined
+} & ModalParamsList &
+  TabsNavigationParamsList &
   MainNavigationStackParamsList &
   HomeNavigationStackParamsList &
   AccountNavigationStackParamsList &

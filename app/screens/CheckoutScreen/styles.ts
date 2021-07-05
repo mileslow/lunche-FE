@@ -45,10 +45,6 @@ export default StyleSheet.create({
   scroll: {
     flex: 1,
   },
-  button: {
-    marginHorizontal: Spacing.double,
-    marginVertical: Spacing.double,
-  },
   greenChevron: {
     transform: [{ rotate: '180deg' }],
   },
@@ -77,10 +73,5 @@ export default StyleSheet.create({
   },
   addressField: {
     justifyContent: 'flex-start',
-  },
-  totals: {
-    backgroundColor: Colors.concrete,
-    paddingHorizontal: Spacing.double,
-    paddingTop: Spacing.base,
   },
 })

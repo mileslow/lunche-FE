@@ -9,6 +9,7 @@ import DishModal from 'screens/DishModal'
 import ChangeAddressModal from 'screens/ChangeAddressModal'
 import CardModal from 'screens/CardModal'
 import SuccessOrderModal from 'screens/SuccessOrderModal'
+import PaymentFailedModal from 'screens/PaymentFailedModal'
 // routs
 import Routes from 'navigation/routes'
 import { modalCardStyleInterpolator } from 'navigation/utils'
@@ -34,6 +35,7 @@ const AppNavigationContainer: FC = () => {
           <RootStack.Screen name={Routes.ChangeAddressModal} component={ChangeAddressModal} />
           <RootStack.Screen name={Routes.CardModal} component={CardModal} />
           <RootStack.Screen name={Routes.SuccessOrderModal} component={SuccessOrderModal} />
+          <RootStack.Screen name={Routes.PaymentFailedModal} component={PaymentFailedModal} />
         </RootStack.Navigator>
       </NavigationContainer>
     </>

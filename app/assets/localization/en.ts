@@ -149,6 +149,12 @@ export default {
     headerTitle: 'Your Credit Cards',
     addCard: 'Add a new card',
   },
+  paymentFailedModal: {
+    mainTitle: 'Oops..Payment failed',
+    subText: 'Payment for order could not be proceed, please try again or',
+    contact: 'contact support',
+    payOrderButton: 'Pay order',
+  },
   totals: {
     order: 'Order',
     fee: 'Fee',

@@ -31,3 +31,5 @@ export const orderAmountSelector = createSelector(
 export const commentOrderSelector = createSelector(ordersSelector, (orders) => orders.comment)
 
 export const orderItemSelector = (id: number) => createSelector(orderItemsSelector, (orderItems) => orderItems[id])
+
+export const notPayedOrderSelector = createSelector(ordersSelector, (orders) => orders.notPayedOrder)
