@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useEffect, useMemo, useReducer } from 'react'
 // libs
-import { ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,6 +11,7 @@ import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
 import ScreenContainer from 'components/ScreenContainer'
+import KeyboardView from 'components/KeyboardView'
 import PickUpFields from 'screens/CheckoutScreen/components/PickUpFields'
 import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
@@ -285,7 +286,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   return (
     <ScreenContainer isLoading={isLoading} style={styles.screen}>
       <Header withBack title={t('checkoutScreen:headerTitle')} />
-      <KeyboardAvoidingView style={styles.content} enabled={Platform.OS === 'ios'} behavior='padding'>
+      <KeyboardView>
         <ScrollView style={styles.content} contentContainerStyle={styles.contentScroll}>
           <Controller
             name='type'
@@ -348,7 +349,7 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
           </Typography>
         </ScrollView>
         <TotalBlock totals={totals} textButton={t('checkoutScreen:submitBtn')} onSubmit={handleSubmit(onSubmit)} />
-      </KeyboardAvoidingView>
+      </KeyboardView>
     </ScreenContainer>
   )
 }
