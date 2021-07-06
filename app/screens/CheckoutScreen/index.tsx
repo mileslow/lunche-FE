@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useEffect, useMemo, useReducer } from 'react'
 // libs
-import { ScrollView, View } from 'react-native'
+import { ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -285,64 +285,70 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   return (
     <ScreenContainer isLoading={isLoading} style={styles.screen}>
       <Header withBack title={t('checkoutScreen:headerTitle')} />
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.contentScroll}>
-        <Controller
-          name='type'
-          control={control}
-          render={({ field: { onChange } }) => (
-            <View style={styles.deliveryTypes}>
-              <Button type={ButtonTypes.basic} style={styles.deliveryBtn} onPress={() => onChange(DeliveryType.PICKUP)}>
-                <PersonIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.PICKUP)} />
-                <Typography color={activeTypeColor(DeliveryType.PICKUP)}>{t('checkoutScreen:pickUpBtn')}</Typography>
-              </Button>
-              {currentTruck.supportDelivery && (
+      <KeyboardAvoidingView style={styles.content} enabled={Platform.OS === 'ios'} behavior='padding'>
+        <ScrollView style={styles.content} contentContainerStyle={styles.contentScroll}>
+          <Controller
+            name='type'
+            control={control}
+            render={({ field: { onChange } }) => (
+              <View style={styles.deliveryTypes}>
                 <Button
                   type={ButtonTypes.basic}
                   style={styles.deliveryBtn}
-                  onPress={() => onChange(DeliveryType.DELIVERY)}
+                  onPress={() => onChange(DeliveryType.PICKUP)}
                 >
-                  <TruckIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.DELIVERY)} />
-                  <Typography color={activeTypeColor(DeliveryType.DELIVERY)}>
-                    {t('checkoutScreen:deliveryBtn')}
-                  </Typography>
+                  <PersonIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.PICKUP)} />
+                  <Typography color={activeTypeColor(DeliveryType.PICKUP)}>{t('checkoutScreen:pickUpBtn')}</Typography>
                 </Button>
-              )}
-            </View>
-          )}
-        />
-
-        {typeDelivery === DeliveryType.PICKUP && (
-          <PickUpFields distance={currentTruck.distance} address={currentTruck.address} />
-        )}
-
-        {typeDelivery === DeliveryType.DELIVERY && (
-          <DeliveryFields
-            control={control}
-            errors={errors}
-            location={currentPosition}
-            onPressAddress={handlePressAddress}
+                {currentTruck.supportDelivery && (
+                  <Button
+                    type={ButtonTypes.basic}
+                    style={styles.deliveryBtn}
+                    onPress={() => onChange(DeliveryType.DELIVERY)}
+                  >
+                    <TruckIcon style={styles.buttonIcon} fill={activeTypeColor(DeliveryType.DELIVERY)} />
+                    <Typography color={activeTypeColor(DeliveryType.DELIVERY)}>
+                      {t('checkoutScreen:deliveryBtn')}
+                    </Typography>
+                  </Button>
+                )}
+              </View>
+            )}
           />
-        )}
 
-        <Typography variant={TypographyVariants.subhead} style={styles.label}>
-          {timeFieldLabel[typeDelivery]}
-        </Typography>
+          {typeDelivery === DeliveryType.PICKUP && (
+            <PickUpFields distance={currentTruck.distance} address={currentTruck.address} />
+          )}
 
-        <TimeField shouldUnregister name='orderTime' control={control} />
+          {typeDelivery === DeliveryType.DELIVERY && (
+            <DeliveryFields
+              control={control}
+              errors={errors}
+              location={currentPosition}
+              onPressAddress={handlePressAddress}
+            />
+          )}
 
-        <PaymentMethodField onPress={handlePaymentPress} payment={payment} errors={errors} />
+          <Typography variant={TypographyVariants.subhead} style={styles.label}>
+            {timeFieldLabel[typeDelivery]}
+          </Typography>
 
-        <Typography variant={TypographyVariants.subhead} style={styles.label}>
-          {t('checkoutScreen:personalInfo')}
-        </Typography>
-        <PersonalInfoFields editable control={control} errors={errors} />
+          <TimeField shouldUnregister name='orderTime' control={control} />
 
-        <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
-          <Typography color={Colors.cadmiumOrange}>*</Typography>
-          {t('checkoutScreen:note')}
-        </Typography>
-      </ScrollView>
-      <TotalBlock totals={totals} textButton={t('checkoutScreen:submitBtn')} onSubmit={handleSubmit(onSubmit)} />
+          <PaymentMethodField onPress={handlePaymentPress} payment={payment} errors={errors} />
+
+          <Typography variant={TypographyVariants.subhead} style={styles.label}>
+            {t('checkoutScreen:personalInfo')}
+          </Typography>
+          <PersonalInfoFields editable control={control} errors={errors} />
+
+          <Typography variant={TypographyVariants.smallBody} color={Colors.midNightMoss}>
+            <Typography color={Colors.cadmiumOrange}>*</Typography>
+            {t('checkoutScreen:note')}
+          </Typography>
+        </ScrollView>
+        <TotalBlock totals={totals} textButton={t('checkoutScreen:submitBtn')} onSubmit={handleSubmit(onSubmit)} />
+      </KeyboardAvoidingView>
     </ScreenContainer>
   )
 }

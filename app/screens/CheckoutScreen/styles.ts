@@ -42,7 +42,7 @@ export default StyleSheet.create({
     paddingHorizontal: Spacing.double,
     paddingVertical: Spacing.double,
   },
-  scroll: {
+  content: {
     flex: 1,
   },
   greenChevron: {
