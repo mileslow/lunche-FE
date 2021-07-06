@@ -75,6 +75,8 @@ export type Order = {
   totalSum: number
   orderSum: number
   totalFee: number
+  deliveryFee: number
+  applicationFee: number
   type: DeliveryType
   foodTruck: {
     name: string

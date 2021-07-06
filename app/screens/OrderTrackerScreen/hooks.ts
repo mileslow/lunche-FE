@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 // libs
 import { useTranslation } from 'react-i18next'
 import upperFirst from 'lodash.upperfirst'
+import reject from 'lodash.reject'
 // types
 import { TypographyVariants } from 'components/Typography'
 import { DeliveryType, Order, OrderStatus } from 'store/orders/types'
@@ -13,14 +14,18 @@ import { Colors } from 'styles'
 export const useOrderInfo = (order: Order | null) => {
   const { t } = useTranslation()
 
-  const totals = useMemo<{ label: string; value: string; textVariant?: TypographyVariants }[]>(
-    () => [
+  const totals = useMemo<{ label: string; value: string; textVariant?: TypographyVariants }[]>(() => {
+    const totalsArr = [
       { label: t('totals:order'), value: `$ ${order?.orderSum ?? 0}` },
       { label: t('totals:fee'), value: `$ ${order?.totalFee ?? 0}` },
+      { label: t('totals:deliveryFee'), value: `$ ${order?.deliveryFee ?? 0}` },
       { label: t('totals:total'), value: `$ ${order?.totalSum ?? 0}`, textVariant: TypographyVariants.body },
-    ],
-    [t, order],
-  )
+    ]
+    if (order?.type === DeliveryType.PICKUP) {
+      return reject(totalsArr, { label: t('totals:deliveryFee') })
+    }
+    return totalsArr
+  }, [t, order])
 
   const contactsInfo = useMemo(
     () =>
