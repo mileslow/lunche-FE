@@ -55,4 +55,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: 32,
   },
+  bottomBlock: {
+    borderTopWidth: 0,
+  },
 })

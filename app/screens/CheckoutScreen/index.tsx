@@ -17,7 +17,7 @@ import DeliveryFields from 'screens/CheckoutScreen/components/DeliveryFields'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
 import TimeField from 'screens/CheckoutScreen/components/TimeField'
 import PaymentMethodField from 'screens/CheckoutScreen/components/PaymentMethodField'
-import TotalBlock from 'screens/CheckoutScreen/components/TotalBlock'
+import TotalBottomBlock from 'components/TotalBottomBlock'
 // thunks + actions
 import { createOrder, createDeliveryQuotes } from 'store/orders/thunks'
 import { clearOrderItems, setNotPayedOrder } from 'store/orders/model'
@@ -348,7 +348,13 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
             {t('checkoutScreen:note')}
           </Typography>
         </ScrollView>
-        <TotalBlock totals={totals} textButton={t('checkoutScreen:submitBtn')} onSubmit={handleSubmit(onSubmit)} />
+
+        <TotalBottomBlock
+          style={styles.bottomBlock}
+          totals={totals}
+          textButton={t('checkoutScreen:submitBtn')}
+          onPress={handleSubmit(onSubmit)}
+        />
       </KeyboardView>
     </ScreenContainer>
   )

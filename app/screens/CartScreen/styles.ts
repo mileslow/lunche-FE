@@ -5,8 +5,7 @@ const INPUT_ICON_SIZE = 32
 
 export default StyleSheet.create({
   screen: {
-    backgroundColor: Colors.basic,
-    flex: 1,
+    paddingBottom: 0,
   },
   header: {
     alignItems: 'center',
@@ -36,19 +35,8 @@ export default StyleSheet.create({
   divider: {
     marginVertical: Spacing.base,
   },
-  totals: {
+  bottomBlock: {
     backgroundColor: Colors.concrete,
-    paddingHorizontal: Spacing.double,
-    paddingVertical: Spacing.base,
-  },
-  totalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: Spacing.tiny,
-  },
-  button: {
-    marginBottom: Spacing.base,
-    marginTop: Spacing.doubleSmall,
   },
   scrollStyle: {
     flex: 1,

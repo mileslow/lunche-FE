@@ -38,9 +38,8 @@ export default StyleSheet.create({
   addressIcon: {
     marginRight: Spacing.base,
   },
-  buttonWrap: {
-    paddingHorizontal: Spacing.double,
-    paddingVertical: Spacing.double,
+  bottomBlock: {
+    backgroundColor: Colors.concrete,
   },
   content: {
     flex: 1,

@@ -8,10 +8,9 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { useDispatch, useSelector } from 'react-redux'
 // components
 import ScreenContainer from 'components/ScreenContainer'
-import Button from 'components/Button'
 import Header from 'components/Header'
-import Divider from 'components/Divider'
 import KeyboardView from 'components/KeyboardView'
+import ActionBottomBlock from 'components/ActionBottomBlock'
 import PersonalInfoFields from 'screens/CheckoutScreen/components/PersonalInfoFields'
 // store
 import { updateCurrentProfile } from 'store/auth/thunks'
@@ -71,18 +70,13 @@ const ProfileDetailsScreen: FC<StackScreenProps<RootNavigationStackParamsList, R
   )
 
   return (
-    <ScreenContainer isLoading={isLoading}>
+    <ScreenContainer style={styles.screen} isLoading={isLoading}>
       <Header withBack title={t('profileDetailsScreen:headerTitle')} />
       <KeyboardView>
         <View style={styles.form}>
           <PersonalInfoFields control={control} errors={errors} />
         </View>
-        <Divider />
-        <Button
-          style={styles.saveButton}
-          title={t('profileDetailsScreen:saveButton')}
-          onPress={handleSubmit(onSubmit)}
-        />
+        <ActionBottomBlock textButton={t('profileDetailsScreen:saveButton')} onPress={handleSubmit(onSubmit)} />
       </KeyboardView>
     </ScreenContainer>
   )

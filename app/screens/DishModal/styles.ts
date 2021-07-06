@@ -8,7 +8,6 @@ export const CLOSE_ICON_SIZE = 28
 export default StyleSheet.create({
   screen: {
     backgroundColor: Colors.transparent,
-    flex: 1,
   },
   card: {
     ...StyleSheet.absoluteFillObject,
@@ -24,10 +23,6 @@ export default StyleSheet.create({
     borderTopRightRadius: BORDER_RADIUS,
     height: Metrics.truckImgHeight,
     width: '100%',
-  },
-  button: {
-    marginHorizontal: Spacing.double,
-    marginVertical: Spacing.double,
   },
   info: {
     flex: 1,

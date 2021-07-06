@@ -6,8 +6,8 @@ export const TRUCK_IMAGE_HEIGHT = round(Metrics.windowHeight / 3)
 
 export default StyleSheet.create({
   screen: {
-    backgroundColor: Colors.basic,
-    flex: 1,
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   truckInfo: {
     height: TRUCK_IMAGE_HEIGHT,
@@ -64,13 +64,6 @@ export default StyleSheet.create({
   },
   underLine: {
     textDecorationLine: 'underline',
-  },
-  buttonWrap: {
-    backgroundColor: Colors.basic,
-  },
-  button: {
-    marginHorizontal: Spacing.double,
-    marginVertical: Spacing.double,
   },
   headerIcon: {
     position: 'absolute',

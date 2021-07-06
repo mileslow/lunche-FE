@@ -1,22 +1,24 @@
 import React, { FC, Fragment, useCallback, memo, useMemo } from 'react'
 import { ScrollView, View, Keyboard } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import map from 'lodash.map'
 // components
 import { TypographyVariants } from 'components/Typography'
-import Button, { ButtonTypes } from 'components/Button'
 import Header from 'components/Header'
 import Input from 'components/Form/Input'
 import Divider from 'components/Divider'
-import Totals from 'components/Totals'
+import ScreenContainer from 'components/ScreenContainer'
+import TotalBottomBlock from 'components/TotalBottomBlock'
 import CartItem from 'screens/CartScreen/components/CartItem'
 // store
 import { commentOrderSelector, orderAmountSelector, orderItemsSelector } from 'store/orders/selectors'
 import { truckTaxSelector } from 'store/trucks/selectors'
 import { removeItemFromOrder, changeComment } from 'store/orders/model'
+// types
 import { AppDispatch } from 'store'
+import { RootNavigationStackParamsList, Routes } from 'navigation'
+import { StackScreenProps } from '@react-navigation/stack'
 // hooks
 import useCountOrderPress from 'hooks/useCountOrderPress'
 import useStatusBarStyle from 'hooks/useStatusBarStyle'
@@ -24,12 +26,8 @@ import useStatusBarStyle from 'hooks/useStatusBarStyle'
 import CommentIcon from 'assets/svg/speech-bubble-comment.svg'
 // styles
 import styles from './styles'
-import { RootNavigationStackParamsList, Routes } from 'navigation'
-import { StackScreenProps } from '@react-navigation/stack'
 
 const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.CartScreen>> = ({ navigation }) => {
-  const insets = useSafeAreaInsets()
-
   const { t } = useTranslation()
 
   const dispatch = useDispatch<AppDispatch>()
@@ -96,7 +94,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
   )
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <ScreenContainer style={styles.screen}>
       <Header withBack title={t('cartScreen:headerTitle')} />
 
       <ScrollView keyboardShouldPersistTaps='always' style={styles.scrollStyle} onScrollBeginDrag={Keyboard.dismiss}>
@@ -109,19 +107,15 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
         />
         {renderItems}
       </ScrollView>
-      <Divider />
 
-      <View style={styles.totals}>
-        <Totals totals={totals} style={styles.totalRow} />
-        <Button
-          disabled={!Object.keys(orderItems).length}
-          type={ButtonTypes.primary}
-          style={styles.button}
-          title={t('cartScreen:primaryBtn')}
-          onPress={redirectToCheckout}
-        />
-      </View>
-    </View>
+      <TotalBottomBlock
+        totals={totals}
+        style={styles.bottomBlock}
+        textButton={t('cartScreen:primaryBtn')}
+        disabledBtn={!Object.keys(orderItems).length}
+        onPress={redirectToCheckout}
+      />
+    </ScreenContainer>
   )
 }
 

@@ -17,11 +17,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import round from 'lodash.round'
 // components
-import Spinner from 'components/Spinner'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
 import ItemCount from 'components/ItemCount'
-import Divider from 'components/Divider'
+import ScreenContainer from 'components/ScreenContainer'
+import ActionBottomBlock from 'components/ActionBottomBlock'
 // store
 import { getTruckMenuItem } from 'store/trucks/thunks'
 import { orderItemSelector } from 'store/orders/selectors'
@@ -183,7 +183,7 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
   )
 
   return (
-    <View style={styles.screen}>
+    <ScreenContainer style={styles.screen} isLoading={state.isLoading}>
       <TapGestureHandler maxDurationMs={100000} ref={masterdrawer} maxDeltaY={lastSnap - stepPositions.value[0]}>
         <Animated.View style={[styles.card, animatedStyle]}>
           <PanGestureHandler
@@ -232,19 +232,14 @@ const DishModal: FC<StackScreenProps<RootNavigationStackParamsList, Routes.DishM
           </PanGestureHandler>
         </Animated.View>
       </TapGestureHandler>
-      <View style={styles.buttonWrap}>
-        <Divider />
-        <Button
-          type={ButtonTypes.primary}
-          title={`${t('dishModal:addToOrderButton')} ($ ${
-            state.isLoading ? '' : round(state.dish.price * state.itemCount, 2)
-          })`}
-          style={styles.button}
-          onPress={handleAddButton}
-        />
-      </View>
-      {state.isLoading && <Spinner />}
-    </View>
+      <ActionBottomBlock
+        style={styles.buttonWrap}
+        textButton={`${t('dishModal:addToOrderButton')} ($ ${
+          state.isLoading ? '' : round(state.dish.price * state.itemCount, 2)
+        })`}
+        onPress={handleAddButton}
+      />
+    </ScreenContainer>
   )
 }
 

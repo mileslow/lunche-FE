@@ -8,7 +8,7 @@ import Header from 'components/Header'
 import ScreenContainer from 'components/ScreenContainer'
 import Button, { ButtonTypes } from 'components/Button'
 import Typography, { TypographyVariants } from 'components/Typography'
-import TotalBlock from 'screens/CheckoutScreen/components/TotalBlock'
+import TotalBottomBlock from 'components/TotalBottomBlock'
 // store
 import { setNotPayedOrder } from 'store/orders/model'
 import { notPayedOrderSelector } from 'store/orders/selectors'
@@ -82,7 +82,7 @@ const PaymentFailedModal: FC<StackScreenProps<RootNavigationStackParamsList, Rou
           <Typography color={Colors.primary}>{t('paymentFailedModal:contact')}</Typography>
         </Typography>
       </View>
-      <TotalBlock totals={totals} textButton={t('paymentFailedModal:payOrderButton')} onSubmit={handlePayOrder} />
+      <TotalBottomBlock totals={totals} textButton={t('paymentFailedModal:payOrderButton')} onPress={handlePayOrder} />
     </ScreenContainer>
   )
 }

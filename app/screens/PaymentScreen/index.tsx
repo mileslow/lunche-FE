@@ -1,21 +1,20 @@
 import React, { FC, memo, useCallback, useMemo, useState } from 'react'
 // libs
-import { View, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useApplePay } from '@stripe/stripe-react-native'
 import map from 'lodash.map'
 import upperFirst from 'lodash.upperfirst'
 // components
-import Button from 'components/Button'
 import AddButton from 'components/Button/AddButton'
 import Checkbox from 'components/Checkbox'
 import Header from 'components/Header'
 import ListItem from 'components/ListItem'
+import ScreenContainer from 'components/ScreenContainer'
+import ActionBottomBlock from 'components/ActionBottomBlock'
 import Typography, { TypographyVariants } from 'components/Typography'
-import Divider from 'components/Divider'
 // store
 import { DeliveryType } from 'store/orders/types'
 import { cardsSelector } from 'store/payments/selectors'
@@ -34,8 +33,6 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
   route,
 }) => {
   const { t } = useTranslation()
-
-  const insets = useSafeAreaInsets()
 
   const { isApplePaySupported } = useApplePay()
 
@@ -114,7 +111,7 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
   )
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
+    <ScreenContainer style={styles.screen}>
       <Header withBack title={t('paymentScreen:headerTitle')} />
       <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
         <Typography variant={TypographyVariants.body} style={{ marginBottom: Spacing.base }}>
@@ -127,11 +124,8 @@ const PaymentScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.P
 
         <AddButton style={styles.addCard} text={t('paymentScreen:addNewCard')} onPress={handleAddCard} />
       </ScrollView>
-      <View>
-        <Divider />
-        <Button style={{ margin: Spacing.double }} title={t('paymentScreen:saveMethod')} onPress={handleSaveMethod} />
-      </View>
-    </View>
+      <ActionBottomBlock textButton={t('paymentScreen:saveMethod')} onPress={handleSaveMethod} />
+    </ScreenContainer>
   )
 }
 

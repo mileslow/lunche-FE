@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useMemo } from 'react'
+import React, { FC, memo, useCallback } from 'react'
 // libs
 import { Platform, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
@@ -7,11 +7,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Button from 'components/Button'
 import SwipeBar from 'components/SwipeBar'
 import Divider from 'components/Divider'
-import Totals from 'components/Totals'
 import InfoSections from 'components/InfoSections'
 import ScrollContent from 'components/AnimatedSheet/ScrollContent'
 import AnimatedSheet from 'components/AnimatedSheet'
 import Typography, { TypographyVariants } from 'components/Typography'
+import TotalBottomBlock from 'components/TotalBottomBlock'
 import OrderStatusCard from 'screens/OrderTrackerScreen/components/OrderStatusCard'
 import OrderNumber from 'screens/OrderTrackerScreen/components/OrderNumber'
 import OrderItemsList from 'screens/OrderTrackerScreen/components/OrderItemsList'
@@ -24,7 +24,7 @@ import BigMenuIcon from 'assets/svg/bigMenu.svg'
 // services
 import { openLink } from 'services/utils'
 // styles
-import { Metrics, Spacing } from 'styles'
+import { Metrics } from 'styles'
 import styles from 'screens/OrderTrackerScreen/styles'
 
 interface IProps {
@@ -48,17 +48,6 @@ const PickupOrderContent: FC<IProps> = ({ order }) => {
     openLink(url)
   }, [order])
 
-  const primaryButton = useMemo(
-    () => (
-      <Button
-        title={t('orderTrackerScreen:getDirectionBtn')}
-        onPress={handleGetDirection}
-        style={styles.commonMargin}
-      />
-    ),
-    [handleGetDirection, t],
-  )
-
   return (
     <>
       <OrderStatusCard
@@ -72,7 +61,11 @@ const PickupOrderContent: FC<IProps> = ({ order }) => {
         <BigMenuIcon />
       </View>
 
-      {primaryButton}
+      <Button
+        title={t('orderTrackerScreen:getDirectionBtn')}
+        onPress={handleGetDirection}
+        style={styles.commonMargin}
+      />
 
       <AnimatedSheet topPosition={insets.top + Metrics.header} endPosition={Metrics.windowHeight - 80}>
         {({ onRegisterScroll, scrollViewRef, waitFor, simultaneousHandlers }) => (
@@ -103,10 +96,12 @@ const PickupOrderContent: FC<IProps> = ({ order }) => {
               <OrderItemsList orderItems={order.orderItems} />
             </ScrollContent>
 
-            <View style={{ paddingBottom: insets.bottom + Spacing.large }}>
-              <Totals totals={totals} style={styles.commonMargin} />
-              {primaryButton}
-            </View>
+            <TotalBottomBlock
+              style={styles.bottomBlock}
+              totals={totals}
+              textButton={t('orderTrackerScreen:getDirectionBtn')}
+              onPress={handleGetDirection}
+            />
           </>
         )}
       </AnimatedSheet>

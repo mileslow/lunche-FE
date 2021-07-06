@@ -15,9 +15,8 @@ import Typography, { TypographyVariants } from 'components/Typography'
 import TruckGradient from 'screens/TruckScreen/components/TruckGradient'
 import Header from 'screens/TruckScreen/components/Header'
 import MenuItems from 'screens/TruckScreen/components/MenuItems'
-import Spinner from 'components/Spinner'
-import Divider from 'components/Divider'
-import Button, { ButtonTypes } from 'components/Button'
+import ScreenContainer from 'components/ScreenContainer'
+import ActionBottomBlock from 'components/ActionBottomBlock'
 // store
 import { AppDispatch } from 'store'
 import { truckSelector, truckCategoriesSelector } from 'store/trucks/selectors'
@@ -110,7 +109,7 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
   const { toggleFavoritePress, isLoadingFavorite } = useToggleFavoritePress()
 
   return (
-    <View style={styles.screen}>
+    <ScreenContainer style={styles.screen} isLoading={isLoading || isLoadingFavorite}>
       <Header isFavorite={currentTruck.isFavorite} translationY={translationY} onFavoritePress={toggleFavoritePress} />
 
       <Animated.ScrollView
@@ -165,19 +164,12 @@ const TruckScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Tru
       </Animated.ScrollView>
 
       {orderAmount ? (
-        <View style={styles.buttonWrap}>
-          <Divider />
-          <Button
-            type={ButtonTypes.primary}
-            title={`${t('truckScreen:redirectButton')} ($ ${orderAmount})`}
-            style={styles.button}
-            onPress={handleGoToCart}
-          />
-        </View>
+        <ActionBottomBlock
+          textButton={`${t('truckScreen:redirectButton')} ($ ${orderAmount})`}
+          onPress={handleGoToCart}
+        />
       ) : null}
-
-      {(isLoading || isLoadingFavorite) && <Spinner />}
-    </View>
+    </ScreenContainer>
   )
 }
 

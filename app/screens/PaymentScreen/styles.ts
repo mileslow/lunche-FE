@@ -1,10 +1,9 @@
 import { StyleSheet } from 'react-native'
-import { Colors, Spacing } from 'styles'
+import { Spacing } from 'styles'
 
 export default StyleSheet.create({
   screen: {
-    backgroundColor: Colors.basic,
-    flex: 1,
+    paddingBottom: 0,
   },
   content: {
     alignItems: 'flex-start',
