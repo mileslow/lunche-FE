@@ -5,6 +5,7 @@ import { PERMISSIONS, RESULTS, requestMultiple } from 'react-native-permissions'
 import some from 'lodash.some'
 import find from 'lodash.find'
 import api from 'services/api'
+import { LocationType } from 'services/api/endpoints/mapBox'
 
 const hasLocationPermission: () => Promise<boolean> = async () => {
   const permissions = Platform.select({
@@ -22,6 +23,23 @@ const GEOLOCATION_CONFIG = {
   timeout: 15000,
   maximumAge: 10000,
 }
+
+export const createLocationObject = (location: LocationType): CurrentLocation => {
+  const place = find(location.context, (i) => i.id.includes('place'))?.text ?? ''
+  const region = find(location.context, (i) => i.id.includes('region'))?.text ?? ''
+  const country = find(location.context, (i) => i.id.includes('country'))
+
+  return {
+    id: location.id,
+    address: [location.text ?? '', place, region, country?.text ?? ''].join(', '),
+    lng: location.geometry.coordinates[0],
+    lat: location.geometry.coordinates[1],
+    country: country?.text ?? '',
+    code: country?.short_code,
+    place,
+  }
+}
+
 export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocation> = async (withAddress = false) => {
   const isGranted = await hasLocationPermission()
   return new Promise((resolve, reject) => {
@@ -32,19 +50,9 @@ export const getCurrentLocation: (withAddress?: boolean) => Promise<CurrentLocat
           if (withAddress) {
             api.geocode({ latitude: location.lat, longitude: location.lng }).then((result) => {
               const response = result.data?.features[0]
-              const country = find(response?.context, (i) => i.id.includes('country'))?.short_code
-              const district = find(response?.context, (i) => i.id.includes('district'))?.text
-              const place = find(response?.context, (i) => i.id.includes('place'))?.text
-              const combinedAddress = [response?.address, response?.text, place].filter((i) => i).join(', ')
-
               resolve({
+                ...createLocationObject(response),
                 ...location,
-                id: response?.id,
-                address: response?.text,
-                country,
-                district,
-                combinedAddress,
-                place,
               })
             })
             return
@@ -65,8 +73,8 @@ export type CurrentLocation = {
   lng: number
   lat: number
   address?: string
-  combinedAddress?: string
   country?: string
+  code?: string
   district?: string
   placeName?: string
   place?: string
@@ -82,3 +90,5 @@ export const useGetCurrentPosition = (withAddress?: boolean) => {
 
   return currentPosition
 }
+
+export const DEFAULT_LOCATION = { address: 'Los Angeles', lat: -118.6919205, lng: 34.0201613 }

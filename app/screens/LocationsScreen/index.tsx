@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useFocusEffect } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
+import find from 'lodash.find'
 // components
 import ScreenContainer from 'components/ScreenContainer'
 import Header from 'components/Header'
@@ -42,7 +43,8 @@ const LocationsScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes
     useCallback(() => {
       const saveLocation = async () => {
         const { address, lat, lng } = route.params ?? {}
-        if (currentUserId && address && lat && lng) {
+        const isExist = !!find(savedLocations, (i) => i.address === address)
+        if (currentUserId && address && lat && lng && !isExist) {
           setLoading(true)
           navigation.setParams({ address: undefined, lat: undefined, lng: undefined })
           await dispatch(addLocation({ id: currentUserId, data: { address, latitude: lat, longitude: lng } }))
@@ -50,7 +52,7 @@ const LocationsScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes
         }
       }
       saveLocation()
-    }, [dispatch, currentUserId, navigation, route.params]),
+    }, [savedLocations, dispatch, currentUserId, navigation, route.params]),
   )
 
   const openLocationModal = useCallback(() => {

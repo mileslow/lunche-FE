@@ -28,7 +28,7 @@ import { currentPositionSelector } from 'store/general/selectors'
 import { AppDispatch } from 'store'
 import { GetTrucksParams, Truck } from 'store/trucks/types'
 // services
-import { CurrentLocation, getCurrentLocation } from 'services/geoLocation'
+import { CurrentLocation, getCurrentLocation, DEFAULT_LOCATION } from 'services/geoLocation'
 // hooks
 import useSwipeAnimation, { END_POSITION } from './useSwipeAnimation'
 // styles
@@ -93,7 +93,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
         const locationResult = await getCurrentLocation(true)
         dispatch(setCurrentPosition(locationResult))
       } catch {
-        fetchTruck()
+        dispatch(setCurrentPosition(DEFAULT_LOCATION))
       } finally {
         await dispatch(getFoodCategories())
         localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
@@ -144,7 +144,7 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
       <HeaderWithLocation
         swipePositionY={swipePositionY}
-        address={currentLocation?.combinedAddress}
+        address={currentLocation?.address}
         onLocationPress={redirectToChangeAddress}
       />
 

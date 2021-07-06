@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useApplePay, useConfirmPayment } from '@stripe/stripe-react-native'
 import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
+import round from 'lodash.round'
 // store
 import { createPayment } from 'store/payments/thunks'
 import { truckTaxSelector } from 'store/trucks/selectors'
@@ -89,7 +90,7 @@ export const useTotals = ({ quoteFee, typeDelivery }: { quoteFee?: number; typeD
       ...fields,
       {
         label: t('totals:total'),
-        value: `$ ${orderAmount + currentTruckTax + deliveryFee}`,
+        value: `$ ${round(orderAmount + currentTruckTax + deliveryFee, 2)}`,
         textVariant: TypographyVariants.body,
       },
     ]

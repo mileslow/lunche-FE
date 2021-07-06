@@ -30,7 +30,7 @@ const DeliveryFields: FC<IProps> = ({ control, errors, location, onPressAddress 
     () =>
       location
         ? {
-            address: location.placeName || location.combinedAddress || '',
+            address: location.address ?? '',
             lat: location.lat,
             lng: location.lng,
           }

@@ -1,4 +1,4 @@
-import React, { memo, FC } from 'react'
+import React, { memo, FC, useMemo } from 'react'
 // libs
 import { Text, Pressable } from 'react-native'
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
@@ -29,6 +29,11 @@ const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address, onLocationPre
     }
   })
 
+  const formattedAddress = useMemo(() => {
+    const addressArr = address?.split(',') ?? []
+    return addressArr.length >= 2 ? addressArr.slice(0, addressArr.length - 1).join(', ') : addressArr.join(', ')
+  }, [address])
+
   return (
     <Animated.View
       style={[styles.header, headerWithLocation, { paddingTop: insets.top, minHeight: Metrics.header + insets.top }]}
@@ -36,7 +41,7 @@ const HeaderWithLocation: FC<IProps> = ({ swipePositionY, address, onLocationPre
       <Text style={styles.headerText}>{t('mainScreen:headerText')}</Text>
       <Pressable style={styles.currentLocationWrap} onPress={onLocationPress} pointerEvents='box-only'>
         <Text style={styles.currentLocation} numberOfLines={1}>
-          {address || 'Los Angeles'}
+          {formattedAddress}
         </Text>
         <PersonIcon />
       </Pressable>
