@@ -57,7 +57,6 @@ const DeliveryFields: FC<IProps> = ({ control, errors, location, onPressAddress 
         )}
         name='deliveryAddress'
         defaultValue={defaultValue}
-        shouldUnregister
       />
       <Error error={error} />
     </>

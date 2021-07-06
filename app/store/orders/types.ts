@@ -40,9 +40,9 @@ export type CreateOrderData = {
   type: DeliveryType
   paymentMethod: keyof typeof PaymentMethodType
   orderTime: string
-  deliveryAddress: string
-  deliveryLatitude: number
-  deliveryLongitude: number
+  deliveryAddress?: string
+  deliveryLatitude?: number
+  deliveryLongitude?: number
   client: {
     name: string
     phone: string

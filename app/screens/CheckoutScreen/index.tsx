@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useFocusEffect } from '@react-navigation/core'
+import omit from 'lodash.omit'
 // components
 import Header from 'components/Header'
 import Button, { ButtonTypes } from 'components/Button'
@@ -51,7 +52,7 @@ import { showErrorAlert } from 'services/api/axios'
 export interface ICreateOrderFormData {
   type: DeliveryType
   paymentMethod: PaymentMethodType
-  deliveryAddress: { address: string; lat: number; lng: number }
+  deliveryAddress?: { address: string; lat: number; lng: number }
   orderTime: string
   client: {
     name: string
@@ -229,8 +230,13 @@ const CheckoutScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.
   }, [route.params])
 
   const onSubmit = useCallback(
-    async (data: ICreateOrderFormData) => {
+    async (formData: ICreateOrderFormData) => {
       setState({ isLoading: true })
+
+      let data = formData
+      if (data.type === DeliveryType.PICKUP) {
+        data = omit(data, ['deliveryAddress'])
+      }
       const result = await dispatch(createOrder({ ...data, deliveryQuoteId: quote?.id }))
 
       if (createOrder.fulfilled.match(result)) {
