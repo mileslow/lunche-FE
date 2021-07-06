@@ -24,6 +24,8 @@ const ordersSlice = createSlice({
     },
     clearOrderItems: (state) => {
       state.orderItems = {}
+      state.comment = ''
+      state.notPayedOrder = null
     },
     setNotPayedOrder: (state, { payload }: PayloadAction<NotPayedOrder | null>) => {
       state.notPayedOrder = payload
