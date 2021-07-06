@@ -15,7 +15,7 @@ interface IProps {
 }
 
 const TotalBlock: FC<IProps> = ({ onPress, textButton, totals, style, disabledBtn }) => (
-  <ActionBottomBlock disabledBtn={disabledBtn} textButton={textButton} onPress={onPress} style={style}>
+  <ActionBottomBlock disabledBtn={disabledBtn} textButton={textButton} onPress={onPress} style={[styles.wrap, style]}>
     <Totals totals={totals} style={styles.totalRow} />
   </ActionBottomBlock>
 )

@@ -67,6 +67,8 @@ const DateTimePicker = ({
             mode={mode}
             minimumDate={minimumDate ? timeWithClearSeconds(minimumDate) : undefined}
             maximumDate={maximumDate ? timeWithClearSeconds(maximumDate) : undefined}
+            locale='en'
+            is24hourSource='locale'
             textColor={Colors.midNightMoss}
           />
           <View style={styles.actions}>
