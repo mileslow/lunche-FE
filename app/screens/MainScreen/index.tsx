@@ -51,8 +51,6 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
 
   const currentLocation = useSelector(currentPositionSelector)
 
-  const isLocationLoaded = useRef<boolean>(false)
-
   const prevLocation = useRef<CurrentLocation | null>(null)
 
   const {
@@ -66,23 +64,26 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
     swipePositionY,
   } = useSwipeAnimation()
 
-  const fetchTruck = useCallback(async (params?: GetTrucksParams) => {
-    localDispatch({ type: ActionType.FetchingTruckPending, payload: params })
-    const resultTruck = await dispatch(getTrucks(params))
-    if (getTrucks.fulfilled.match(resultTruck)) {
-      localDispatch({ type: ActionType.FetchingTruckFulfilled, payload: resultTruck.payload })
-    } else {
-      localDispatch({ type: ActionType.SetLoadingTruck, payload: false })
-    }
-  }, [])
+  const fetchTruck = useCallback(
+    async (params?: GetTrucksParams) => {
+      localDispatch({ type: ActionType.FetchingTruckPending, payload: params })
+      const resultTruck = await dispatch(getTrucks(params))
+      if (getTrucks.fulfilled.match(resultTruck)) {
+        localDispatch({ type: ActionType.FetchingTruckFulfilled, payload: resultTruck.payload })
+      } else {
+        localDispatch({ type: ActionType.SetLoadingTruck, payload: false })
+      }
+    },
+    [dispatch, localDispatch],
+  )
 
   useFocusEffect(
     useCallback(() => {
-      if (isLocationLoaded.current && !is(currentLocation, prevLocation.current)) {
+      if (!is(currentLocation, prevLocation.current)) {
         prevLocation.current = currentLocation
         fetchTruck({ latitude: currentLocation?.lat, longitude: currentLocation?.lng })
       }
-    }, [currentLocation]),
+    }, [fetchTruck, currentLocation]),
   )
 
   useEffect(() => {
@@ -90,18 +91,16 @@ const MainScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Main
       localDispatch({ type: ActionType.SetLoadingLocation, payload: true })
       try {
         const locationResult = await getCurrentLocation(true)
-        isLocationLoaded.current = true
         dispatch(setCurrentPosition(locationResult))
-
-        await dispatch(getFoodCategories())
-        localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
       } catch {
-        await fetchTruck()
+        fetchTruck()
+      } finally {
+        await dispatch(getFoodCategories())
         localDispatch({ type: ActionType.SetLoadingLocation, payload: false })
       }
     }
     fetchData()
-  }, [dispatch])
+  }, [fetchTruck, localDispatch, dispatch])
 
   const navigateToTruck = useCallback(
     (id) => {
