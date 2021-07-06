@@ -114,6 +114,7 @@ const CartScreen: FC<StackScreenProps<RootNavigationStackParamsList, Routes.Cart
       <View style={styles.totals}>
         <Totals totals={totals} style={styles.totalRow} />
         <Button
+          disabled={!Object.keys(orderItems).length}
           type={ButtonTypes.primary}
           style={styles.button}
           title={t('cartScreen:primaryBtn')}
